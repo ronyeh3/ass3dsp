@@ -23,7 +23,6 @@ public class Step3 {
 
 	// This step extract Hook Words & HighFrequency Words (HFW)
 	// Parameters Fc, Fh, Fb
-
 	public static class MapperClassWordCounter5Gram extends Mapper<LongWritable, Text, Text, Text> {
 		private static final int Fc = 2500;				// Article: 100-5000
 		private static final int Fh = 50;				// Article: 10-100

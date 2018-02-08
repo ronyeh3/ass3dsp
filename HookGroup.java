@@ -7,10 +7,19 @@ public class HookGroup { // THIS IS CORPUS. THIS IS CREATED PER HOOKWORD.
  private HashMap<String, ArrayList<Pattern>> group; // private MapWritable<Text, ArrayWritable(Text)>   AKA CLUSTER
   //   TARGET  PATTERN
  
-public HookGroup(String hookWord, HashMap<String, ArrayList<Pattern>> group) {
+public HookGroup(String hookWord) {
 	super();
 	this.hookWord = hookWord;
-	this.group = group;
+	this.group = new HashMap<String, ArrayList<Pattern>>();
+}
+
+public void addPatternToTarget(String target, Pattern pattern) {
+	if (group.containsKey(target))
+		group.get(target).add(pattern);
+	else {
+		group.put(target, new ArrayList<Pattern>());
+		group.get(target).add(pattern);
+	}
 }
 
 public String getHookWord() {

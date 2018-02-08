@@ -106,7 +106,7 @@ public class Step4 {
 					patternsAndTargets += value.toString()+"|";
 				}
 				patternsAndTargets = patternsAndTargets.substring(0,patternsAndTargets.length());
-				mos.write("byHook", new Text(actualKey), new Text("{"+patternsAndTargets+"}"));
+				mos.write("byHook", new Text(actualKey), new Text(patternsAndTargets));
 				mos.write("byHook", new Text(""), null);
 			}
 			else { // if (key.toString().charAt(1) == '2')
@@ -116,7 +116,7 @@ public class Step4 {
 					hookWords += value.toString()+"|";
 				}
 				hookWords = hookWords.substring(0,hookWords.length());
-				mos.write("byPattern", new Text(actualKey), new Text("{"+hookWords+"}"));
+				mos.write("byPattern", new Text(actualKey), new Text(hookWords));
 				mos.write("byPattern", new Text(""), null);
 			}
 		}

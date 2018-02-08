@@ -26,7 +26,7 @@ import org.apache.hadoop.io.LongWritable;
 public class Step5 {
 	
 	
-	static List<HookGroup> byHook = new ArrayList<HookGroup>();
+	static List<HookGroup> hookGroups = new ArrayList<HookGroup>(); // LIST OF CORPUSES
 
 
 	public static class MapperClass extends Mapper<LongWritable, Text, Text, Text> {
@@ -53,46 +53,35 @@ public class Step5 {
 
 		}
 		public void readFile(FSDataInputStream in, String filename) throws IOException {
-			List<String> currList;
 			
 			BufferedReader joinReader = new BufferedReader(new InputStreamReader(in, "UTF8"));
 			String line;
+			String[] splittedLine, splittedPatternAndTarget;
+			String hookWord, pattern, target;
 			while ((line = joinReader.readLine()) != null) {
-				//FILE with HOOKWORD: TARGET~PATTERN | TARGET~PATTERN
-				
-				String keyValue = line.toString();
-				currList.add(keyValue);  
+				//lap	sat my and##on|on last of##the|hands his and##in|living the of##in|hands her and##in|head his and##in|head her and##in|took victory around##a|sitting the of##on|sit my and##on|down his and##on|me his and##on|
+				splittedLine = line.split("\t");
+				hookWord = splittedLine[0];
+				HookGroup currentHook = new HookGroup(hookWord);
+				for (String patternAndTarget : splittedLine[1].split("\\|")) {
+					splittedPatternAndTarget = patternAndTarget.split("##");
+					pattern = splittedPatternAndTarget[0];
+					Pattern patternObj = new Pattern(pattern,false,false);
+					target = splittedPatternAndTarget[1];
+					currentHook.addPatternToTarget(target, patternObj);
+				}
+				hookGroups.add(currentHook);  
+
 			}
 
 		}
 
 		public void map(LongWritable LongWritable, Text value, Context context) throws IOException,  InterruptedException {
-			String ngram = value.toString();
-			String type1 = "-1-";
-			String type2 = "-2-";
-			String[] ngramWords = ngram.split("\\s+");
-			String target, pattern, hookword;
-			if (hfw.contains(ngramWords[0]) && hfw.contains(ngramWords[2]) && hfw.contains(ngramWords[4])){
-				if (hooks.contains(ngramWords[1])) {
-					hookword = ngramWords[1];
-					target = ngramWords[3];
-					pattern = ngramWords[0] + " " + ngramWords[2] + " " + ngramWords[4];
-					context.write(new Text(type1+"\t"+hookword), new Text(pattern+"##"+target));
-					context.write(new Text(type2+"\t"+pattern), new Text(hookword));
-				}
-				else if (hooks.contains(ngramWords[3])) {
-					hookword = ngramWords[3];
-					target = ngramWords[1];
-					pattern = ngramWords[0] + " " + ngramWords[2] + " " + ngramWords[4];
-					context.write(new Text(type1+"\t"+hookword), new Text(pattern+"##"+target));
-					context.write(new Text(type2+"\t"+pattern), new Text(hookword));
 
-				}
-
+			context.write("", "");
 
 			}  
 		}
-	}
 
 	public static class ReducerClass extends Reducer<Text,Text,Text,Text> {
 		private MultipleOutputs<Text,Text> mos;
