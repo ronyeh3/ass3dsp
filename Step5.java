@@ -24,8 +24,9 @@ import org.apache.hadoop.io.LongWritable;
 
 
 public class Step5 {
-	static Map<String, List<String>> byPattern = new HashMap<String, List<String>>();
-	static List<String> byHook = new ArrayList<String>();
+	
+	
+	static List<HookGroup> byHook = new ArrayList<HookGroup>();
 
 
 	public static class MapperClass extends Mapper<LongWritable, Text, Text, Text> {
@@ -38,7 +39,7 @@ public class Step5 {
 			Path [] cacheFiles = context.getLocalCacheFiles();
 			if((cacheFiles != null) && (cacheFiles.length >0)) {
 				for (Path cacheFile : cacheFiles) {
-					if (cacheFile.getName().charAt(0) == 'h') {
+					if (cacheFile.getName().substring(0, 3).equals("byH")) {
 						FSDataInputStream in = fs.open(cacheFile);
 						readFile(in, cacheFile.getName());
 						in.close();
@@ -53,13 +54,12 @@ public class Step5 {
 		}
 		public void readFile(FSDataInputStream in, String filename) throws IOException {
 			List<String> currList;
-			if (filename.substring(0, 3).equals("hfw"))
-				currList = hfw;
-			else
-				currList = hooks;
+			
 			BufferedReader joinReader = new BufferedReader(new InputStreamReader(in, "UTF8"));
 			String line;
 			while ((line = joinReader.readLine()) != null) {
+				//FILE with HOOKWORD: TARGET~PATTERN | TARGET~PATTERN
+				
 				String keyValue = line.toString();
 				currList.add(keyValue);  
 			}
