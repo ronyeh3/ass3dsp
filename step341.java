@@ -41,7 +41,7 @@ public class step341 {
 		Gson gson = new Gson();
 		FileInputStream fstream = new FileInputStream(args[0]);
 		BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-		HashMap<String,HashMap<String, List<String>>> hooksAndClusters = new HashMap<String, HashMap<String,List<String>>>();
+		HashMap<String,HashMap<String, Object>> hooksAndClusters = new HashMap<String, HashMap<String,Object>>();
 		String strLine;
 
 		String[] splittedLine;
@@ -66,20 +66,46 @@ public class step341 {
 
 
 
-			Iterator<Entry<String, List<String>>> innerIterator = hooksAndClusters.get(singlehookword).entrySet().iterator();
+			Iterator<Entry<String, Object>> innerIterator = hooksAndClusters.get(singlehookword).entrySet().iterator();
 			//now i have iterator for target and patterns for specific hook 
 			while (innerIterator.hasNext()) {
-				innerIterator.next().getValue().remove(pattern);
+				((List<String>)innerIterator.next().getValue()).remove(pattern);
 			}
 		}
 
-		BufferedWriter out2 = new BufferedWriter(new FileWriter("output/step341/outbefor.txt"));
-		out2.write(gson.toJson(hooksAndClusters,type));
+		//		BufferedWriter out2 = new BufferedWriter(new FileWriter("output/step341/outbefor.txt"));
+		//		out2.write(gson.toJson(hooksAndClusters,type));
+		//		out2.close();
+
+
+		for(Entry<String, HashMap<String, Object>> hookANDtargetPatterns : hooksAndClusters.entrySet()) {
+			Iterator<Entry<String, Object>> innerIterator = hookANDtargetPatterns.getValue().entrySet().iterator();
+			while (innerIterator.hasNext()) {
+				Map.Entry<String, Object> curr = innerIterator.next();
+				List<String> currentListOfPatterns = (List) curr.getValue();
+				List<Pair<String,Integer>> newListOfPatterns = new ArrayList<Pair<String,Integer>>();
+				for (String currPattern : currentListOfPatterns) {
+					newListOfPatterns.add(new Pair<String, Integer>(currPattern, 0));
+				}
+				curr.setValue(newListOfPatterns);
+
+
+
+
+			}
+
+
+		}
+		//Type type2 = new TypeToken<HashMap<String,HashMap<String, Pair<String,Integer>>>>(){}.getType();
+		
+		
+		//HashMap<String,HashMap<String, Pair<String,Integer>>> hooksAndClusters2 
+
+		BufferedWriter out2 = new BufferedWriter(new FileWriter("output/step342/outbefor.txt"));
+		out2.write(gson.toJson(hooksAndClusters));
 		out2.close();
 
-
 	}
-
 }
 
 
