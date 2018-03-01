@@ -19,6 +19,11 @@ import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.io.LongWritable;
 
+/*
+ * input - step 1 :  5 gram just the words
+ * input - step 3:the clasificains of the HFW and hooks
+ */
+
 
 public class Step4 {
 	static List<String> hfw = new ArrayList<String>();
@@ -72,7 +77,7 @@ public class Step4 {
 			if (hfw.contains(ngramWords[0]) && hfw.contains(ngramWords[2]) && hfw.contains(ngramWords[4])){
 				if (hooks.contains(ngramWords[1])) {
 					hookword = ngramWords[1];
-					target = ngramWords[3];
+					target = ngramWords[3];  // not is - contain 
 					pattern = ngramWords[0] + " " + ngramWords[2] + " " + ngramWords[4];
 					context.write(new Text(type1+"\t"+hookword), new Text(pattern+"##"+target));
 					context.write(new Text(type2+"\t"+pattern), new Text(hookword));
@@ -132,6 +137,10 @@ public class Step4 {
 	}
 
 	public static void main(String[] args) throws Exception {
+		
+		System.load("C:/Users/RONlptp/eclipse-workspace/ass2localRunner/lib/lzo2.dll");
+		System.setProperty("hadoop.home.dir", "E:\\hadoop-2.6.2");
+		
 		Configuration conf = new Configuration();
 		Job job = new Job(conf);
 		job.setJarByClass(Step4.class);
@@ -144,18 +153,18 @@ public class Step4 {
 		job.setOutputValueClass(Text.class);
 		job.setOutputFormatClass(TextOutputFormat.class);
 		job.setInputFormatClass(TextInputFormat.class);
-		FileInputFormat.addInputPaths(job, args[0]);
+		FileInputFormat.addInputPaths(job, args[0]);   //input !!!!!!!
 		MultipleOutputs.addNamedOutput(job, "byHook", TextOutputFormat.class,
 				Text.class, Text.class);
 		MultipleOutputs.addNamedOutput(job, "byPattern", TextOutputFormat.class,
 				Text.class, Text.class);
-		Path hfwAndHooks = new Path("output/step3/[^_]*");
+		Path hfwAndHooks = new Path(args[1]+"[^_]*");  //!!!!!!!!!! input
 		FileSystem fs = FileSystem.get(job.getConfiguration());
 		FileStatus[] list = fs.globStatus(hfwAndHooks);  //TODO s3 is object 
 		for (FileStatus status : list) {
 			job.addCacheFile(status.getPath().toUri());
 		}
-		FileOutputFormat.setOutputPath(job, new Path(args[1]));		  
+		FileOutputFormat.setOutputPath(job, new Path(args[2]));		  
 		System.exit(job.waitForCompletion(true) ? 0 : 1);
 
 	}

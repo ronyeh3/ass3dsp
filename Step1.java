@@ -58,8 +58,11 @@ public class Step1 {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		System.load("C:/Users/Tamir/Desktop/lzo2.dll");
-		System.setProperty("hadoop.home.dir", "C:/hadoop-2.6.2");
+//		System.load("C:/Users/Tamir/Desktop/lzo2.dll");
+//		System.setProperty("hadoop.home.dir", "C:/hadoop-2.6.2");
+		
+		System.load("C:/Users/RONlptp/eclipse-workspace/ass2localRunner/lib/lzo2.dll");
+		System.setProperty("hadoop.home.dir", "E:\\hadoop-2.6.2");
 		Configuration conf = new Configuration();
 		Job job = new Job(conf, "5Grams Aggregator");
 		job.setJarByClass(Step1.class);

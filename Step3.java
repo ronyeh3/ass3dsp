@@ -21,8 +21,9 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 public class Step3 {
 
-	// This step extract Hook Words & HighFrequency Words (HFW)
+	// This step extract Hook Words & HighFrequency Words (HFW) from word count
 	// Parameters Fc, Fh, Fb
+	
 	public static class MapperClassWordCounter5Gram extends Mapper<LongWritable, Text, Text, Text> {
 		private static final int Fc = 2500;				// Article: 100-5000
 		private static final int Fh = 50;				// Article: 10-100
@@ -77,8 +78,12 @@ public class Step3 {
 	}
 
 	public static void main(String[] args) throws Exception {
-		System.load("C:/Users/Tamir/Desktop/lzo2.dll");
-		System.setProperty("hadoop.home.dir", "C:/hadoop-2.6.2");
+//		System.load("C:/Users/Tamir/Desktop/lzo2.dll");
+//		System.setProperty("hadoop.home.dir", "C:/hadoop-2.6.2");
+		
+		System.load("C:/Users/RONlptp/eclipse-workspace/ass2localRunner/lib/lzo2.dll");
+		System.setProperty("hadoop.home.dir", "E:\\hadoop-2.6.2");
+		
 		Configuration conf = new Configuration();
 		Job job = new Job(conf, "HFW & Hook Words Counter");
 		job.setJarByClass(Step1.class);
