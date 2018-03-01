@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,13 +30,14 @@ import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.hadoop.io.LongWritable;
 
 
 public class Step5 {
 
-
+  private final static int S = 2/3;
 	public static void main(String[] args) throws Exception {
 
 		FileInputStream fstream = new FileInputStream(args[0]);
@@ -73,28 +75,64 @@ public class Step5 {
 			}
 
 		}
-		//BufferedWriter out = new BufferedWriter(new FileWriter("output/step5/out.txt"));
-		//out.write(gson.toJson(hooksAndClusters));
-		
+		BufferedWriter out = new BufferedWriter(new FileWriter("output/step5/outbefor.txt"));
+		out.write(gson.toJson(hooksAndClusters));
+
 		// Second
+                 //hook          //targets   //patterns
+		for(Entry<String, HashMap<String, List<String>>> hookANDtargetPattens : hooksAndClusters.entrySet()) {
+
+			Iterator<Entry<String, List<String>>> innerIterator = hookANDtargetPattens.getValue().entrySet().iterator();
+			//now i have iterator for target and patterns for specific hook 
+			while (innerIterator.hasNext()) {
+				Map.Entry<String, List<String>> curr = innerIterator.next();
+				if(innerIterator.hasNext()) {
+					Map.Entry<String, List<String>> next = innerIterator.next();
+					if (shouldmerge(curr.getValue(), next.getValue())) { // if true merge and delete smaller
+                         curr.getValue().addAll(next.getValue());
+                         hookANDtargetPattens.getValue().remove(next.getKey());
+						innerIterator = hookANDtargetPattens.getValue().entrySet().iterator();
+					}
+				}
+			}
+
+		}
 		
-		Iterator it = hooksAndClusters.entrySet().iterator();
-	    while (it.hasNext()) {
-	        Map.Entry<String, HashMap<String, List<String>>> currentHookAndClusters = (Entry<String, HashMap<String, List<String>>>)it.next();
-	        Iterator innerIterator = currentHookAndClusters.getValue().entrySet().iterator();
-	        while (innerIterator.hasNext()) {
-	        	next
-	        	
-	        	shouldmerge(curr, next)
-	        	
-		        <Target, List<Patterns>>
-	        	
-	        	Iterator innerIterator = currentHookAndClusters.getValue().entrySet().iterator();
-	        	if (shouldMerge(i))
-	        }
-	        
-	        
-	    }
+		BufferedWriter out2 = new BufferedWriter(new FileWriter("output/step5/outafter.txt"));
+		Type type = new TypeToken<HashMap<String,HashMap<String, List<String>>>>(){}.getType();
+		out2.write(gson.toJson(hooksAndClusters,type));
+		out2.close();
+	}
+
+	private static boolean shouldmerge(List<String> curr, List<String> next) {
+		List<String> big;
+		List<String> small;
+		
+		int denominator;
+		int numemenator;
+		//if small\big such that 2\3 share same patterns - merge
+		if( curr.size() < next.size()) {
+			big = next;
+			small  = curr;
+			numemenator = 0;		
+		}
+		else {                        //   2 = comons    2
+			big = curr;             //    3 not comon  5-2
+			small  = next;
+			numemenator = 0;
+		}
+    
+		for(String pattern: small)
+			if(big.contains(pattern))
+				numemenator++;
+				
+         denominator= big.size() + small.size() - numemenator;
+
+         if( numemenator /  denominator < S) 
+        	 return false;
+         
+		return true; 
+
 
 	}
 }
