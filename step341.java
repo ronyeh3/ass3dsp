@@ -34,8 +34,10 @@ import com.google.gson.reflect.TypeToken;
 
 import org.apache.hadoop.io.LongWritable;
 
+
 //remove pattern that appers in only 1 curpuse
 public class step341 {
+	private static final int S = 2/3;
 
 	public static void main(String[] args) throws Exception {
 		Gson gson = new Gson();
@@ -89,37 +91,78 @@ public class step341 {
 				}
 				curr.setValue(newListOfPatterns);
 
-
-
-
 			}
 
 
 		}
 		//Type type2 = new TypeToken<HashMap<String,HashMap<String, Pair<String,Integer>>>>(){}.getType();
-		
-		
+
+
 		//HashMap<String,HashMap<String, Pair<String,Integer>>> hooksAndClusters2 
 
-		BufferedWriter out2 = new BufferedWriter(new FileWriter("output/step342/outbefor.txt"));
-		out2.write(gson.toJson(hooksAndClusters));
-		out2.close();
+		//		BufferedWriter out2 = new BufferedWriter(new FileWriter("output/step342/outbefor.txt"));
+		//		out2.write(gson.toJson(hooksAndClusters));
+		//		out2.close();
+		//target   //pattern //unconfirmed/core
+		Pair<String,Entry<String,List<Pair<String,Integer>>>> minimalUnconfirmedCluster;
+		while ((minimalUnconfirmedCluster = getMinimalUnconfirmedCluster(hooksAndClusters)) != null) {
+
+			for(Entry<String, HashMap<String, Object>> hookANDtargetPatterns : hooksAndClusters.entrySet()) {
+				if (hookANDtargetPatterns.getKey().equals(minimalUnconfirmedCluster.getFirst()))
+					continue;
+
+				Iterator<Entry<String, Object>> innerIterator = hookANDtargetPatterns.getValue().entrySet().iterator();
+				while (innerIterator.hasNext()) {
+					Map.Entry<String, Object> curr = innerIterator.next();
+					if(shouldmerge((List<Pair<String,Integer>>)curr.getValue(), minimalUnconfirmedCluster.getSecond().getValue())) {
+
+					}
+
+
+
+				}
+			}
+		}
 
 	}
-}
+
+	public static boolean shouldmerge(List<Pair<String, Integer>> c2, List<Pair<String, Integer>> c1) {
+		String c1Patt, c2Patt;
+		boolean allCoresAreShared = true;
+		int denominator;
+		int numemenator = 0;		
+		//if small\big such that 2\3 share same patterns - merge
+
+		// we want to merge c1 and c2 if they have 2/3 of their patterns shared AND all c2 cores are shared.
+
+		for(Pair<String,Integer> c2Pattern: c2) {
+			c2Patt = (String) c2Pattern.getFirst();
+			if (c2Pattern.getSecond() == 1) {
+				allCoresAreShared = false;
+			}
+			for (Pair<String,Integer> c1Pattern : c1){
+				c1Patt = (String) c1Pattern.getFirst();
+				if(c1Patt.equals(c2Patt)) {
+					numemenator++;
+					allCoresAreShared = true;
+				}
+			}
+			if (!allCoresAreShared) {
+				return false;
+			}
+		}
+			//TODO Check how we should calculate the percentage of shared. From the minimal list or the total num of elements.
+			denominator = c1.size() + c2.size() - numemenator;
+			if( numemenator /  denominator < S) 
+				return false;
+
+			return true; 
+
+		}
+
+		private static Pair<String, Entry<String, List<Pair<String, Integer>>>> getMinimalUnconfirmedCluster(HashMap<String, HashMap<String, Object>> hooksAndClusters) {
 
 
-
-
-
-
-//			for (String pair : splittedPatternsTargets) {
-//				currPatternAndTarget = pair.split("##");
-//				pattern = currPatternAndTarget[0];
-//				target = currPatternAndTarget[1];
-//				if (currHookHashMap.containsKey(target)) {
-//					currHookHashMap.get(target).add(pattern);
-//				}
-//				else {
-//					currHookHashMap.put(target, new ArrayList<String>());
-//					currHookHashMap.get(target).add(pattern);
+			return null;
+		}
+	}
