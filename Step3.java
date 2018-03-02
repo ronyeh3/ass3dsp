@@ -29,13 +29,22 @@ public class Step3 {
 		private static final int Fh = 50;				// Article: 10-100
 		private static final int Fb = 25;				// Article: 1-50
 		private static final int maxHookWords = 1000;	// TODO Article: 100-1000 (N).    NEED TO CHECK WHY! Currently unused.
+		
+		private static final int limiter = 5; 
+		private static  int counter = 0;
+		
 		private int occurences;
 		private String classification;
 		private String valueAsString;
 		private String[] splittedValue;
 		@Override
+		
+		
 		public void map(LongWritable key, Text value, Context context) throws IOException,  InterruptedException {
-			classification = "";
+			if (  (counter= ((counter+1)%limiter) ) !=0 )
+				return;
+			
+			classification = "";   // or hook or hfw
 			valueAsString = value.toString();
 			splittedValue = valueAsString.split("\t");
 			occurences = Integer.parseInt(splittedValue[1]);
