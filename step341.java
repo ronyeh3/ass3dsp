@@ -38,7 +38,7 @@ import org.apache.hadoop.io.LongWritable;
 
 //remove pattern that appers in only 1 curpuse
 public class step341 {
-	private static final int S = 2/3;
+	private static final float S = (float) 2/3;
 
 	public static void main(String[] args) throws Exception {
 		Gson gson = new Gson();
@@ -76,9 +76,7 @@ public class step341 {
 			}
 		}
 
-		//		BufferedWriter out2 = new BufferedWriter(new FileWriter("output/step341/outbefor.txt"));
-		//		out2.write(gson.toJson(hooksAndClusters,type));
-		//		out2.close();
+
 
 
 		for(Entry<String, HashMap<String, Object>> hookANDtargetPatterns : hooksAndClusters.entrySet()) {
@@ -105,21 +103,23 @@ public class step341 {
 		//		out2.write(gson.toJson(hooksAndClusters));
 		//		out2.close();
 		//target   //pattern //unconfirmed/core
+		System.out.println("Searching for minimal unconfirmed");
 		Pair<String,Entry<String,List<Pair<String,Integer>>>> minimalUnconfirmedCluster;
 		while ((minimalUnconfirmedCluster = getMinimalUnconfirmedCluster(hooksAndClusters)) != null) {
-
+			System.out.println("Got a minimal unconfirmed");
 			for(Entry<String, HashMap<String, Object>> hookANDtargetPatterns : hooksAndClusters.entrySet()) {
 				if (hookANDtargetPatterns.getKey().equals(minimalUnconfirmedCluster.getFirst()))
 					continue;
-
 				Iterator<Entry<String, Object>> innerIterator = hookANDtargetPatterns.getValue().entrySet().iterator();
 				while (innerIterator.hasNext()) {
 					Map.Entry<String, Object> curr = innerIterator.next();
 					if(shouldmerge(minimalUnconfirmedCluster.getSecond().getValue(), (List<Pair<String,Integer>>)curr.getValue())) {
+						System.out.println("Decided to merge!!");
 						mergeListPatternClusters(minimalUnconfirmedCluster.getSecond().getValue(), (List<Pair<String,Integer>>)curr.getValue());
 						hookANDtargetPatterns.getValue().remove(curr.getKey());
 						innerIterator = hookANDtargetPatterns.getValue().entrySet().iterator();
 					}
+
 				}
 			}
 			if (isStillUnconfirmed(minimalUnconfirmedCluster)) { // step 4 in the algorithm : is c1 still unconfirmed? if yes, delete it
@@ -128,6 +128,13 @@ public class step341 {
 				hooksAndClusters.get(hookWord).remove(targetWord);
 			}
 		}
+
+
+		BufferedWriter out2 = new BufferedWriter(new FileWriter("output/step34c/outbefor.txt"));
+		out2.write(gson.toJson(hooksAndClusters,type));
+		out2.close();
+
+
 
 	}
 
@@ -139,14 +146,17 @@ public class step341 {
 			}
 		}
 		return true;
-		
+
 	}
 
 	private static void mergeListPatternClusters(List<Pair<String, Integer>> c1, List<Pair<String, Integer>> c2) {
 		String c1Patt, c2Patt;
-		for(Pair<String,Integer> c2Pattern: c2) {
+		Pair<String,Integer> c1Pattern, c2Pattern;
+		for (int i=0 ; i<c2.size(); i++) {
+			c2Pattern = c2.get(i);
 			c2Patt = (String) c2Pattern.getFirst();
-			for (Pair<String,Integer> c1Pattern : c1){
+			for (int j=0 ; j<c1.size() ; j++) {
+				c1Pattern = c1.get(j);
 				c1Patt = (String) c1Pattern.getFirst();
 				if(c1Patt.equals(c2Patt)) {
 					c1Pattern.setSecond(1);
@@ -157,24 +167,28 @@ public class step341 {
 				}
 			}
 		}
-		
+
 	}
 
 	public static boolean shouldmerge(List<Pair<String, Integer>> c1, List<Pair<String, Integer>> c2) {
 		String c1Patt, c2Patt;
 		boolean allCoresAreShared = true;
-		int denominator;
-		int numerator = 0;		
+		float denominator;
+		float numerator = 0;	
+		Pair<String,Integer> c2Pattern;
+		Pair<String,Integer> c1Pattern;
 		//if small\big such that 2\3 share same patterns - merge
 
 		// we want to merge c1 and c2 if they have 2/3 of their patterns shared AND all c2 cores are shared.
 
-		for(Pair<String,Integer> c2Pattern: c2) {
+		for (int i=0 ; i<c2.size() ; i++) {
+			c2Pattern = c2.get(i);
 			c2Patt = (String) c2Pattern.getFirst();
 			if (c2Pattern.getSecond() == 1) {
 				allCoresAreShared = false;
 			}
-			for (Pair<String,Integer> c1Pattern : c1){
+			for (int j=0 ; j<c1.size() ; j++) {
+				c1Pattern = c1.get(j);
 				c1Patt = (String) c1Pattern.getFirst();
 				if(c1Patt.equals(c2Patt)) {
 					numerator++;
@@ -187,7 +201,8 @@ public class step341 {
 		}
 		//TODO Check how we should calculate the percentage of shared. From the minimal list or the total num of elements.
 		denominator = c1.size() + c2.size() - numerator;
-		if( numerator /  denominator < S) 
+		System.out.println((float) numerator/denominator);
+		if((float) numerator/denominator < S) 
 			return false;
 
 		return true; 
@@ -198,7 +213,7 @@ public class step341 {
 		boolean allPatternsUnconfirmed;
 		Pair<String,Integer> currPattern;
 		Pair<String, Entry<String, List<Pair<String, Integer>>>> ans = null;
-		
+
 		for(Entry<String, HashMap<String, Object>> hookANDtargetPatterns : hooksAndClusters.entrySet()) {
 			for(Entry<String, Object> targetANDPatterns : hookANDtargetPatterns.getValue().entrySet()) {
 				List<Pair<String,Integer>> currPatternList = (List<Pair<String,Integer>>) targetANDPatterns.getValue();

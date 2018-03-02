@@ -37,7 +37,7 @@ import org.apache.hadoop.io.LongWritable;
 
 public class Step5 {
 
-  private final static int S = 2/3;
+  private final static float S = (float) 2/3;
 	public static void main(String[] args) throws Exception {
 
 		FileInputStream fstream = new FileInputStream(args[0]);
@@ -108,8 +108,8 @@ public class Step5 {
 		List<String> big;
 		List<String> small;
 		
-		int denominator;
-		int numerator;
+		float denominator;
+		float numerator;
 		//if small\big such that 2\3 share same patterns - merge
 		if( curr.size() < next.size()) {
 			big = next;
