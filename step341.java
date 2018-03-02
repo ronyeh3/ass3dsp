@@ -57,7 +57,7 @@ public class step341 {
 		FileInputStream fstream2 = new FileInputStream(args[1]);
 		BufferedReader br2 = new BufferedReader(new InputStreamReader(fstream2));
 
-		while ((strLine = br2.readLine()) != null) {
+		while ((strLine = br2.readLine()) != null) {    //Remove all patterns originating from a single hook corpus only
 			if (strLine.length() < 2)
 				continue;
 			splittedLine = strLine.split("\\t");
@@ -66,9 +66,6 @@ public class step341 {
 			if (splittedtargetbyHook.length > 1)
 				continue;
 			String singlehookword = splittedtargetbyHook[0];
-
-
-
 			Iterator<Entry<String, Object>> innerIterator = hooksAndClusters.get(singlehookword).entrySet().iterator();
 			//now i have iterator for target and patterns for specific hook 
 			while (innerIterator.hasNext()) {
@@ -78,7 +75,7 @@ public class step341 {
 
 
 
-
+///mark all as unconfirmed
 		for(Entry<String, HashMap<String, Object>> hookANDtargetPatterns : hooksAndClusters.entrySet()) {
 			Iterator<Entry<String, Object>> innerIterator = hookANDtargetPatterns.getValue().entrySet().iterator();
 			while (innerIterator.hasNext()) {
@@ -94,23 +91,26 @@ public class step341 {
 
 
 		}
+
+
+
 		//Type type2 = new TypeToken<HashMap<String,HashMap<String, Pair<String,Integer>>>>(){}.getType();
-
-
-
-		//		BufferedWriter out2 = new BufferedWriter(new FileWriter("output/step342/outbefor.txt"));
-		//		out2.write(gson.toJson(hooksAndClusters));
-		//		out2.close();
+				BufferedWriter out2 = new BufferedWriter(new FileWriter("output/step341/outbef1.txt"));
+				out2.write(gson.toJson(hooksAndClusters));
+				out2.close();
 		
-		
+		//3.4.3
 		//target   //pattern //unconfirmed/core
 		System.out.println("Searching for minimal unconfirmed");
 		Pair<String,Entry<String,List<Pair<String,Integer>>>> minimalUnconfirmedCluster;
 		while ((minimalUnconfirmedCluster = getMinimalUnconfirmedCluster(hooksAndClusters)) != null) {
-			System.out.println("Got a minimal unconfirmed");
+			//System.out.println("Got a minimal unconfirmed");
 			for(Entry<String, HashMap<String, Object>> hookANDtargetPatterns : hooksAndClusters.entrySet()) {
-				if (hookANDtargetPatterns.getKey().equals(minimalUnconfirmedCluster.getFirst()))
+				if (hookANDtargetPatterns.getKey().equals(minimalUnconfirmedCluster.getFirst())) {
+					
+					//System.out.println("hiiiiiiiiiiiiiiiiiiiiii");
 					continue;
+				}
 				Iterator<Entry<String, Object>> innerIterator = hookANDtargetPatterns.getValue().entrySet().iterator();
 				while (innerIterator.hasNext()) {
 					Map.Entry<String, Object> curr = innerIterator.next();
@@ -119,6 +119,8 @@ public class step341 {
 						System.out.println("hookword1: "+minimalUnconfirmedCluster.getFirst() + "  hookword2: "+hookANDtargetPatterns.getKey());
 						System.out.println("targetword1: "+minimalUnconfirmedCluster.getSecond().getKey()+" t argetword2: "+curr.getKey());
 						mergeListPatternClusters(minimalUnconfirmedCluster.getSecond().getValue(), (List<Pair<String,Integer>>)curr.getValue());
+						
+						
 						hookANDtargetPatterns.getValue().remove(curr.getKey());
 						innerIterator = hookANDtargetPatterns.getValue().entrySet().iterator();
 					}
@@ -129,13 +131,14 @@ public class step341 {
 				String hookWord = minimalUnconfirmedCluster.getFirst();
 				String targetWord = minimalUnconfirmedCluster.getSecond().getKey(); // the name of the cluster to delete
 				hooksAndClusters.get(hookWord).remove(targetWord);
+				System.out.println("deletinggggggggg : "+ targetWord);
 			}
 		}
 
 
-		BufferedWriter out2 = new BufferedWriter(new FileWriter("output/step34c/outbefor.txt"));
-		out2.write(gson.toJson(hooksAndClusters,type));
-		out2.close();
+		BufferedWriter out22 = new BufferedWriter(new FileWriter("output/step341/outbefor2.txt"));
+		out22.write(gson.toJson(hooksAndClusters));
+		out22.close();
 
 
 
@@ -153,6 +156,10 @@ public class step341 {
 	}
 
 	private static void mergeListPatternClusters(List<Pair<String, Integer>> c1, List<Pair<String, Integer>> c2) {
+		
+		List<Pair<String, Integer>> confiremd = new ArrayList<Pair<String, Integer>>();
+		
+		
 		String c1Patt, c2Patt;
 		Pair<String,Integer> c1Pattern, c2Pattern;
 		for (int i=0 ; i<c2.size(); i++) {
@@ -163,14 +170,16 @@ public class step341 {
 				c1Patt = (String) c1Pattern.getFirst();
 				if(c1Patt.equals(c2Patt)) {
 					c1Pattern.setSecond(1);
-				}
-				else {
-					c2Pattern.setSecond(0);
-					c1.add(c2Pattern);
+					c2.remove(c2Pattern);
+					//change anything else to unconfiermed
 				}
 			}
 		}
-
+		
+		//add to list c1 all items from c2 that are not confiremed
+		  c2.forEach((a)->a.setSecond(0));
+         c1.addAll(c2);
+         System.out.println("rrrrrrrrrrr");
 	}
 
 	public static boolean shouldmerge(List<Pair<String, Integer>> c1, List<Pair<String, Integer>> c2) {
@@ -204,8 +213,9 @@ public class step341 {
 		}
 		//TODO Check how we should calculate the percentage of shared. From the minimal list or the total num of elements.
 		denominator = c1.size() + c2.size() - numerator;
-		System.out.println((float) numerator/denominator);
-		if((float) numerator/denominator < S) 
+		float ans =  numerator/denominator;
+		//System.out.println(ans);
+		if(ans < S) 
 			return false;
 
 		return true; 
@@ -216,7 +226,7 @@ public class step341 {
 		boolean allPatternsUnconfirmed;
 		Pair<String,Integer> currPattern;
 		Pair<String, Entry<String, List<Pair<String, Integer>>>> ans = null;
-
+			//hoook        //target       //patternim with status
 		for(Entry<String, HashMap<String, Object>> hookANDtargetPatterns : hooksAndClusters.entrySet()) {
 			for(Entry<String, Object> targetANDPatterns : hookANDtargetPatterns.getValue().entrySet()) {
 				List<Pair<String,Integer>> currPatternList = (List<Pair<String,Integer>>) targetANDPatterns.getValue();
@@ -226,16 +236,19 @@ public class step341 {
 						currPattern = currPatternList.get(i);
 						if (currPattern.getSecond() == 1) {
 							allPatternsUnconfirmed = false; // caught confirmed (core) pattern, not all patterns are unconfirmed, break.
-							break;
+							continue;
 						}
 						// if we reached here we found a new minimal unconfirmed cluster
 						minimal = currPatternList.size();
 						ans = new Pair(hookANDtargetPatterns.getKey(), targetANDPatterns);
+						
 					}
 				}
 			}
 		}
 		// at this point, if we found a miminalUnconfirmedCluster it set in the variable ans, otherwise ans is null
+		System.out.println(ans.getSecond().getValue());
 		return ans;
+		
 	}
 }

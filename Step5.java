@@ -51,14 +51,16 @@ public class Step5 {
 		String target, pattern;
 		Gson gson = new Gson();
 
-		while ((strLine = br.readLine()) != null) {
+		
+		///first - read by-paterns and group togheter
+		while ((strLine = br.readLine()) != null) {   
 			if (strLine.length() < 2)
 				continue;
 			splittedLine = strLine.split("\\t");
 			hookWord = splittedLine[0];
 			hooksAndClusters.put(hookWord, new HashMap<String,List<String>>());
-			HashMap<String, List<String>> currHookHashMap = hooksAndClusters.get(hookWord);
-			System.out.println(hookWord);
+			HashMap<String, List<String>> currHookHashMap = hooksAndClusters.get(hookWord);// target and arry of patterns
+
 			patternsAndTargets = splittedLine[1];
 			splittedPatternsTargets = patternsAndTargets.split("\\|");
 			for (String pair : splittedPatternsTargets) {
@@ -67,7 +69,6 @@ public class Step5 {
 				target = currPatternAndTarget[1];
 				if (currHookHashMap.containsKey(target)) {
 					if (!currHookHashMap.get(target).contains(pattern))
-						if (!currHookHashMap.get(target).contains(pattern))
 							currHookHashMap.get(target).add(pattern);
 				}
 				else {
@@ -77,9 +78,11 @@ public class Step5 {
 			}
 
 		}
-		//		BufferedWriter out = new BufferedWriter(new FileWriter("output/step5/outbefore.txt"));
-		//		out.write(gson.toJson(hooksAndClusters));
-
+				BufferedWriter out = new BufferedWriter(new FileWriter("output/step5/outbefore.txt"));
+				out.write(gson.toJson(hooksAndClusters));
+				out.close();
+				
+				
 		// Second
 		//hook          //targets   //patterns
 		for(Entry<String, HashMap<String, List<String>>> hookANDtargetPattens : hooksAndClusters.entrySet()) {
@@ -91,10 +94,11 @@ public class Step5 {
 				if(innerIterator.hasNext()) {
 					Map.Entry<String, List<String>> next = innerIterator.next();
 					if (shouldmerge(curr.getValue(), next.getValue())) { // if true merge and delete smaller
+						curr.getValue().removeAll(next.getValue());
 						curr.getValue().addAll(next.getValue());
 						hookANDtargetPattens.getValue().remove(next.getKey());
 						innerIterator = hookANDtargetPattens.getValue().entrySet().iterator();
-					}
+					}      ///chaingins somntige while iterate over it , maybe not good
 				}
 			}
 
