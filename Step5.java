@@ -67,7 +67,8 @@ public class Step5 {
 				target = currPatternAndTarget[1];
 				if (currHookHashMap.containsKey(target)) {
 					if (!currHookHashMap.get(target).contains(pattern))
-						currHookHashMap.get(target).add(pattern);
+						if (!currHookHashMap.get(target).contains(pattern))
+							currHookHashMap.get(target).add(pattern);
 				}
 				else {
 					currHookHashMap.put(target, new ArrayList<String>());
