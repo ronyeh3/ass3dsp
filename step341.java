@@ -116,8 +116,6 @@ public class step341 {
 					Map.Entry<String, Object> curr = innerIterator.next();
 					if(shouldmerge(minimalUnconfirmedCluster.getSecond().getValue(), (List<Pair<String,Integer>>)curr.getValue())) {
 						System.out.println("Decided to merge!!");
-						System.out.println("hookword1: "+minimalUnconfirmedCluster.getFirst() + "  hookword2: "+hookANDtargetPatterns.getKey());
-						System.out.println("targetword1: "+minimalUnconfirmedCluster.getSecond().getKey()+" t argetword2: "+curr.getKey());
 						mergeListPatternClusters(minimalUnconfirmedCluster.getSecond().getValue(), (List<Pair<String,Integer>>)curr.getValue());
 						hookANDtargetPatterns.getValue().remove(curr.getKey());
 						innerIterator = hookANDtargetPatterns.getValue().entrySet().iterator();
