@@ -37,7 +37,7 @@ import org.apache.hadoop.io.LongWritable;
 
 public class Step5 {
 
-  private final static float S = (float) 2/3;
+	private final static float S = (float) 2/3;
 	public static void main(String[] args) throws Exception {
 
 		FileInputStream fstream = new FileInputStream(args[0]);
@@ -66,7 +66,8 @@ public class Step5 {
 				pattern = currPatternAndTarget[0];
 				target = currPatternAndTarget[1];
 				if (currHookHashMap.containsKey(target)) {
-					currHookHashMap.get(target).add(pattern);
+					if (!currHookHashMap.get(target).contains(pattern))
+						currHookHashMap.get(target).add(pattern);
 				}
 				else {
 					currHookHashMap.put(target, new ArrayList<String>());
@@ -75,11 +76,11 @@ public class Step5 {
 			}
 
 		}
-		BufferedWriter out = new BufferedWriter(new FileWriter("output/step5/outbefore.txt"));
-		out.write(gson.toJson(hooksAndClusters));
+		//		BufferedWriter out = new BufferedWriter(new FileWriter("output/step5/outbefore.txt"));
+		//		out.write(gson.toJson(hooksAndClusters));
 
 		// Second
-                 //hook          //targets   //patterns
+		//hook          //targets   //patterns
 		for(Entry<String, HashMap<String, List<String>>> hookANDtargetPattens : hooksAndClusters.entrySet()) {
 
 			Iterator<Entry<String, List<String>>> innerIterator = hookANDtargetPattens.getValue().entrySet().iterator();
@@ -89,15 +90,15 @@ public class Step5 {
 				if(innerIterator.hasNext()) {
 					Map.Entry<String, List<String>> next = innerIterator.next();
 					if (shouldmerge(curr.getValue(), next.getValue())) { // if true merge and delete smaller
-                         curr.getValue().addAll(next.getValue());
-                         hookANDtargetPattens.getValue().remove(next.getKey());
+						curr.getValue().addAll(next.getValue());
+						hookANDtargetPattens.getValue().remove(next.getKey());
 						innerIterator = hookANDtargetPattens.getValue().entrySet().iterator();
 					}
 				}
 			}
 
 		}
-		
+
 		BufferedWriter out2 = new BufferedWriter(new FileWriter("output/step5/outafter.txt"));
 		Type type = new TypeToken<HashMap<String,HashMap<String, List<String>>>>(){}.getType();
 		out2.write(gson.toJson(hooksAndClusters,type));
@@ -107,7 +108,7 @@ public class Step5 {
 	private static boolean shouldmerge(List<String> curr, List<String> next) {
 		List<String> big;
 		List<String> small;
-		
+
 		float denominator;
 		float numerator;
 		//if small\big such that 2\3 share same patterns - merge
@@ -121,16 +122,16 @@ public class Step5 {
 			small  = next;
 			numerator = 0;
 		}
-    
+
 		for(String pattern: small)
 			if(big.contains(pattern))
 				numerator++;
-				
-         denominator= big.size() + small.size() - numerator;
 
-         if( numerator /  denominator < S) 
-        	 return false;
-         
+		denominator = big.size() + small.size() - numerator;
+
+		if (numerator/denominator < S) 
+			return false;
+
 		return true; 
 
 
