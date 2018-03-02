@@ -97,11 +97,12 @@ public class step341 {
 		//Type type2 = new TypeToken<HashMap<String,HashMap<String, Pair<String,Integer>>>>(){}.getType();
 
 
-		//HashMap<String,HashMap<String, Pair<String,Integer>>> hooksAndClusters2 
 
 		//		BufferedWriter out2 = new BufferedWriter(new FileWriter("output/step342/outbefor.txt"));
 		//		out2.write(gson.toJson(hooksAndClusters));
 		//		out2.close();
+		
+		
 		//target   //pattern //unconfirmed/core
 		System.out.println("Searching for minimal unconfirmed");
 		Pair<String,Entry<String,List<Pair<String,Integer>>>> minimalUnconfirmedCluster;
