@@ -29,6 +29,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
+import com.amazonaws.services.opsworks.model.App;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -124,7 +125,7 @@ public class step341 {
 			if (isStillUnconfirmed(minimalUnconfirmedCluster)) { // step 4 in the algorithm : is c1 still unconfirmed? if yes, delete it
 				String hookWord = minimalUnconfirmedCluster.getFirst();
 				String targetWord = minimalUnconfirmedCluster.getSecond().getKey(); // the name of the cluster to delete
-				hooksAndClusters.get(minimalUnconfirmedCluster.getFirst()).remove(hookWord);
+				hooksAndClusters.get(hookWord).remove(targetWord);
 			}
 		}
 
@@ -163,7 +164,7 @@ public class step341 {
 		String c1Patt, c2Patt;
 		boolean allCoresAreShared = true;
 		int denominator;
-		int numemenator = 0;		
+		int numerator = 0;		
 		//if small\big such that 2\3 share same patterns - merge
 
 		// we want to merge c1 and c2 if they have 2/3 of their patterns shared AND all c2 cores are shared.
@@ -176,7 +177,7 @@ public class step341 {
 			for (Pair<String,Integer> c1Pattern : c1){
 				c1Patt = (String) c1Pattern.getFirst();
 				if(c1Patt.equals(c2Patt)) {
-					numemenator++;
+					numerator++;
 					allCoresAreShared = true;
 				}
 			}
@@ -185,16 +186,38 @@ public class step341 {
 			}
 		}
 		//TODO Check how we should calculate the percentage of shared. From the minimal list or the total num of elements.
-		denominator = c1.size() + c2.size() - numemenator;
-		if( numemenator /  denominator < S) 
+		denominator = c1.size() + c2.size() - numerator;
+		if( numerator /  denominator < S) 
 			return false;
 
 		return true; 
 	}
 
 	private static Pair<String, Entry<String, List<Pair<String, Integer>>>> getMinimalUnconfirmedCluster(HashMap<String, HashMap<String, Object>> hooksAndClusters) {
-
-
-		return null;
+		int minimal = Integer.MAX_VALUE;
+		boolean allPatternsUnconfirmed;
+		Pair<String,Integer> currPattern;
+		Pair<String, Entry<String, List<Pair<String, Integer>>>> ans = null;
+		
+		for(Entry<String, HashMap<String, Object>> hookANDtargetPatterns : hooksAndClusters.entrySet()) {
+			for(Entry<String, Object> targetANDPatterns : hookANDtargetPatterns.getValue().entrySet()) {
+				List<Pair<String,Integer>> currPatternList = (List<Pair<String,Integer>>) targetANDPatterns.getValue();
+				if (currPatternList.size() < minimal) { // if the currlist is bigger than minimal, it is not a candidate
+					allPatternsUnconfirmed = true; // initializing
+					for (int i=0 ; i< currPatternList.size() && allPatternsUnconfirmed; i++) {
+						currPattern = currPatternList.get(i);
+						if (currPattern.getSecond() == 1) {
+							allPatternsUnconfirmed = false; // caught confirmed (core) pattern, not all patterns are unconfirmed, break.
+							break;
+						}
+						// if we reached here we found a new minimal unconfirmed cluster
+						minimal = currPatternList.size();
+						ans = new Pair(hookANDtargetPatterns.getKey(), targetANDPatterns);
+					}
+				}
+			}
+		}
+		// at this point, if we found a miminalUnconfirmedCluster it set in the variable ans, otherwise ans is null
+		return ans;
 	}
 }
