@@ -84,29 +84,29 @@ public class step7_42 {
 		public void map(LongWritable LongWritable, Text value, Context context) throws IOException,  InterruptedException {
 			String ngram = value.toString();
 			String[] splittedNgram = ngram.split("\\s+");
-			String firstBlessed, secondBlessed;
 			String[] blessedPairArr;
-			String ngram_x1x3x5_string = splittedNgram[0] + " " + splittedNgram[2] + " " + splittedNgram[4];
-
+			String firstBlessed, secondBlessed;
+			String currHit, totalHits="";
 			for (String blessedPair : blesed_words) {
 				blessedPairArr = blessedPair.split("\\t");
 				firstBlessed = blessedPairArr[0];
 				secondBlessed = blessedPairArr[1];
-				// if (x2,x4)=blessedPair
 				if (splittedNgram[1].equals(firstBlessed) && splittedNgram[3].equals(secondBlessed)) { 
-					//iterate all clusters and check if x1,x3,x5 are a pattern.
-					for (List<List<String>> currList : allClusters) {
-						for (List<String> currList1 : currList) {
-							for (String pattern : currList1) {
-								if (pattern.equals(ngram_x1x3x5_string)) {
-									
-								}
-									
+					if (ngramHasBlessedAndPattern(splittedNgram)) {
+
+						//here we need to iterate through all clusters and calculate hits
+						for (List<List<String>> currList : allClusters) {
+							for (List<String> currPatternList : currList) {
+								currHit = getHits(currPatternList, blessedPairArr);
+								totalHits += " "+currHit;
 							}
+
 						}
 					}
 				}
+				context.write(new Text(blessedPair), new Text(totalHits));
 			}
+
 
 
 			//			String[] ngramWords = ngram.split("\\s+");
@@ -130,82 +130,100 @@ public class step7_42 {
 
 
 		}  
-	}
+		private String getHits(List<String> currPatternList, String[] blessedPairArr) {
+			return null;
 
-
-	public static class ReducerClass extends Reducer<Text,Text,Text,Text> {
-		private MultipleOutputs<Text,Text> mos;
-
-		public void setup(Context context) {
-			mos = new MultipleOutputs<Text,Text>(context);
 		}
+		public boolean ngramHasBlessedAndPattern(String[] ngram) {
+			String firstBlessed, secondBlessed;
+			String[] blessedPairArr;
+			String ngram_w1w3w5_string = ngram[0] + " " + ngram[2] + " " + ngram[4];
+			for (List<List<String>> currList : allClusters) {
+				for (List<String> currList1 : currList) {
+					for (String pattern : currList1) {
+						if (pattern.equals(ngram_w1w3w5_string)) {
+							return true;
+						}
 
-		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException,  InterruptedException {
-			//			if (key.toString().charAt(1) == '1') {
-			//				String patternsAndTargets="";
-			//				String actualKey = key.toString().split("\t")[1];
-			//				for (Text value : values) {
-			//					patternsAndTargets += value.toString()+"|";
-			//				}
-			//				patternsAndTargets = patternsAndTargets.substring(0,patternsAndTargets.length());
-			//				mos.write("byHook", new Text(actualKey), new Text(patternsAndTargets));
-			//				mos.write("byHook", new Text(""), null);
-			//			}
-			//			else { // if (key.toString().charAt(1) == '2')
-			//				String hookWords="";
-			//				String actualKey = key.toString().split("\t")[1];
-			//				for (Text value : values) {
-			//					hookWords += value.toString()+"|";
-			//				}
-			//				hookWords = hookWords.substring(0,hookWords.length());
-			//				mos.write("byPattern", new Text(actualKey), new Text(hookWords));
-			//				mos.write("byPattern", new Text(""), null);
-			//			}
-			//		}
-			//		public void cleanup(Context context) throws IOException {
-			//			try {
-			//				mos.close();
-			//			} catch (InterruptedException e) {
-			//				e.printStackTrace();
-			//			}
+					}
+				}
+			}
+			return false;
 		}
 
 
-	}
+		public static class ReducerClass extends Reducer<Text,Text,Text,Text> {
+			private MultipleOutputs<Text,Text> mos;
 
-	public static void main(String[] args) throws Exception {
+			public void setup(Context context) {
+				mos = new MultipleOutputs<Text,Text>(context);
+			}
 
-		//		System.load("C:/Users/Tamir/Desktop/lzo2.dll");
-		//		System.setProperty("hadoop.home.dir", "C:/hadoop-2.6.2");
+			public void reduce(Text key, Iterable<Text> values, Context context) throws IOException,  InterruptedException {
+				//			if (key.toString().charAt(1) == '1') {
+				//				String patternsAndTargets="";
+				//				String actualKey = key.toString().split("\t")[1];
+				//				for (Text value : values) {
+				//					patternsAndTargets += value.toString()+"|";
+				//				}
+				//				patternsAndTargets = patternsAndTargets.substring(0,patternsAndTargets.length());
+				//				mos.write("byHook", new Text(actualKey), new Text(patternsAndTargets));
+				//				mos.write("byHook", new Text(""), null);
+				//			}
+				//			else { // if (key.toString().charAt(1) == '2')
+				//				String hookWords="";
+				//				String actualKey = key.toString().split("\t")[1];
+				//				for (Text value : values) {
+				//					hookWords += value.toString()+"|";
+				//				}
+				//				hookWords = hookWords.substring(0,hookWords.length());
+				//				mos.write("byPattern", new Text(actualKey), new Text(hookWords));
+				//				mos.write("byPattern", new Text(""), null);
+				//			}
+				//		}
+				//		public void cleanup(Context context) throws IOException {
+				//			try {
+				//				mos.close();
+				//			} catch (InterruptedException e) {
+				//				e.printStackTrace();
+				//			}
+			}
 
-		System.load("C:/Users/RONlptp/eclipse-workspace/ass2localRunner/lib/lzo2.dll");
-		System.setProperty("hadoop.home.dir", "E:\\hadoop-2.6.2");
 
-		Configuration conf = new Configuration();
-		Job job = new Job(conf);
-		job.setJarByClass(step7_42.class);
-		job.setMapperClass(MapperClass.class);
-		job.setReducerClass(ReducerClass.class);
-		job.setMapOutputKeyClass(Text.class);
-		job.setMapOutputValueClass(Text.class);
-		job.setOutputFormatClass(TextOutputFormat.class);
-		job.setOutputKeyClass(Text.class);
-		job.setOutputValueClass(Text.class);
-		job.setOutputFormatClass(TextOutputFormat.class);
-		job.setInputFormatClass(TextInputFormat.class);
-		FileInputFormat.addInputPaths(job, args[0]);   //input 5gram!!!!!!!
-		MultipleOutputs.addNamedOutput(job, "output", TextOutputFormat.class,
-				Text.class, Text.class);
-		Path bllessedAndClusters = new Path(args[1]+"[^_]*");  //!!!!!!!!!! input cache
-		FileSystem fs = FileSystem.get(job.getConfiguration());
-		FileStatus[] list = fs.globStatus(bllessedAndClusters);  //TODO s3 is object 
-		for (FileStatus status : list) {
-			job.addCacheFile(status.getPath().toUri());
 		}
-		FileOutputFormat.setOutputPath(job, new Path(args[2]));		  
-		System.exit(job.waitForCompletion(true) ? 0 : 1);
 
+		public static void main(String[] args) throws Exception {
+
+			//		System.load("C:/Users/Tamir/Desktop/lzo2.dll");
+			//		System.setProperty("hadoop.home.dir", "C:/hadoop-2.6.2");
+
+			System.load("C:/Users/RONlptp/eclipse-workspace/ass2localRunner/lib/lzo2.dll");
+			System.setProperty("hadoop.home.dir", "E:\\hadoop-2.6.2");
+
+			Configuration conf = new Configuration();
+			Job job = new Job(conf);
+			job.setJarByClass(step7_42.class);
+			job.setMapperClass(MapperClass.class);
+			job.setReducerClass(ReducerClass.class);
+			job.setMapOutputKeyClass(Text.class);
+			job.setMapOutputValueClass(Text.class);
+			job.setOutputFormatClass(TextOutputFormat.class);
+			job.setOutputKeyClass(Text.class);
+			job.setOutputValueClass(Text.class);
+			job.setOutputFormatClass(TextOutputFormat.class);
+			job.setInputFormatClass(TextInputFormat.class);
+			FileInputFormat.addInputPaths(job, args[0]);   //input 5gram!!!!!!!
+			MultipleOutputs.addNamedOutput(job, "output", TextOutputFormat.class,
+					Text.class, Text.class);
+			Path bllessedAndClusters = new Path(args[1]+"[^_]*");  //!!!!!!!!!! input cache
+			FileSystem fs = FileSystem.get(job.getConfiguration());
+			FileStatus[] list = fs.globStatus(bllessedAndClusters);  //TODO s3 is object 
+			for (FileStatus status : list) {
+				job.addCacheFile(status.getPath().toUri());
+			}
+			FileOutputFormat.setOutputPath(job, new Path(args[2]));		  
+			System.exit(job.waitForCompletion(true) ? 0 : 1);
+
+		}
 	}
-
-
 }
