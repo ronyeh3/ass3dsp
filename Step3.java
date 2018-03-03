@@ -20,7 +20,7 @@ import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 public class Step3 {
-
+// input 5 gram and wordcuont !!!! CHANGE
 	// This step extract Hook Words & HighFrequency Words (HFW) from word count
 	// Parameters Fc, Fh, Fb
 	

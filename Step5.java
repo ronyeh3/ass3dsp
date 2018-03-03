@@ -82,7 +82,7 @@ public class Step5 {
 				out.write(gson.toJson(hooksAndClusters));
 				out.close();
 				
-				
+	//merge per hook worde 2/3 common		 ? check for fix point	
 		// Second
 		//hook          //targets   //patterns
 		for(Entry<String, HashMap<String, List<String>>> hookANDtargetPattens : hooksAndClusters.entrySet()) {

@@ -23,10 +23,10 @@ import org.apache.hadoop.io.LongWritable;
  * input - step 1 :  5 gram just the words
  * input - step 3:the clasificains of the HFW and hooks
  */
-
+//ADD RESTRICRING OF CW
 
 public class Step4 {
-	static List<String> hfw = new ArrayList<String>();
+	static List<String> hfw = new ArrayList<String>();  // onegram!!!!!!!!!!
 	static List<String> hooks = new ArrayList<String>();
 
 
