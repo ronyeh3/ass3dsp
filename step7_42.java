@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -23,6 +24,7 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import com.google.gson.Gson;
 import com.google.gson.JsonStreamParser;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 
 import org.apache.hadoop.io.LongWritable;
 
@@ -46,13 +48,13 @@ public class step7_42 {
 			FileSystem fs = FileSystem.get(conf);
 			System.out.println("entring setup");
 			Path [] cacheFiles = context.getLocalCacheFiles();
+			System.out.println("HOW MANY FILES?   "+cacheFiles.length);
+
 			if((cacheFiles != null) && (cacheFiles.length >0)) {
 				for (Path cacheFile : cacheFiles) {
-					if (cacheFile.getName().charAt(0) == 'h') {
-						FSDataInputStream in = fs.open(cacheFile);
-						readFile(in, cacheFile.getName());
-						in.close();
-					}
+					FSDataInputStream in = fs.open(cacheFile);
+					readFile(in, cacheFile.getName());
+					in.close();
 				}
 			}
 			else {
@@ -62,21 +64,19 @@ public class step7_42 {
 
 		}
 		public void readFile(FSDataInputStream in, String filename) throws IOException {
-
 			if (filename.substring(0, 3).equals("las")) {  // clusters
 				BufferedReader br = new BufferedReader(new InputStreamReader(in));
-				JsonStreamParser jp = new JsonStreamParser(br);
-				Type type = new TypeToken<ArrayList<List<String>>>(){}.getType();
-				while(jp.hasNext()) {
-					allClusters.add(gson.fromJson(jp.next(), type));
-				}
+				JsonReader reader = new JsonReader(br);
+				Type type = new TypeToken<ArrayList<List<List<String>>>>(){}.getType();
+				allClusters = gson.fromJson(reader, type);
+
 			}
 			else {//bslessed
 				BufferedReader joinReader = new BufferedReader(new InputStreamReader(in, "UTF8"));
 				String line;
 				while ((line = joinReader.readLine()) != null) {
 					String words = line.toString();
-					blesed_words.add(words);  
+					blesed_words.add(words);
 				}
 
 			}
@@ -86,119 +86,112 @@ public class step7_42 {
 			String[] splittedNgram = ngram.split("\\s+");
 			String[] blessedPairArr;
 			String firstBlessed, secondBlessed;
-			String currHit, totalHits="";
-			for (String blessedPair : blesed_words) {
-				blessedPairArr = blessedPair.split("\\t");
-				firstBlessed = blessedPairArr[0];
-				secondBlessed = blessedPairArr[1];
-				if (splittedNgram[1].equals(firstBlessed) && splittedNgram[3].equals(secondBlessed)) { 
-					if (ngramHasBlessedAndPattern(splittedNgram)) {
+			String currHit, totalHits="";             
+			if (ngramAppearsAsPattern(splittedNgram)) {   ///////// the ngram (x1 x3 x5) appears as pattern somewhere (don't know if confirmed/unconfirmed)
+				for (String blessedPair : blesed_words) {
+					blessedPairArr = blessedPair.split("\\t");
+					firstBlessed = blessedPairArr[0].toLowerCase();
+					secondBlessed = blessedPairArr[1].toLowerCase();
+					if (splittedNgram[1].toLowerCase().equals(firstBlessed) && splittedNgram[3].toLowerCase().equals(secondBlessed)) { /// The x2 x4 of ngram is a blessed pair
 
 						//here we need to iterate through all clusters and calculate hits
-						for (List<List<String>> currList : allClusters) {
-							for (List<String> currPatternList : currList) {
-								currHit = getHits(currPatternList, blessedPairArr);
-								totalHits += " "+currHit;
-							}
-
+						for (List<List<String>> cluster : allClusters) {
+							currHit = getHits(cluster, blessedPairArr);
+							totalHits += " "+currHit;
 						}
-					}
-				}
-				context.write(new Text(blessedPair), new Text(totalHits));
-			}
-
-
-
-			//			String[] ngramWords = ngram.split("\\s+");
-			//			String target, pattern, hookword;
-			//			if (hfw.contains(ngramWords[0]) && hfw.contains(ngramWords[2]) && hfw.contains(ngramWords[4])){
-			//				if (hooks.contains(ngramWords[1])) {
-			//					hookword = ngramWords[1];
-			//					target = ngramWords[3];  // not is - contain 
-			//					pattern = ngramWords[0] + " " + ngramWords[2] + " " + ngramWords[4];
-			//					context.write(new Text(type1+"\t"+hookword), new Text(pattern+"##"+target));
-			//					context.write(new Text(type2+"\t"+pattern), new Text(hookword));
-			//				}
-			//				else if (hooks.contains(ngramWords[3])) {
-			//					hookword = ngramWords[3];
-			//					target = ngramWords[1];
-			//					pattern = ngramWords[0] + " " + ngramWords[2] + " " + ngramWords[4];
-			//					context.write(new Text(type1+"\t"+hookword), new Text(pattern+"##"+target));
-			//					context.write(new Text(type2+"\t"+pattern), new Text(hookword));
-			//
-			//				}
-
-
-		}  
-		private String getHits(List<String> currPatternList, String[] blessedPairArr) {
-			return null;
-
-		}
-		public boolean ngramHasBlessedAndPattern(String[] ngram) {
-			String firstBlessed, secondBlessed;
-			String[] blessedPairArr;
-			String ngram_w1w3w5_string = ngram[0] + " " + ngram[2] + " " + ngram[4];
-			for (List<List<String>> currList : allClusters) {
-				for (List<String> currList1 : currList) {
-					for (String pattern : currList1) {
-						if (pattern.equals(ngram_w1w3w5_string)) {
-							return true;
-						}
-
+						System.out.println("NOW EMIT!!!!\n "+blessedPair+" ## \n"+totalHits);
+						context.write(new Text(blessedPair), new Text(totalHits));
 					}
 				}
 			}
-			return false;
 		}
 
 
-		public static class ReducerClass extends Reducer<Text,Text,Text,Text> {
-			private MultipleOutputs<Text,Text> mos;
-
-			public void setup(Context context) {
-				mos = new MultipleOutputs<Text,Text>(context);
+	}  
+	private static String getHits(List<List<String>> cluster, String[] blessed) {
+		List<String> confirmed = cluster.get(0);
+		List<String> unconfirmed = cluster.get(1);
+		System.out.println("Confirmed: "+confirmed.toString());
+		System.out.println("Unconfirmed: "+unconfirmed.toString());
+		float alpha = 1;
+		float n = confirmed.size();
+		float m = unconfirmed.size();
+		float appearsAsCore=0;
+		float appearsAsUnconfirmed=0;
+		for (String corePattern : confirmed) {
+			corePattern = corePattern.toLowerCase();
+			if (corePattern.contains(blessed[0].toLowerCase()) && corePattern.contains(blessed[1].toLowerCase())) {
+				appearsAsCore++;
 			}
-
-			public void reduce(Text key, Iterable<Text> values, Context context) throws IOException,  InterruptedException {
-				//			if (key.toString().charAt(1) == '1') {
-				//				String patternsAndTargets="";
-				//				String actualKey = key.toString().split("\t")[1];
-				//				for (Text value : values) {
-				//					patternsAndTargets += value.toString()+"|";
-				//				}
-				//				patternsAndTargets = patternsAndTargets.substring(0,patternsAndTargets.length());
-				//				mos.write("byHook", new Text(actualKey), new Text(patternsAndTargets));
-				//				mos.write("byHook", new Text(""), null);
-				//			}
-				//			else { // if (key.toString().charAt(1) == '2')
-				//				String hookWords="";
-				//				String actualKey = key.toString().split("\t")[1];
-				//				for (Text value : values) {
-				//					hookWords += value.toString()+"|";
-				//				}
-				//				hookWords = hookWords.substring(0,hookWords.length());
-				//				mos.write("byPattern", new Text(actualKey), new Text(hookWords));
-				//				mos.write("byPattern", new Text(""), null);
-				//			}
-				//		}
-				//		public void cleanup(Context context) throws IOException {
-				//			try {
-				//				mos.close();
-				//			} catch (InterruptedException e) {
-				//				e.printStackTrace();
-				//			}
+		}
+		for (String unconfirmedPattern : unconfirmed) {
+			unconfirmedPattern = unconfirmedPattern.toLowerCase();
+			if (unconfirmedPattern.contains(blessed[0].toLowerCase()) && unconfirmedPattern.contains(blessed[1].toLowerCase())) {
+				appearsAsUnconfirmed++;
 			}
+		}
+		float firstValue, secondValue;
+		firstValue = (n == 0) ? 0 : (appearsAsCore/n);
+		secondValue = (m == 0) ? 0 : (appearsAsUnconfirmed/m);
+		return Float.toString(  firstValue   +   (alpha*secondValue)   );
 
+
+	}
+
+	public static boolean ngramAppearsAsPattern(String[] ngram) {
+		String ngram_w1w3w5_string = ngram[0] + " " + ngram[2] + " " + ngram[4]; // x1 x2 x3
+		for (List<List<String>> currList : allClusters) { // currList is a cluster
+			for (List<String> currList1 : currList) {
+				for (String pattern : currList1) {
+					if (pattern.equals(ngram_w1w3w5_string)) {
+						return true;
+					}
+
+				}
+			}
+		}
+		return false;
+	}
+
+
+	public static class ReducerClass extends Reducer<Text,Text,Text,Text> {
+		private MultipleOutputs<Text,Text> mos;
+		// reducer receives blessed word couple (key) and their probabilities per cluster (value)
+		// (blessed1 blessed2 ; connection) , (0.0 0.6 0.2 0.4 0.5 ......... )
+		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException,  InterruptedException {
+			float[] hitsVector=null;
+			String[] vectorData;
+			float currElement;
+			for (Text value : values) {
+				while (value.toString().charAt(0) == ' ') {
+					value = new Text(value.toString().substring(1, value.toString().length()));
+				}
+				vectorData = value.toString().split(" ");
+				if (hitsVector == null)
+					hitsVector = new float[vectorData.length];
+				for (int i=0 ; i< vectorData.length ; i++) {
+					System.out.println("Vector data "+i+": "+vectorData[i]);
+					currElement = Float.parseFloat(vectorData[i]);
+					hitsVector[i] += currElement;
+				}
+			}
+			String finalVector="";
+			for (float value : hitsVector) {
+				finalVector += value + " ";
+			}
+			context.write(key, new Text(finalVector));
 
 		}
+
+
 
 		public static void main(String[] args) throws Exception {
 
-			//		System.load("C:/Users/Tamir/Desktop/lzo2.dll");
-			//		System.setProperty("hadoop.home.dir", "C:/hadoop-2.6.2");
+			System.load("C:/Users/Tamir/Desktop/lzo2.dll");
+			System.setProperty("hadoop.home.dir", "C:/hadoop-2.6.2");
 
-			System.load("C:/Users/RONlptp/eclipse-workspace/ass2localRunner/lib/lzo2.dll");
-			System.setProperty("hadoop.home.dir", "E:\\hadoop-2.6.2");
+			//			System.load("C:/Users/RONlptp/eclipse-workspace/ass2localRunner/lib/lzo2.dll");
+			//			System.setProperty("hadoop.home.dir", "E:\\hadoop-2.6.2");
 
 			Configuration conf = new Configuration();
 			Job job = new Job(conf);
