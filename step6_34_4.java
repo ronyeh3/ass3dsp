@@ -56,11 +56,11 @@ public class step6_34_4 {
 			allClusters.add(gson.fromJson(jp.next(), type));
 		}
 
-		//		System.out.println(allClusters);
+				System.out.println(allClusters);
 				System.out.println("How many clustrs: "+allClusters.size());
-		//		System.out.println(allpattenslist.get(0));
-		//		System.out.println(allpattenslist.get(0).get(0));
-		//		System.out.println(allpattenslist.get(0).get(0).get(0));
+				System.out.println(allClusters.get(0));
+				System.out.println(allClusters.get(0).get(0));
+				System.out.println(allClusters.get(0).get(0).get(0));
 
 		statAgain:
 			for( int i=0; i<allClusters.size();i++) {
