@@ -42,7 +42,7 @@ public class Step3 {
 		
 		public void map(LongWritable key, Text value, Context context) throws IOException,  InterruptedException {
 			if (  (counter= ((counter+1)%limiter) ) !=0 )
-				return;
+				return; // it also limit the hfw ?????? TODO IS THAT WHAT WE WANT ON TOP ON HOOL LIMITATIONS? ?
 			
 			classification = "";   // or hook or hfw
 			valueAsString = value.toString();

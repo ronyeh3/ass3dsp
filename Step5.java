@@ -59,8 +59,8 @@ public class Step5 {
 			splittedLine = strLine.split("\\t");
 			hookWord = splittedLine[0];
 			hooksAndClusters.put(hookWord, new HashMap<String,List<String>>());
-			HashMap<String, List<String>> currHookHashMap = hooksAndClusters.get(hookWord);// target and arry of patterns
-
+			HashMap<String, List<String>> currHookHashMap = hooksAndClusters.get(hookWord);// cluster is {target,[array of patterns]}    
+//for each hook , cluster patternt by target
 			patternsAndTargets = splittedLine[1];
 			splittedPatternsTargets = patternsAndTargets.split("\\|");
 			for (String pair : splittedPatternsTargets) {
@@ -72,7 +72,7 @@ public class Step5 {
 							currHookHashMap.get(target).add(pattern);
 				}
 				else {
-					currHookHashMap.put(target, new ArrayList<String>());
+					currHookHashMap.put(target, new ArrayList<String>());  // new cluster
 					currHookHashMap.get(target).add(pattern);
 				}
 			}
@@ -86,19 +86,19 @@ public class Step5 {
 		// Second
 		//hook          //targets   //patterns
 		for(Entry<String, HashMap<String, List<String>>> hookANDtargetPattens : hooksAndClusters.entrySet()) {
-
 			Iterator<Entry<String, List<String>>> innerIterator = hookANDtargetPattens.getValue().entrySet().iterator();
-			//now i have iterator for target and patterns for specific hook 
+			//now i have iterator for all target and patterns for specific hook 
 			while (innerIterator.hasNext()) {
-				Map.Entry<String, List<String>> curr = innerIterator.next();
-				if(innerIterator.hasNext()) {
+				Map.Entry<String, List<String>> curr = innerIterator.next(); //target and list of patterns
+				while (innerIterator.hasNext()) {
 					Map.Entry<String, List<String>> next = innerIterator.next();
 					if (shouldmerge(curr.getValue(), next.getValue())) { // if true merge and delete smaller
 						curr.getValue().removeAll(next.getValue());
 						curr.getValue().addAll(next.getValue());
 						hookANDtargetPattens.getValue().remove(next.getKey());
 						innerIterator = hookANDtargetPattens.getValue().entrySet().iterator();
-					}      ///chaingins somntige while iterate over it , maybe not good
+						break;
+					}      ///changing something while iterate over it , maybe not good
 				}
 			}
 

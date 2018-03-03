@@ -41,7 +41,7 @@ public class Step4 {
 			Path [] cacheFiles = context.getLocalCacheFiles();
 			if((cacheFiles != null) && (cacheFiles.length >0)) {
 				for (Path cacheFile : cacheFiles) {
-					if (cacheFile.getName().charAt(0) == 'h') {
+					if (cacheFile.getName().charAt(0) == 'h') {   //hfw or hook
 						FSDataInputStream in = fs.open(cacheFile);
 						readFile(in, cacheFile.getName());
 						in.close();

@@ -27,7 +27,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 public class Step2 {
 
 	// This step is a simple WordCount for the words that appear in 5Grams.
-
+    // need to do word count on step 1 and not the full 5 gram
 	public static class MapperClassWordCounter5Gram extends Mapper<LongWritable, Text, Text, IntWritable> {
 		private String valueAsString;
 		private String[] splittedValue;

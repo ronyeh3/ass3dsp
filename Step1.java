@@ -27,6 +27,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 public class Step1 {
 	
 	// This step aggregates identical 5Grams from different years
+	// also do minimization of 5 gram to 20%
 
 	public static class MapperClass5GramAgg extends Mapper<LongWritable, Text, Text, LongWritable> {
 		private Text word = new Text();
@@ -48,8 +49,14 @@ public class Step1 {
 	}
 
 	public static class ReducerClass extends Reducer<Text,LongWritable,Text,LongWritable> {
-		@Override
+	
+		private static final int limiter = 5; 
+		private static  int counter = 0;
+		
 		public void reduce(Text key, Iterable<LongWritable> values, Context context) throws IOException,  InterruptedException {
+			if (  (counter= ((counter+1)%limiter) ) !=0 ) //skip every 4 = 20%
+				return;
+			
 			long sum = 0;
 			for (LongWritable value : values)
 				sum += value.get();			
