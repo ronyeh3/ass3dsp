@@ -34,7 +34,7 @@ import org.apache.hadoop.io.LongWritable;
 
 
 public class step7_42 {
-	static List<String> blesed_wordes = new ArrayList<String>();  //pair words and relation word [w1 w2 w3, ... ]
+	static List<String> blesed_words = new ArrayList<String>();  //pair words and relation word [w1 w2 w3, ... ]
 	static ArrayList<List<List<String>>> allClusters =  new ArrayList<List<List<String>>>(); 
 
 
@@ -76,37 +76,62 @@ public class step7_42 {
 				String line;
 				while ((line = joinReader.readLine()) != null) {
 					String words = line.toString();
-					blesed_wordes.add(words);  
+					blesed_words.add(words);  
 				}
 
 			}
 		}
 		public void map(LongWritable LongWritable, Text value, Context context) throws IOException,  InterruptedException {
 			String ngram = value.toString();
+			String[] splittedNgram = ngram.split("\\s+");
+			String firstBlessed, secondBlessed;
+			String[] blessedPairArr;
+			String ngram_x1x3x5_string = splittedNgram[0] + " " + splittedNgram[2] + " " + splittedNgram[4];
 
-//			String[] ngramWords = ngram.split("\\s+");
-//			String target, pattern, hookword;
-//			if (hfw.contains(ngramWords[0]) && hfw.contains(ngramWords[2]) && hfw.contains(ngramWords[4])){
-//				if (hooks.contains(ngramWords[1])) {
-//					hookword = ngramWords[1];
-//					target = ngramWords[3];  // not is - contain 
-//					pattern = ngramWords[0] + " " + ngramWords[2] + " " + ngramWords[4];
-//					context.write(new Text(type1+"\t"+hookword), new Text(pattern+"##"+target));
-//					context.write(new Text(type2+"\t"+pattern), new Text(hookword));
-//				}
-//				else if (hooks.contains(ngramWords[3])) {
-//					hookword = ngramWords[3];
-//					target = ngramWords[1];
-//					pattern = ngramWords[0] + " " + ngramWords[2] + " " + ngramWords[4];
-//					context.write(new Text(type1+"\t"+hookword), new Text(pattern+"##"+target));
-//					context.write(new Text(type2+"\t"+pattern), new Text(hookword));
-//
-//				}
+			for (String blessedPair : blesed_words) {
+				blessedPairArr = blessedPair.split("\\t");
+				firstBlessed = blessedPairArr[0];
+				secondBlessed = blessedPairArr[1];
+				// if (x2,x4)=blessedPair
+				if (splittedNgram[1].equals(firstBlessed) && splittedNgram[3].equals(secondBlessed)) { 
+					//iterate all clusters and check if x1,x3,x5 are a pattern.
+					for (List<List<String>> currList : allClusters) {
+						for (List<String> currList1 : currList) {
+							for (String pattern : currList1) {
+								if (pattern.equals(ngram_x1x3x5_string)) {
+									
+								}
+									
+							}
+						}
+					}
+				}
+			}
 
 
-			}  
-		}
+			//			String[] ngramWords = ngram.split("\\s+");
+			//			String target, pattern, hookword;
+			//			if (hfw.contains(ngramWords[0]) && hfw.contains(ngramWords[2]) && hfw.contains(ngramWords[4])){
+			//				if (hooks.contains(ngramWords[1])) {
+			//					hookword = ngramWords[1];
+			//					target = ngramWords[3];  // not is - contain 
+			//					pattern = ngramWords[0] + " " + ngramWords[2] + " " + ngramWords[4];
+			//					context.write(new Text(type1+"\t"+hookword), new Text(pattern+"##"+target));
+			//					context.write(new Text(type2+"\t"+pattern), new Text(hookword));
+			//				}
+			//				else if (hooks.contains(ngramWords[3])) {
+			//					hookword = ngramWords[3];
+			//					target = ngramWords[1];
+			//					pattern = ngramWords[0] + " " + ngramWords[2] + " " + ngramWords[4];
+			//					context.write(new Text(type1+"\t"+hookword), new Text(pattern+"##"+target));
+			//					context.write(new Text(type2+"\t"+pattern), new Text(hookword));
+			//
+			//				}
+
+
+		}  
 	}
+
 
 	public static class ReducerClass extends Reducer<Text,Text,Text,Text> {
 		private MultipleOutputs<Text,Text> mos;
@@ -116,33 +141,33 @@ public class step7_42 {
 		}
 
 		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException,  InterruptedException {
-//			if (key.toString().charAt(1) == '1') {
-//				String patternsAndTargets="";
-//				String actualKey = key.toString().split("\t")[1];
-//				for (Text value : values) {
-//					patternsAndTargets += value.toString()+"|";
-//				}
-//				patternsAndTargets = patternsAndTargets.substring(0,patternsAndTargets.length());
-//				mos.write("byHook", new Text(actualKey), new Text(patternsAndTargets));
-//				mos.write("byHook", new Text(""), null);
-//			}
-//			else { // if (key.toString().charAt(1) == '2')
-//				String hookWords="";
-//				String actualKey = key.toString().split("\t")[1];
-//				for (Text value : values) {
-//					hookWords += value.toString()+"|";
-//				}
-//				hookWords = hookWords.substring(0,hookWords.length());
-//				mos.write("byPattern", new Text(actualKey), new Text(hookWords));
-//				mos.write("byPattern", new Text(""), null);
-//			}
-//		}
-//		public void cleanup(Context context) throws IOException {
-//			try {
-//				mos.close();
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
+			//			if (key.toString().charAt(1) == '1') {
+			//				String patternsAndTargets="";
+			//				String actualKey = key.toString().split("\t")[1];
+			//				for (Text value : values) {
+			//					patternsAndTargets += value.toString()+"|";
+			//				}
+			//				patternsAndTargets = patternsAndTargets.substring(0,patternsAndTargets.length());
+			//				mos.write("byHook", new Text(actualKey), new Text(patternsAndTargets));
+			//				mos.write("byHook", new Text(""), null);
+			//			}
+			//			else { // if (key.toString().charAt(1) == '2')
+			//				String hookWords="";
+			//				String actualKey = key.toString().split("\t")[1];
+			//				for (Text value : values) {
+			//					hookWords += value.toString()+"|";
+			//				}
+			//				hookWords = hookWords.substring(0,hookWords.length());
+			//				mos.write("byPattern", new Text(actualKey), new Text(hookWords));
+			//				mos.write("byPattern", new Text(""), null);
+			//			}
+			//		}
+			//		public void cleanup(Context context) throws IOException {
+			//			try {
+			//				mos.close();
+			//			} catch (InterruptedException e) {
+			//				e.printStackTrace();
+			//			}
 		}
 
 
