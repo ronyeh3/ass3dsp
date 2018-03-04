@@ -30,7 +30,7 @@ public class Step2 {
     // need to do word count on step 1 and not the full 5 gram
 	
 	//new : input - 1gram
-	public static class MapperClassWordCounter5Gram extends Mapper<LongWritable, Text, Text, IntWritable> {
+	public static class MapperClassWordCounter1Gram extends Mapper<LongWritable, Text, Text, IntWritable> {
 		private String valueAsString;
 		private String[] splittedValue;
 		private LongWritable occurences;
@@ -72,7 +72,7 @@ public class Step2 {
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);
 		job.setInputFormatClass(TextInputFormat.class);
-		MultipleInputs.addInputPath(job,new Path(args[0]),TextInputFormat.class,MapperClassWordCounter5Gram.class);
+		MultipleInputs.addInputPath(job,new Path(args[0]),TextInputFormat.class,MapperClassWordCounter1Gram.class);
 		//TODO Change to the following lines when working with Lz0
 		//job.setInputFormatClass(SequenceFileInputFormat.class);
 		//MultipleInputs.addInputPath(job,new Path(args[0]),SequenceFileInputFormat.class,MapperClass5Gram.class);

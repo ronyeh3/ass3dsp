@@ -38,7 +38,7 @@ public class Ass3emrRunner {
 
 	private static final String JAR_BUCKET_NAME_S3 = "s3://jarsfromass3dspron";
 	private static final String S3_STEP1_JAR = JAR_BUCKET_NAME_S3+"/step1.jar";
-	private static final String S3_STEP4_JAR = JAR_BUCKET_NAME_S3 + "/step2.jar";
+	private static final String S3_STEP2_JAR = JAR_BUCKET_NAME_S3 + "/step2.jar";
 	private static final String S3_STEP5_JAR = JAR_BUCKET_NAME_S3 + "/step3.jar";
 	private static final String S3_STEP6_JAR = JAR_BUCKET_NAME_S3 + "/step7.jar";
 
@@ -73,19 +73,19 @@ public class Ass3emrRunner {
 /* ###############################################################################################*/
 
 		//step1 preperation DONE
-		HadoopJarStepConfig hadoopJarStep1 = new HadoopJarStepConfig( S3_STEP1_JAR);
-		hadoopJarStep1.withArgs(FIVE_GRAM_CORPUS_3A,BUCKET_NAME_3N+ STEP1_RESULT_FOLDER_NAME);
-
-		
-		StepConfig step1 = new StepConfig()
-				.withName("Step1")
-				.withHadoopJarStep(hadoopJarStep1)
-				.withActionOnFailure("TERMINATE_JOB_FLOW");
-		steps.add(step1);  
+//		HadoopJarStepConfig hadoopJarStep1 = new HadoopJarStepConfig( S3_STEP1_JAR);
+//		hadoopJarStep1.withArgs(FIVE_GRAM_CORPUS_3A,BUCKET_NAME_3N+ STEP1_RESULT_FOLDER_NAME);
+//
+//		
+//		StepConfig step1 = new StepConfig()
+//				.withName("Step1")
+//				.withHadoopJarStep(hadoopJarStep1)
+//				.withActionOnFailure("TERMINATE_JOB_FLOW");
+//		steps.add(step1);  
 
 		
 				//step2 preperation word count 		   
-				HadoopJarStepConfig hadoopJarStep2 = new HadoopJarStepConfig(S3_STEP1_JAR);
+				HadoopJarStepConfig hadoopJarStep2 = new HadoopJarStepConfig(S3_STEP2_JAR);
 				hadoopJarStep2.withArgs(ONE_GRAM_CORPUS_3A,BUCKET_NAME_3N+STEP2_RESULT_FOLDER_NAME);
 				//step2
 				StepConfig step2 = new StepConfig()
@@ -192,7 +192,7 @@ public class Ass3emrRunner {
 					System.out.println("\n"+stepSummary.getName() +" completed");
 					break;//Continue with for
 				}
-				if (stepStatus.equals("FAILED")) {
+				if (stepStatus.equals("FAILED") && stepStatus.equals("CANCELLED")) {
 					System.err.println("\n"+stepSummary.getName() +" failed");
 					return;
 				}
@@ -200,7 +200,7 @@ public class Ass3emrRunner {
 					state = stepStatus;
 					System.out.println("\n"+stepSummary.getName() + " is "+ state);
 				}
-				if ( (dotcount= ((dotcount+1)%1200))==0)
+				if ( (dotcount= ((dotcount+1)%120))==0)
 					System.out.println(".");
 				System.out.print(".");
 				Thread.sleep(5000);
