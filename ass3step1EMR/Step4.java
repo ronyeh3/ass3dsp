@@ -27,9 +27,8 @@ import org.apache.hadoop.io.LongWritable;
 
 /*
  * input - step 1 :  5 gram just the words
- * input - step 3 (cache) :  the classifications of the HFW and hooks
+ * input - step 3 (cache) :  the classifications of the HFW and hooks and CW(not)
  */
-//TODO ADD RESTRICRING OF CW. Target word should have less occurences than Fc!!!!!!!
 
 public class Step4 {
 	static HashSet<String> hfw = new HashSet<String>();  // onegram!!!!!!!!!!
@@ -94,10 +93,12 @@ public class Step4 {
 			HashSet<String> currList;
 			if (filename.substring(0, 3).equals("hfw"))
 				currList = hfw;
-			else if (filename.substring(0, 3).equals("hook"))
+			else if (filename.substring(0, 3).equals("hoo")) //hook
 				currList = hooks;
-			else // dealing with notcws
+			 else if (filename.substring(0, 3).equals("not"))  //not-content-word
 				currList = notcws;
+			 else
+				 return;
 
 			String line;
 			while ((line = joinReader.readLine()) != null) {
@@ -113,8 +114,8 @@ public class Step4 {
 			String[] ngramWords = ngram.split("\\s+");
 			String target, pattern, hookword;
 			if (hfw.contains(ngramWords[0]) && hfw.contains(ngramWords[2]) && hfw.contains(ngramWords[4])){
-				if (hooks.contains(ngramWords[1])) {   //[3]<fc
-					if (!notcws.contains(ngramWords[3])) {
+				if (hooks.contains(ngramWords[1])) {  
+					if (!notcws.contains(ngramWords[3])) {// //[3]<fc - so it is content word
 						hookword = ngramWords[1];
 						target = ngramWords[3];  // not is - contain 
 						pattern = ngramWords[0] + " " + ngramWords[2] + " " + ngramWords[4];

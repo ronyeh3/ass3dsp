@@ -79,6 +79,7 @@ public class Step5 {
 			}
 
 		}
+		br.close();
 				BufferedWriter out = new BufferedWriter(new FileWriter("output/step5/outbefore.txt"));
 				out.write(gson.toJson(hooksAndClusters));
 				out.close();
