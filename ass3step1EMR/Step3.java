@@ -16,6 +16,7 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Partitioner;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
@@ -32,19 +33,24 @@ public class Step3 {
 	//TODO add counter of max hookwords
 
 	public static class MapperClassWordCounter5Gram extends Mapper<LongWritable, Text, Text, Text> {
-		private static final int Fc = 2000;				// Article: 100-5000
-		private static final int Fh = 250;				// Article: 10-100
-		private static final int Fb = 25;				// Article: 1-50
-		private static final int maxHookWords = 1000;	// TODO Article: 100-1000 (N).    NEED TO CHECK WHY! Currently unused.
+		private static int Fc;					// Article: 100-5000
+		private static int Fh;			// Article: 10-100
+		private static int Fb;				// Article: 1-50
+		private static int maxHookWord;	// TODO Article: 100-1000 (N).    NEED TO CHECK WHY! Currently unused.
 
-		private static final int limiter = 5; 
-		private static  int counter = 0;
 
 		private long occurences;
 		private String classification;
 		private String valueAsString;
 		private String[] splittedValue;
 		@Override
+
+		public void setup(Context context) throws IOException, InterruptedException {
+			Fb = context.getConfiguration().getInt("Fb", 50);
+			Fc = context.getConfiguration().getInt("Fc", 2500);
+			Fc = context.getConfiguration().getInt("Fh", 100);
+			maxHookWord = context.getConfiguration().getInt("maxHook", 2500);
+		}
 
 
 		public void map(LongWritable key, Text value, Context context) throws IOException,  InterruptedException {
@@ -56,9 +62,9 @@ public class Step3 {
 			splittedValue = valueAsString.split("\t");
 			occurences = Long.parseLong(splittedValue[1]);
 			if (occurences < Fc && occurences > Fb) { // hook word // add only if we are below maxHookWords
-					classification += "Hook|";
-					context.getCounter(COUNTER.HOOKWORDS).increment(1);
-				}
+				classification += "Hook|";
+				context.getCounter(COUNTER.HOOKWORDS).increment(1);
+			}
 
 			if (occurences > Fc) {
 				classification += "NOTCW|";
@@ -98,7 +104,7 @@ public class Step3 {
 					}
 					else if (wordClassifications[i].equals("HFW"))
 						mos.write("hfw", key, null);
-					
+
 					else if (wordClassifications[i].equals("NOTCW")) {
 						mos.write("notcw", key, null);
 					}
@@ -125,6 +131,10 @@ public class Step3 {
 		Configuration conf = new Configuration();
 		Job job = new Job(conf, "HFW & Hook Words Counter");
 		job.setJarByClass(Step1.class);
+		conf.setInt("Fb", Integer.parseInt(args[2]));
+		conf.setInt("Fc", Integer.parseInt(args[3]));
+		conf.setInt("Fh", Integer.parseInt(args[4]));
+		conf.setInt("maxHook", Integer.parseInt(args[5]));
 		job.setCombinerClass(ReducerWordCountClass.class);
 		job.setReducerClass(ReducerWordCountClass.class);
 		job.setMapOutputKeyClass(Text.class);
