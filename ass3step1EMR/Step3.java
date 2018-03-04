@@ -14,6 +14,7 @@ import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Counters;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Partitioner;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
@@ -79,14 +80,18 @@ public class Step3 {
 		@Override
 		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException,  InterruptedException {
 
-			if ((counter = ((counter+1)%ratio)) !=0)
-				return;
+
 
 			for (Text value : values) {
 				wordClassifications = value.toString().split("\\|");
 				for (int i=0 ; i<wordClassifications.length ; i++) {
-					if (wordClassifications[i].equals("Hook"))
+					if (wordClassifications[i].equals("Hook")) {
+						// if we want multiple reducers, consider adding this context.getNumReduceTasks()) to the value of ratio
+						if ((counter = ((counter+1)%ratio)) !=0)
+							continue;
+						// decrease counter 
 						mos.write("hook", key, null);
+					}
 					else if (wordClassifications[i].equals("HFW"))
 						mos.write("hfw", key, null);
 				}
@@ -101,6 +106,7 @@ public class Step3 {
 			}
 		}
 	}
+
 
 	public static enum COUNTER {
 		HOOKWORDS
@@ -126,6 +132,7 @@ public class Step3 {
 				Text.class, Text.class);
 		//Counters counters = job.getCounters();
 		//counters.findCounter(COUNTER.HOOKWORDS).setValue(0);
+		job.setNumReduceTasks(1);
 		System.exit(job.waitForCompletion(true) ? 0 : 1);
 
 	}

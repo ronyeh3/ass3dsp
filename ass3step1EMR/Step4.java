@@ -171,11 +171,6 @@ public class Step4 {
 
 	public static void main(String[] args) throws Exception {
 		
-		System.load("C:/Users/Tamir/Desktop/lzo2.dll");
-		System.setProperty("hadoop.home.dir", "C:/hadoop-2.6.2");
-		
-//		System.load("C:/Users/RONlptp/eclipse-workspace/ass2localRunner/lib/lzo2.dll");
-//		System.setProperty("hadoop.home.dir", "E:\\hadoop-2.6.2");
 		
 		Configuration conf = new Configuration();
 		Job job = new Job(conf);
@@ -193,9 +188,9 @@ public class Step4 {
 		
 		/*  cache  */
 		FileSystem fs_s3a = new S3AFileSystem();
-		//args[1] = "s3a://onegramoutputresult"
+		//args[1] = "s3n://ass3dsp181resultstamir"
 		fs_s3a.initialize(URI.create(args[1] ) , conf);
-		// args[2] = "s3a://onegramoutputresult/step1Result"
+		// args[2] = "s3n://ass3dsp181resultstamir/step3Result/"
 		Path path = new Path(args[2]);
 		RemoteIterator<LocatedFileStatus> itr = fs_s3a.listFiles(path, false);
 		while (itr.hasNext()) {
