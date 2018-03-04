@@ -27,7 +27,7 @@ public class Ass3emrRunner {
 
 	private static final String HADOOP_VERSION = "2.7.3";
 	private static final int INSTANCE_COUNT = 6;
-	private static final String INSTANCE_TYPE = InstanceType.M4Xlarge.toString();
+	private static final String INSTANCE_TYPE = InstanceType.M3Xlarge.toString();
 
 
 	private static final UUID RANDOM_UUID = UUID.randomUUID();
@@ -192,7 +192,7 @@ public class Ass3emrRunner {
 					System.out.println("\n"+stepSummary.getName() +" completed");
 					break;//Continue with for
 				}
-				if (stepStatus.equals("FAILED") && stepStatus.equals("CANCELLED")) {
+				if (stepStatus.equals("FAILED") || stepStatus.equals("CANCELLED")) {
 					System.err.println("\n"+stepSummary.getName() +" failed");
 					return;
 				}
