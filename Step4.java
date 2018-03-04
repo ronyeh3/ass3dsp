@@ -21,9 +21,9 @@ import org.apache.hadoop.io.LongWritable;
 
 /*
  * input - step 1 :  5 gram just the words
- * input - step 3:the clasificains of the HFW and hooks
+ * input - step 3 (cache) :  the classifications of the HFW and hooks
  */
-//ADD RESTRICRING OF CW
+//TODO ADD RESTRICRING OF CW. Target word should have less occurences than Fc!!!!!!!
 
 public class Step4 {
 	static List<String> hfw = new ArrayList<String>();  // onegram!!!!!!!!!!
@@ -90,7 +90,6 @@ public class Step4 {
 					context.write(new Text(type2+"\t"+pattern), new Text(hookword));
 
 				}
-//// x1 x2 x3 x4 x5
 
 			}  
 		}
@@ -135,6 +134,8 @@ public class Step4 {
 
 
 	}
+	
+
 
 	public static void main(String[] args) throws Exception {
 		
