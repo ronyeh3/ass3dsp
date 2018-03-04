@@ -36,10 +36,10 @@ public class Ass3emrRunner {
 	private static final String ONE_GRAM_CORPUS_3A = "s3a://datasets.elasticmapreduce/ngrams/books/20090715/eng-all/1gram/data";
 	private static final String FIVE_GRAM_CORPUS_3A = "s3a://datasets.elasticmapreduce/ngrams/books/20090715/eng-all/5gram/data";
 
-	private static final String JAR_BUCKET_NAME_S3 = "s3://jarsfromass3dspron";
+	private static final String JAR_BUCKET_NAME_S3 = "s3://jarsfromass3dsptamir";
 	private static final String S3_STEP1_JAR = JAR_BUCKET_NAME_S3+"/step1.jar";
 	private static final String S3_STEP2_JAR = JAR_BUCKET_NAME_S3 + "/step2.jar";
-	private static final String S3_STEP5_JAR = JAR_BUCKET_NAME_S3 + "/step3.jar";
+	private static final String S3_STEP3_JAR = JAR_BUCKET_NAME_S3 + "/step3.jar";
 	private static final String S3_STEP6_JAR = JAR_BUCKET_NAME_S3 + "/step7.jar";
 
 
@@ -51,12 +51,12 @@ public class Ass3emrRunner {
 
 	//Individual buckets!!!
 	private static final String REGION = "us-east-1d";
-	private static final String S3N_LOG_URI = "s3n://aws-logs-036711232198-us-east-1/elasticmapreduce/";
-	private static final String BUCKET_NAME = "ass3dsp181resultsron";
+	private static final String S3N_LOG_URI = "s3n://aws-logs-489418265486-us-east-1/elasticmapreduce/";
+	private static final String BUCKET_NAME = "ass3dsp181resultstamir";
 	private static final String BUCKET_NAME_3A = "s3a://"+BUCKET_NAME; //old format
 	private static final String BUCKET_NAME_3N = "s3n://"+BUCKET_NAME;   //new format
 	//Ec2KeyName
-	private static final String Ec2_Key_Name = "ronyeh";
+	private static final String Ec2_Key_Name = "TamirDSP";
 
 	public static void main(String[] args) {
 		AWSCredentials credentials = new ProfileCredentialsProvider().getCredentials();
@@ -64,48 +64,50 @@ public class Ass3emrRunner {
 		AmazonElasticMapReduce mapReduce = AmazonElasticMapReduceClientBuilder.standard()
 				.withCredentials(new AWSStaticCredentialsProvider(credentials)) //home\.aws\credentials
 				.withRegion("us-east-1").build();
-		
+
 		Configuration configuration = new Configuration();
 		configuration.addPropertiesEntry("mapreduce.reduce.java.opts", "-Xmx4096m");
 		configuration.addPropertiesEntry("mapreduce.reduce.memory.mb", "8192");
 
 		LinkedList<StepConfig> steps = new LinkedList<StepConfig>();
-/* ###############################################################################################*/
+		/* ###############################################################################################*/
 
 		//step1 preperation DONE
-//		HadoopJarStepConfig hadoopJarStep1 = new HadoopJarStepConfig( S3_STEP1_JAR);
-//		hadoopJarStep1.withArgs(FIVE_GRAM_CORPUS_3A,BUCKET_NAME_3N+ STEP1_RESULT_FOLDER_NAME);
-//
-//		
-//		StepConfig step1 = new StepConfig()
-//				.withName("Step1")
-//				.withHadoopJarStep(hadoopJarStep1)
-//				.withActionOnFailure("TERMINATE_JOB_FLOW");
-//		steps.add(step1);  
+		//		HadoopJarStepConfig hadoopJarStep1 = new HadoopJarStepConfig( S3_STEP1_JAR);
+		//		hadoopJarStep1.withArgs(FIVE_GRAM_CORPUS_3A,BUCKET_NAME_3N+ STEP1_RESULT_FOLDER_NAME);
+		//
+		//		
+		//		StepConfig step1 = new StepConfig()
+		//				.withName("Step1")
+		//				.withHadoopJarStep(hadoopJarStep1)
+		//				.withActionOnFailure("TERMINATE_JOB_FLOW");
+		//		steps.add(step1);  
+
+
+		//step2 preperation word count 		   
+//		HadoopJarStepConfig hadoopJarStep2 = new HadoopJarStepConfig(S3_STEP2_JAR);
+//		hadoopJarStep2.withArgs(ONE_GRAM_CORPUS_3A,BUCKET_NAME_3N+STEP2_RESULT_FOLDER_NAME);
+//		//step2
+//		StepConfig step2 = new StepConfig()
+//				.withName("Step2")
+//				.withHadoopJarStep(hadoopJarStep2)
+//				.withActionOnFailure("TERMINATE_JOB_FLOW");			
+//		steps.add(step2);
+
+
 
 		
-				//step2 preperation word count 		   
-				HadoopJarStepConfig hadoopJarStep2 = new HadoopJarStepConfig(S3_STEP2_JAR);
-				hadoopJarStep2.withArgs(ONE_GRAM_CORPUS_3A,BUCKET_NAME_3N+STEP2_RESULT_FOLDER_NAME);
-				//step2
-				StepConfig step2 = new StepConfig()
-						.withName("Step2")
-						.withHadoopJarStep(hadoopJarStep2)
-						.withActionOnFailure("TERMINATE_JOB_FLOW");			
-				steps.add(step2);
-		//		
-		//		
-		//				//hadoop step3     
-		//				HadoopJarStepConfig hadoopJarStep3 = new HadoopJarStepConfig( S3_STEP123_JAR);
-		//				hadoopJarStep3.withArgs(THREE_GRAM_CORPUS_3A,BUCKET_NAME_3N+STEP3_RESULT_FOLDER_NAME,combiner_flag);
-		//		
-		//				// 
-		//				StepConfig step3 = new StepConfig()
-		//						.withName("Step3")
-		//						.withHadoopJarStep(hadoopJarStep3)
-		//						.withActionOnFailure("TERMINATE_JOB_FLOW");			
-		//				steps.add(step3);
-		//
+		//hadoop step3 // Find hookwords and hfws     
+		HadoopJarStepConfig hadoopJarStep3 = new HadoopJarStepConfig(S3_STEP3_JAR);
+		hadoopJarStep3.withArgs(BUCKET_NAME_3N+STEP2_RESULT_FOLDER_NAME,BUCKET_NAME_3N+STEP3_RESULT_FOLDER_NAME);
+
+		// 
+		StepConfig step3 = new StepConfig()
+				.withName("Step3")
+				.withHadoopJarStep(hadoopJarStep3)
+				.withActionOnFailure("TERMINATE_JOB_FLOW");			
+		steps.add(step3);
+
 		//
 		//		//hadoop step 4 		    
 		//		HadoopJarStepConfig hadoopJarStep4 = new HadoopJarStepConfig( S3_STEP4_JAR);
@@ -121,7 +123,7 @@ public class Ass3emrRunner {
 		//		steps.add(step4);
 		//
 		//
-		
+
 
 		//		//step6 		    
 		//		HadoopJarStepConfig hadoopJarStep6 = new HadoopJarStepConfig( S3_STEP6_JAR);
