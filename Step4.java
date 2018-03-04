@@ -75,7 +75,7 @@ public class Step4 {
 			String[] ngramWords = ngram.split("\\s+");
 			String target, pattern, hookword;
 			if (hfw.contains(ngramWords[0]) && hfw.contains(ngramWords[2]) && hfw.contains(ngramWords[4])){
-				if (hooks.contains(ngramWords[1])) {
+				if (hooks.contains(ngramWords[1])) {   //[3]<fc
 					hookword = ngramWords[1];
 					target = ngramWords[3];  // not is - contain 
 					pattern = ngramWords[0] + " " + ngramWords[2] + " " + ngramWords[4];
@@ -90,7 +90,7 @@ public class Step4 {
 					context.write(new Text(type2+"\t"+pattern), new Text(hookword));
 
 				}
-
+//// x1 x2 x3 x4 x5
 
 			}  
 		}

@@ -34,7 +34,7 @@ public class Step1 {
 		private String valueAsString;
 		private String[] splittedValue;
 		private LongWritable occurences;
-		Pattern p = Pattern.compile("[a-zA-Z]+");
+		Pattern p = Pattern.compile("[a-z]+");  // [a-zA-Z]+
 		@Override
 		public void map(LongWritable key, Text value, Context context) throws IOException,  InterruptedException {
 			valueAsString = value.toString();
@@ -55,7 +55,7 @@ public class Step1 {
 		
 		public void reduce(Text key, Iterable<LongWritable> values, Context context) throws IOException,  InterruptedException {
 			if (  (counter= ((counter+1)%limiter) ) !=0 ) //skip every 4 = 20%
-				return;
+				return;        
 			
 			long sum = 0;
 			for (LongWritable value : values)

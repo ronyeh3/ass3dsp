@@ -39,10 +39,10 @@ import org.apache.hadoop.io.LongWritable;
 
 
 //last step (number 4) of 3.4 algoritm : If several clusters have the same set of core patterns
-// merge them according to rules (i,ii).
+// merge them according to rules (i,ii). 
 //input : finish.txt. from step6_34_123
 public class step6_34_4 {
-
+///maybe change to also 2/3 from total pattrns on top of same core and set other as unconfirm
 
 	public static void main(String[] args) throws Exception {
 		Gson gson = new Gson();

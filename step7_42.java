@@ -29,7 +29,7 @@ import com.google.gson.stream.JsonReader;
 import org.apache.hadoop.io.LongWritable;
 
 /*
- *   input - step 1 :  5 gram minimize
+ *   input - step 1 :  5 gram minimize (to see that it a valide sentence)
  *   input ram - blessed words
  *   input ram - step 6_344: all clusters and how many
  */   

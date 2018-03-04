@@ -121,8 +121,8 @@ public class step6_34_123 {
 						
 						mergeListPatternClusters(minimalUnconfirmedCluster.getSecond().getValue(), (List<Pair<String,Integer>>)otherCluster.getValue());
 						cuurHookANDtargetPatterns.getValue().remove(otherCluster.getKey());
-						//we are stupied -innerIterator = cuurHookANDtargetPatterns.getValue().entrySet().iterator();
-						break; //???? if merge starit from beginig??????????????
+						innerIterator = cuurHookANDtargetPatterns.getValue().entrySet().iterator();
+						//break; //???? if merge starit from beginig??????????????
 					}
 
 				}

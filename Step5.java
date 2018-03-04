@@ -28,6 +28,7 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+import org.apache.hadoop.yarn.webapp.hamlet.HamletSpec.A;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -40,7 +41,7 @@ public class Step5 {
 	private final static float S = (float) 2/3;
 	public static void main(String[] args) throws Exception {
 
-		FileInputStream fstream = new FileInputStream(args[0]);
+		FileInputStream fstream = new FileInputStream(args[0]); /// make this map-red
 		BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 		HashMap<String,HashMap<String, List<String>>> hooksAndClusters = new HashMap<String, HashMap<String,List<String>>>();
 		String strLine;
@@ -84,7 +85,7 @@ public class Step5 {
 				
 	//merge per hook worde 2/3 common		 ? check for fix point	
 		// Second
-		//hook          //targets   //patterns
+		//hook                //targets   //patterns
 		for(Entry<String, HashMap<String, List<String>>> hookANDtargetPattens : hooksAndClusters.entrySet()) {
 			Iterator<Entry<String, List<String>>> innerIterator = hookANDtargetPattens.getValue().entrySet().iterator();
 			//now i have iterator for all target and patterns for specific hook 
@@ -100,7 +101,7 @@ public class Step5 {
 						break;
 					}      ///changing something while iterate over it , maybe not good
 				}
-			}
+			}  
 
 		}
 
@@ -134,7 +135,7 @@ public class Step5 {
 
 		denominator = big.size() + small.size() - numerator;
 
-		if (numerator/denominator < S) 
+		if (numerator/denominator <= S) 
 			return false;
 
 		return true; 

@@ -28,12 +28,14 @@ public class Step2 {
 
 	// This step is a simple WordCount for the words that appear in 5Grams.
     // need to do word count on step 1 and not the full 5 gram
+	
+	//new : input - 1gram
 	public static class MapperClassWordCounter5Gram extends Mapper<LongWritable, Text, Text, IntWritable> {
 		private String valueAsString;
 		private String[] splittedValue;
 		private LongWritable occurences;
 		private IntWritable one = new IntWritable(1);
-		Pattern p = Pattern.compile("[a-zA-Z]+");
+		Pattern p = Pattern.compile("[a-z]+");
 		@Override
 		public void map(LongWritable key, Text value, Context context) throws IOException,  InterruptedException {
 			valueAsString = value.toString();
