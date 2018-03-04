@@ -199,8 +199,9 @@ public class Ass3emrRunner {
 				if ( ! stepStatus.equals(state)) {
 					state = stepStatus;
 					System.out.println("\n"+stepSummary.getName() + " is "+ state);
+					dotcount = 0;
 				}
-				if ( (dotcount= ((dotcount+1)%120))==0)
+				if ( (dotcount= ((dotcount+1)%100))==0)
 					System.out.println(".");
 				System.out.print(".");
 				Thread.sleep(5000);
