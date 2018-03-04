@@ -32,8 +32,8 @@ public class Step3 {
 	//TODO add counter of max hookwords
 
 	public static class MapperClassWordCounter5Gram extends Mapper<LongWritable, Text, Text, Text> {
-		private static final int Fc = 2500;				// Article: 100-5000
-		private static final int Fh = 50;				// Article: 10-100
+		private static final int Fc = 2000;				// Article: 100-5000
+		private static final int Fh = 250;				// Article: 10-100
 		private static final int Fb = 25;				// Article: 1-50
 		private static final int maxHookWords = 1000;	// TODO Article: 100-1000 (N).    NEED TO CHECK WHY! Currently unused.
 
@@ -56,8 +56,12 @@ public class Step3 {
 			splittedValue = valueAsString.split("\t");
 			occurences = Long.parseLong(splittedValue[1]);
 			if (occurences < Fc && occurences > Fb) { // hook word // add only if we are below maxHookWords
-				classification += "Hook|";
-				context.getCounter(COUNTER.HOOKWORDS).increment(1);
+					classification += "Hook|";
+					context.getCounter(COUNTER.HOOKWORDS).increment(1);
+				}
+
+			if (occurences > Fc) {
+				classification += "NOTCW|";
 			}
 
 			if (occurences > Fh) { // high frequency word
@@ -94,6 +98,10 @@ public class Step3 {
 					}
 					else if (wordClassifications[i].equals("HFW"))
 						mos.write("hfw", key, null);
+					
+					else if (wordClassifications[i].equals("NOTCW")) {
+						mos.write("notcw", key, null);
+					}
 				}
 			}
 
@@ -129,6 +137,8 @@ public class Step3 {
 		MultipleOutputs.addNamedOutput(job, "hook", TextOutputFormat.class,
 				Text.class, Text.class);
 		MultipleOutputs.addNamedOutput(job, "hfw", TextOutputFormat.class,
+				Text.class, Text.class);
+		MultipleOutputs.addNamedOutput(job, "notcw", TextOutputFormat.class,
 				Text.class, Text.class);
 		//Counters counters = job.getCounters();
 		//counters.findCounter(COUNTER.HOOKWORDS).setValue(0);

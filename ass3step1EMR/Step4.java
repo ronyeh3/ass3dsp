@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -31,15 +32,18 @@ import org.apache.hadoop.io.LongWritable;
 //TODO ADD RESTRICRING OF CW. Target word should have less occurences than Fc!!!!!!!
 
 public class Step4 {
-	static List<String> hfw = new ArrayList<String>();  // onegram!!!!!!!!!!
-	static List<String> hooks = new ArrayList<String>();
+	static HashSet<String> hfw = new HashSet<String>();  // onegram!!!!!!!!!!
+	static HashSet<String> hooks = new HashSet<String>();
+	static HashSet<String> notcws = new HashSet<String>(); // there are less not CWs than CWs, working with the "not" for efficiency
+	// because we need them just to make sure we don't choose target words that are very common (is, the ...)
+
 
 
 	public static class MapperClass extends Mapper<LongWritable, Text, Text, Text> {
 		private static final String type1 = "-1-";
 		private static final String type2 = "-2-";
-		
-		
+
+
 		protected void setup(Context context) throws IOException, InterruptedException {
 
 			System.out.println("[Mapper Step5] INFO: Starting mapper setup.");
@@ -75,7 +79,7 @@ public class Step4 {
 
 		}
 		public void readFile(FileReader in, String filename) throws IOException {
-			
+
 			System.out.println("reading a file ...");
 
 			BufferedReader joinReader = null;
@@ -86,12 +90,14 @@ public class Step4 {
 				System.err.println("[Mapper step5]  ERROR in readFile. failed in BufferedReader");
 				e.printStackTrace();
 			}
-			
-			List<String> currList;
+
+			HashSet<String> currList;
 			if (filename.substring(0, 3).equals("hfw"))
 				currList = hfw;
-			else
+			else if (filename.substring(0, 3).equals("hook"))
 				currList = hooks;
+			else // dealing with notcws
+				currList = notcws;
 
 			String line;
 			while ((line = joinReader.readLine()) != null) {
@@ -108,19 +114,22 @@ public class Step4 {
 			String target, pattern, hookword;
 			if (hfw.contains(ngramWords[0]) && hfw.contains(ngramWords[2]) && hfw.contains(ngramWords[4])){
 				if (hooks.contains(ngramWords[1])) {   //[3]<fc
-					hookword = ngramWords[1];
-					target = ngramWords[3];  // not is - contain 
-					pattern = ngramWords[0] + " " + ngramWords[2] + " " + ngramWords[4];
-					context.write(new Text(type1+"\t"+hookword), new Text(pattern+"##"+target));
-					context.write(new Text(type2+"\t"+pattern), new Text(hookword));
+					if (!notcws.contains(ngramWords[3])) {
+						hookword = ngramWords[1];
+						target = ngramWords[3];  // not is - contain 
+						pattern = ngramWords[0] + " " + ngramWords[2] + " " + ngramWords[4];
+						context.write(new Text(type1+"\t"+hookword), new Text(pattern+"##"+target));
+						context.write(new Text(type2+"\t"+pattern), new Text(hookword));
+					}
 				}
 				else if (hooks.contains(ngramWords[3])) {
-					hookword = ngramWords[3];
-					target = ngramWords[1];
-					pattern = ngramWords[0] + " " + ngramWords[2] + " " + ngramWords[4];
-					context.write(new Text(type1+"\t"+hookword), new Text(pattern+"##"+target));
-					context.write(new Text(type2+"\t"+pattern), new Text(hookword));
-
+					if (!notcws.contains(ngramWords[1])) {
+						hookword = ngramWords[3];
+						target = ngramWords[1];
+						pattern = ngramWords[0] + " " + ngramWords[2] + " " + ngramWords[4];
+						context.write(new Text(type1+"\t"+hookword), new Text(pattern+"##"+target));
+						context.write(new Text(type2+"\t"+pattern), new Text(hookword));
+					}
 				}
 
 			}  
@@ -129,7 +138,7 @@ public class Step4 {
 
 	public static class ReducerClass extends Reducer<Text,Text,Text,Text> {
 		private MultipleOutputs<Text,Text> mos;
-		
+
 		public void setup(Context context) {
 			mos = new MultipleOutputs<Text,Text>(context);
 		}
@@ -166,12 +175,12 @@ public class Step4 {
 
 
 	}
-	
+
 
 
 	public static void main(String[] args) throws Exception {
-		
-		
+
+
 		Configuration conf = new Configuration();
 		Job job = new Job(conf);
 		job.setJarByClass(Step4.class);
@@ -185,7 +194,7 @@ public class Step4 {
 		job.setOutputFormatClass(TextOutputFormat.class);
 		job.setInputFormatClass(TextInputFormat.class);
 		FileInputFormat.addInputPaths(job, args[0]);   //input 5 gram!!!!!!!
-		
+
 		/*  cache  */
 		FileSystem fs_s3a = new S3AFileSystem();
 		//args[1] = "s3n://ass3dsp181resultstamir"
@@ -205,8 +214,8 @@ public class Step4 {
 		}
 		fs_s3a.close();
 		System.out.println("[Step5] Finished adding files to cache.");
-		
-		
+
+
 		MultipleOutputs.addNamedOutput(job, "byHook", TextOutputFormat.class,
 				Text.class, Text.class);
 		MultipleOutputs.addNamedOutput(job, "byPattern", TextOutputFormat.class,
