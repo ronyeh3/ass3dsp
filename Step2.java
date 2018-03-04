@@ -30,30 +30,32 @@ public class Step2 {
     // need to do word count on step 1 and not the full 5 gram
 	
 	//new : input - 1gram
-	public static class MapperClassWordCounter1Gram extends Mapper<LongWritable, Text, Text, IntWritable> {
+	public static class MapperClassWordCounter1Gram extends Mapper<LongWritable, Text, Text, LongWritable> {
 		private String valueAsString;
+		private Text word = new Text();
 		private String[] splittedValue;
 		private LongWritable occurences;
-		private IntWritable one = new IntWritable(1);
 		Pattern p = Pattern.compile("[a-z]+");
 		@Override
 		public void map(LongWritable key, Text value, Context context) throws IOException,  InterruptedException {
 			valueAsString = value.toString();
 			splittedValue = valueAsString.split("\t");
-			String[] splittedNgram = splittedValue[0].split("\\s+");
-			for (String word : splittedNgram) {
-				context.write(new Text(word), one);
+			String[] splittedNgram = splittedValue[0].trim().toLowerCase().split("\\s+");
+			for (String word : splittedNgram)
+				if (!p.matcher(word).matches()) { return; }
+			word.set(splittedValue[0]);   
+			context.write(word, occurences);
 			}
 		}
-	}
+	
 
-	public static class ReducerWordCountClass extends Reducer<Text,IntWritable,Text,IntWritable> {
+	public static class ReducerWordCountClass extends Reducer<Text,LongWritable,Text,LongWritable> {
 		@Override
-		public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException,  InterruptedException {
-			int sum = 0;
-			for (IntWritable value : values)
+		public void reduce(Text key, Iterable<LongWritable> values, Context context) throws IOException,  InterruptedException {
+			long sum = 0;
+			for (LongWritable value : values)
 				sum += value.get();			
-			context.write(key, new IntWritable(sum));
+			context.write(key, new LongWritable(sum));
 		}
 	}
 

@@ -31,14 +31,23 @@ public class Step1 {
 		private String valueAsString;
 		private String[] splittedValue;
 		private LongWritable occurences;
-		Pattern p = Pattern.compile("[a-z]+");  // [a-zA-Z]+
+		Pattern p = Pattern.compile("[a-z]+");  // [a-zA-Z]+ change to lowecase
+		
+		private static final int limiter = 5; 
+		private static  int counter = 0;
+		
 		@Override
 		public void map(LongWritable key, Text value, Context context) throws IOException,  InterruptedException {
+			
+//			if (  (counter= ((counter+1)%limiter) ) !=0 ) //skip every 4 = 20%
+//				return;  
+			
 			valueAsString = value.toString();
 			splittedValue = valueAsString.split("\t");
-			String[] splittedNgram = splittedValue[0].split("\\s+");
+			String[] splittedNgram = splittedValue[0].trim().toLowerCase().split("\\s+");
 			for (String word : splittedNgram)
 				if (!p.matcher(word).matches()) { return; }
+			
 			occurences = new LongWritable(Long.parseLong(splittedValue[2]));
 			word.set(splittedValue[0]);  
 			context.write(word, occurences);
@@ -47,12 +56,9 @@ public class Step1 {
 
 	public static class ReducerClass extends Reducer<Text,LongWritable,Text,LongWritable> {
 	
-		private static final int limiter = 5; 
-		private static  int counter = 0;
+
 		
-		public void reduce(Text key, Iterable<LongWritable> values, Context context) throws IOException,  InterruptedException {
-			if (  (counter= ((counter+1)%limiter) ) !=0 ) //skip every 4 = 20%
-				return;        
+		public void reduce(Text key, Iterable<LongWritable> values, Context context) throws IOException,  InterruptedException {      
 			
 			long sum = 0;
 			for (LongWritable value : values)

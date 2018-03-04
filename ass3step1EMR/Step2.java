@@ -29,7 +29,6 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 public class Step2 {
 
 	// This step is a simple WordCount for the words that appear in 5Grams.
-    // need to do word count on step 1 and not the full 5 gram
 	
 	//new : input - 1gram
 	public static class MapperClassWordCounter1Gram extends Mapper<LongWritable, Text, Text, LongWritable> {
@@ -38,11 +37,11 @@ public class Step2 {
 		public void map(LongWritable key, Text value, Context context) throws IOException,  InterruptedException {
 			String[] splitted = value.toString().split("\t");
 		       if (splitted.length < 4) { return; } /* malformed line, skip it. */
-		       String ngram = splitted[0].trim();	//ngram
+		       String ngram = splitted[0].trim().toLowerCase();	//ngram to lower case !!!
 		       String count = splitted[2];	//occurrences 
 		       
-		       String[] w1w2_w3 = ngram.split("\\s+");
-		       for (String w : w1w2_w3)
+		       String[] w1 = ngram.split("\\s+");
+		       for (String w : w1)
 		    	   if (!p.matcher(w).matches()) { return; }
 		       
 		       context.write(new Text(ngram), new LongWritable(Long.valueOf(count)));

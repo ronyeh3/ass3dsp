@@ -34,7 +34,7 @@ public class Step1 {
 		private String valueAsString;
 		private String[] splittedValue;
 		private LongWritable occurences;
-		Pattern p = Pattern.compile("[a-z]+");  // [a-zA-Z]+
+		Pattern p = Pattern.compile("[a-zA-Z]+");  // [a-zA-Z]+
 		@Override
 		public void map(LongWritable key, Text value, Context context) throws IOException,  InterruptedException {
 			valueAsString = value.toString();

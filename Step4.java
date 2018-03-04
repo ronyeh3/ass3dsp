@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -26,8 +27,9 @@ import org.apache.hadoop.io.LongWritable;
 //TODO ADD RESTRICRING OF CW. Target word should have less occurences than Fc!!!!!!!
 
 public class Step4 {
-	static List<String> hfw = new ArrayList<String>();  // onegram!!!!!!!!!!
-	static List<String> hooks = new ArrayList<String>();
+	static HashSet<String> hfw = new HashSet<String>();  // onegram!!!!!!!!!!
+	static HashSet<String> hooks = new HashSet<String>();
+	static HashSet<String> notcws = new HashSet<String>(); // there are less not CWs than CWs, working with the "not" for efficiency
 
 
 	public static class MapperClass extends Mapper<LongWritable, Text, Text, Text> {
@@ -55,7 +57,7 @@ public class Step4 {
 
 		}
 		public void readFile(FSDataInputStream in, String filename) throws IOException {
-			List<String> currList;
+			HashSet<String> currList;
 			if (filename.substring(0, 3).equals("hfw"))
 				currList = hfw;
 			else
