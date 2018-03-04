@@ -39,7 +39,7 @@ public class Step3 {
 		private static final int limiter = 5; 
 		private static  int counter = 0;
 
-		private int occurences;
+		private long occurences;
 		private String classification;
 		private String valueAsString;
 		private String[] splittedValue;
@@ -53,7 +53,7 @@ public class Step3 {
 			classification = "";   // or hook or hfw
 			valueAsString = value.toString();
 			splittedValue = valueAsString.split("\t");
-			occurences = Integer.parseInt(splittedValue[1]);
+			occurences = Long.parseLong(splittedValue[1]);
 			if (occurences < Fc && occurences > Fb) { // hook word // add only if we are below maxHookWords
 				classification += "Hook|";
 				context.getCounter(COUNTER.HOOKWORDS).increment(1);
