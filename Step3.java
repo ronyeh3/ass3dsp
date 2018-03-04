@@ -36,7 +36,7 @@ public class Step3 {
 		private static final int Fb = 25;				// Article: 1-50
 		private static final int maxHookWords = 1000;	// TODO Article: 100-1000 (N).    NEED TO CHECK WHY! Currently unused.
 
-		private static final int limiter = 5; 
+		private static final int limiter = 5;
 		private static  int counter = 0;
 
 		private long occurences;
@@ -79,6 +79,8 @@ public class Step3 {
 		@Override
 		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException,  InterruptedException {
 
+			if ((counter = ((counter+1)%ratio)) !=0)
+				return;
 
 			for (Text value : values) {
 				wordClassifications = value.toString().split("\\|");
@@ -87,7 +89,7 @@ public class Step3 {
 						// if we want multiple reducers, consider adding this context.getNumReduceTasks()) to the value of ratio
 						if ((counter = ((counter+1)%ratio)) !=0)
 							continue;
-						// decrease counter 
+						// decrease counter
 						mos.write("hook", key, null);
 					}
 					else if (wordClassifications[i].equals("HFW"))
@@ -134,7 +136,6 @@ public class Step3 {
 				Text.class, Text.class);
 		//Counters counters = job.getCounters();
 		//counters.findCounter(COUNTER.HOOKWORDS).setValue(0);
-		job.setNumReduceTasks(1);
 		System.exit(job.waitForCompletion(true) ? 0 : 1);
 
 	}
