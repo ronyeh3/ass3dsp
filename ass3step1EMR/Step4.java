@@ -109,8 +109,7 @@ public class Step4 {
 		}
 
 		public void map(LongWritable LongWritable, Text value, Context context) throws IOException,  InterruptedException {
-			String ngram = value.toString();
-
+			String ngram = value.toString().split("\\t")[0];
 			String[] ngramWords = ngram.split("\\s+");
 			String target, pattern, hookword;
 			if (hfw.contains(ngramWords[0]) && hfw.contains(ngramWords[2]) && hfw.contains(ngramWords[4])){
@@ -153,7 +152,7 @@ public class Step4 {
 				}
 				patternsAndTargets = patternsAndTargets.substring(0,patternsAndTargets.length());
 				mos.write("byHook", new Text(actualKey), new Text(patternsAndTargets));
-				mos.write("byHook", new Text(""), null);
+//				mos.write("byHook", new Text(""), null);
 			}
 			else { // if (key.toString().charAt(1) == '2')
 				String hookWords="";
@@ -163,7 +162,7 @@ public class Step4 {
 				}
 				hookWords = hookWords.substring(0,hookWords.length());
 				mos.write("byPattern", new Text(actualKey), new Text(hookWords));
-				mos.write("byPattern", new Text(""), null);
+//				mos.write("byPattern", new Text(""), null);
 			}
 		}
 		public void cleanup(Context context) throws IOException {

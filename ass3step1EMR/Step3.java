@@ -62,28 +62,36 @@ public class Step3 {
 			splittedValue = valueAsString.split("\t");
 			occurences = Long.parseLong(splittedValue[1]);
 			if (occurences < Fc && occurences > Fb) { // hook word // add only if we are below maxHookWords
-				classification += "Hook|";
+				classification += "Hook$";
 				context.getCounter(COUNTER.HOOKWORDS).increment(1);
 			}
 
-			if (occurences > Fc) {
-				classification += "NOTCW|";
+			if (occurences > Fc) { // most common words should return true here
+				classification += "NOTCW$";
 			}
 
 			if (occurences > Fh) { // high frequency word
-				classification += "HFW|";
+				classification += "HFW$";
+				if (Math.random() < 0.02) {
+					System.out.println("HFW: "+splittedValue[0]+"  Original: "+valueAsString);
+				}
 			}
+			// here splittedValue[0] is the word
+			// classification example: Hook|HFW
+			// classification example: Hook|
+			// classification example: HFW|
 			context.write(new Text(splittedValue[0]), new Text(classification));
 		}
 	}
 
 	public static class ReducerWordCountClass extends Reducer<Text,Text,Text,Text> {
-		private static final long maxHookWords = 1000;
+		private static long maxHookWords;
 		private MultipleOutputs<Text,Text> mos;
 		private static long ratio;
 		private static long counter = 0;
 		public void setup(Context context) {
 			mos = new MultipleOutputs<Text,Text>(context);
+			maxHookWords = context.getConfiguration().getInt("maxHook", 2500);
 			ratio = Math.round((float) context.getCounter(COUNTER.HOOKWORDS).getValue() / (float) maxHookWords);
 		}
 		private String[] wordClassifications;
@@ -93,7 +101,7 @@ public class Step3 {
 
 
 			for (Text value : values) {
-				wordClassifications = value.toString().split("\\|");
+				wordClassifications = value.toString().split("$");
 				for (int i=0 ; i<wordClassifications.length ; i++) {
 					if (wordClassifications[i].equals("Hook")) {
 						// if we want multiple reducers, consider adding this context.getNumReduceTasks()) to the value of ratio
