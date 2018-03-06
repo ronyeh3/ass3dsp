@@ -1,0 +1,32 @@
+   % 1. Title: DSP181 - Final Project
+   % 
+   % 2. Sources:
+   %      (a) Creators: Ron Yehuda & Tamir Eyal
+   %      (b) Date: March, 2018
+   % 
+   @RELATION semanticsRelations
+
+   @ATTRIBUTE cluster1  NUMERIC
+   @ATTRIBUTE cluster2   NUMERIC
+   @ATTRIBUTE cluster3  NUMERIC
+   @ATTRIBUTE cluster4   NUMERIC
+   @ATTRIBUTE cluster5  NUMERIC
+   @ATTRIBUTE cluster6   NUMERIC
+   @ATTRIBUTE cluster7  NUMERIC
+   @ATTRIBUTE cluster8   NUMERIC
+   @ATTRIBUTE cluster9  NUMERIC
+   @ATTRIBUTE cluster10   NUMERIC
+   @ATTRIBUTE class        {COORD,HYPER,MERO,RANDOM}
+   
+   
+   @DATA
+   5.1,3.5,1.4,0.2,3.0,1.4,3.5,1.4,0.2,3.0,COORD
+   4.9,3.0,1.4,0.2,7.0,2.1,4.1,1.7,0.3,0.4,MERO
+   4.7,3.2,1.3,0.2,3.9,1.7,0.4,3.9,1.7,0.4,COORD
+   4.6,3.1,1.5,0.2,5.0,3.6,1.4,0.2,5.0,1.2,COORD
+   5.0,3.6,32,0.2,5.0,85,1.4,0.2,5.0,85,HYPER
+   5.4,3.9,29,0.4,5.4,104,1.7,0.4,2.3,92,HYPER
+   4.6,3.4,1.4,0.3,0.5,0.7,0.8,1.3,4.1,2.5,COORD
+   5.0,3.4,1.5,0.2,3.0,1.4,4.6,3.1,1.5,0.2,RANDOM
+   4.4,2.9,1.4,0.2,4.4,2.9,4.4,2.9,1.4,0.2,MERO
+   4.9,3.1,1.5,0.1,1.5,0.1,4.6,3.1,1.5,0.2,COORD
