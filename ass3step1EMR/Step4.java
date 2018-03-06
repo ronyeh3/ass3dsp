@@ -183,7 +183,7 @@ public class Step4 {
 
 
 	    Configuration conf = new Configuration();
-		System.out.println("[~programer messege~] Staring step 4 .");
+		System.out.println("[~programmer messege~] Staring step 4 .");
 		Job job = Job.getInstance(conf);
 		job.setJarByClass(Step4.class);
 		job.setMapperClass(MapperClass.class);
