@@ -38,9 +38,9 @@ public class Step3 {
 		private String[] splittedValue;
 		@Override
 		public void setup(Context context) throws IOException, InterruptedException {
-			Fb = 50*100000;
-			Fc = 1000*100000;
-			Fc =  100*100000;
+			Fb = 100*100000;
+			Fc = 750*100000;
+			Fh =  200*100000;
 			maxHookWord = context.getConfiguration().getInt("maxHook", 2000);
 		}
 
