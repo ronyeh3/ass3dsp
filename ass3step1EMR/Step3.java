@@ -1,13 +1,10 @@
 import java.io.IOException;
 
-import org.apache.commons.httpclient.URI;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Counter;
-import org.apache.hadoop.mapreduce.Counters;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -26,9 +23,9 @@ public class Step3 {
 	//TODO add counter of max hookwords
 
 	public static class myMapperClass extends Mapper<LongWritable, Text, Text, Text> {
+		private static int Fb;				// Article: 1-50  per miliion
 		private static int Fc;					// Article: 100-5000 per miliion
 		private static int Fh;			// Article: 10-100  per miliion
-		private static int Fb;				// Article: 1-50  per miliion
 		private static int maxHookWord;	// TODO Article: 100-1000 (N).    NEED TO CHECK WHY! Currently unused.
 
 
@@ -38,10 +35,10 @@ public class Step3 {
 		private String[] splittedValue;
 		@Override
 		public void setup(Context context) throws IOException, InterruptedException {
-			Fb = 100*100000;
-			Fc = 750*100000;
-			Fh =  200*100000;
-			maxHookWord = context.getConfiguration().getInt("maxHook", 2000);
+			Fb = context.getConfiguration().getInt("Fb", 100*100000);
+			Fc = context.getConfiguration().getInt("Fc", 750*100000);;
+			Fh = context.getConfiguration().getInt("Fh", 25*100000); ;  //Maybe less then 50
+			maxHookWord = context.getConfiguration().getInt("maxHook", 2000);   // manual deletion from buckets
 		}
 
 		
@@ -151,8 +148,6 @@ public class Step3 {
 		job.setMapOutputValueClass(Text.class);
 		job.setInputFormatClass(TextInputFormat.class);
 		FileInputFormat.addInputPath(job, new Path(args[0]));
-		//TODO Change to the following lines when working with Lz0
-		//		job.setInputFormatClass(SequenceFileInputFormat.class);
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
 		MultipleOutputs.addNamedOutput(job, "hook", TextOutputFormat.class,
 				Text.class, Text.class);

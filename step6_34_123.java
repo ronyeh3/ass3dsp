@@ -62,9 +62,13 @@ public class step6_34_123 {
 						if (splittedtargetbyHook.length > 1)
 							continue;
 						String singlehookword = splittedtargetbyHook[0];
+						Iterator<Entry<String, Object>> innerIterator;
 						//cluster is a target and a set of patterns, for each hook we have several clusters
-						Iterator<Entry<String, Object>> innerIterator = hooksAndClusters.get(singlehookword).entrySet().iterator();
+						if(hooksAndClusters.containsKey(singlehookword))
+						innerIterator = hooksAndClusters.get(singlehookword).entrySet().iterator();
 						//now i have iterator for target and patterns for specific hook 
+						else
+							continue;
 						while (innerIterator.hasNext()) {
 							((List<String>)innerIterator.next().getValue()).remove(pattern);
 						}

@@ -38,7 +38,7 @@ import com.google.gson.reflect.TypeToken;
 import org.apache.hadoop.io.LongWritable;
 
 
-/* input - step 4 by hooks 
+/* input - step 4 by hooks output/step4/
  * 
  */
 
