@@ -23,9 +23,24 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
  
+/* 
+ * 		Map input records=24492478978
+		Map output records=10663205018
+		Map output bytes=364806084770
+		Map output materialized bytes=38565333207
+		Input split bytes=971056
+		Combine input records=0
+		Combine output records=0
+		Reduce input groups=247491358
+		Reduce shuffle bytes=38565333207
+		Reduce input records=10663205018
+		Reduce output records=247491358
+ * 
+ */
+
 
 public class Step1 {
-
+//total 5 gram records 247491358 100% after agregation
 	public static class MapperClass5GramAgg extends Mapper<LongWritable, Text, Text, LongWritable> {
 		private Text word = new Text();
 		private String valueAsString;
@@ -33,13 +48,13 @@ public class Step1 {
 		private LongWritable occurences;
 		Pattern p = Pattern.compile("[a-z]+");  // [a-zA-Z]+ change to lowecase
 		
-		private static final int limiter = 5; 
+		private static final int limiter = 5; //for 20%
 		private static  int counter = 0;
 		
 		@Override
 		public void map(LongWritable key, Text value, Context context) throws IOException,  InterruptedException {
 			
-//			if (  (counter= ((counter+1)%limiter) ) !=0 ) //skip every 4 = 20%
+//			if (  (counter= ((counter+1)%limiter) ) !=0 ) //skip every 4 = ~20%
 //				return;  
 			
 			valueAsString = value.toString();

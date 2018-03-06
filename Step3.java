@@ -15,6 +15,7 @@ import org.apache.hadoop.mapreduce.Counters;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
@@ -62,6 +63,8 @@ public class Step3 {
 			if (occurences > Fh) { // high frequency word
 				classification += "HFW|";
 			}
+			
+			if(!classification.equals(""))
 			context.write(new Text(splittedValue[0]), new Text(classification));
 		}
 	}
@@ -120,13 +123,12 @@ public class Step3 {
 
 		Configuration conf = new Configuration();
 		Job job = new Job(conf, "HFW & Hook Words Counter");
-		job.setJarByClass(Step1.class);
-		job.setCombinerClass(ReducerWordCountClass.class);
+		job.setJarByClass(Step3.class);
 		job.setReducerClass(ReducerWordCountClass.class);
 		job.setMapOutputKeyClass(Text.class);
 		job.setMapOutputValueClass(Text.class);
 		job.setInputFormatClass(TextInputFormat.class);
-		MultipleInputs.addInputPath(job,new Path(args[0]),TextInputFormat.class,MapperClassWordCounter5Gram.class);
+		FileInputFormat.addInputPath(job, new Path(args[0]));
 		//TODO Change to the following lines when working with Lz0
 		//		job.setInputFormatClass(SequenceFileInputFormat.class);
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));

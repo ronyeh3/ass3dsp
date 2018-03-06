@@ -1,14 +1,9 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.LocatedFileStatus;
 import org.apache.hadoop.fs.Path;
@@ -26,12 +21,14 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.io.LongWritable;
 
 /*
- * input - step 1 :  5 gram just the words
+ * input - step 1 :  5 gram (after aggregation) just the words
  * input - step 3 (cache) :  the classifications of the HFW and hooks and CW(not)
  */
 
 public class Step4 {
-	static HashSet<String> hfw = new HashSet<String>();  // onegram!!!!!!!!!!
+	
+	//Instead of putting  1 gram we upload to cache exactly what we need to arrange
+	static HashSet<String> hfw = new HashSet<String>();  
 	static HashSet<String> hooks = new HashSet<String>();
 	static HashSet<String> notcws = new HashSet<String>(); // there are less not CWs than CWs, working with the "not" for efficiency
 	// because we need them just to make sure we don't choose target words that are very common (is, the ...)
@@ -42,18 +39,18 @@ public class Step4 {
 		private static final String type1 = "-1-";
 		private static final String type2 = "-2-";
 
-
+		@Override
 		protected void setup(Context context) throws IOException, InterruptedException {
 
-			System.out.println("[Mapper Step5] INFO: Starting mapper setup.");
+			System.out.println("[Mapper Step4] INFO: Starting mapper setup.");
 			URI [] cacheFilesURI = Job.getInstance(context.getConfiguration()).getCacheFiles();
-			System.out.println("[Mapper Step5] INFO: entring setup");
+			System.out.println("[Mapper Step4] INFO: entring setup");
 
 			if((cacheFilesURI != null) && (cacheFilesURI.length >0)) {
-				System.out.println("[Mapper Step5] INFO: In Setup adding CacheFiles URI to N1Map");
+				System.out.println("[Mapper Step4] INFO: In Setup adding CacheFiles URI to N1Map");
 				for (URI cacheFileURI : cacheFilesURI) {
 					if(cacheFileURI.getPath() != null) {
-						System.out.println("[Mapper Step5] INFO: In Setup path to file is not null");
+						System.out.println("[Mapper Step4] INFO: In Setup path to file is not null");
 
 						Path cacheFilePath = new Path(cacheFileURI.getPath());
 						try{
@@ -64,16 +61,16 @@ public class Step4 {
 							fr.close();
 						}
 						catch (IOException e) {
-							System.err.println("[Mapper Step5]  ERROR: in opening cache file path.");
+							System.err.println("[Mapper Step4]  ERROR: in opening cache file path.");
 							e.printStackTrace();			
 						}
 					}
 				}
 			}
 			else {
-				System.err.println("[Mapper step5]  ERROR: cacheFile is Empty!!! ");
+				System.err.println("[Mapper step4]  ERROR: cacheFile is Empty!!! ");
 			}
-			System.out.println("[Mapper Step5] INFO: Finished loading N1 File.");
+			System.out.println("[Mapper Step4] INFO: Finished loading N1 File.");
 
 
 		}
@@ -138,13 +135,16 @@ public class Step4 {
 
 	public static class ReducerClass extends Reducer<Text,Text,Text,Text> {
 		private MultipleOutputs<Text,Text> mos;
-
+		@Override
 		public void setup(Context context) {
 			mos = new MultipleOutputs<Text,Text>(context);
 		}
 
 		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException,  InterruptedException {
-			if (key.toString().charAt(1) == '1') {
+			
+			//reduces assumes that for each hook word , we can put in memory all the target-patterns for it
+			
+			if (key.toString().charAt(1) == '1') {    // -1-
 				String patternsAndTargets="";
 				String actualKey = key.toString().split("\t")[1];
 				for (Text value : values) {
@@ -165,6 +165,7 @@ public class Step4 {
 //				mos.write("byPattern", new Text(""), null);
 			}
 		}
+		@Override
 		public void cleanup(Context context) throws IOException {
 			try {
 				mos.close();
@@ -181,8 +182,9 @@ public class Step4 {
 	public static void main(String[] args) throws Exception {
 
 
-		Configuration conf = new Configuration();
-		Job job = new Job(conf);
+	    Configuration conf = new Configuration();
+		System.out.println("[~programer messege~] Staring step 4 .");
+		Job job = Job.getInstance(conf);
 		job.setJarByClass(Step4.class);
 		job.setMapperClass(MapperClass.class);
 		job.setReducerClass(ReducerClass.class);
@@ -205,15 +207,15 @@ public class Step4 {
 		while (itr.hasNext()) {
 			LocatedFileStatus f = itr.next();
 			if(f.getPath().getName().toString().equals("_SUCCESS")) {
-				System.out.println("[Step5] Skiped \"_SUCCESS\" file");
+				System.out.println("[Step4] Skiped \"_SUCCESS\" file");
 				continue;
 			}
-			System.out.println("[Step5] Adding "+ f.getPath().toUri()+"  URI to cache File");
+			System.out.println("[Step4] Adding "+ f.getPath().toUri()+"  URI to cache File");
 			job.addCacheFile(f.getPath().toUri());
 			System.out.println("[Step5]	A file has been added to cache");
 		}
 		fs_s3a.close();
-		System.out.println("[Step5] Finished adding files to cache.");
+		System.out.println("[Step4] Finished adding files to cache.");
 
 
 		MultipleOutputs.addNamedOutput(job, "byHook", TextOutputFormat.class,

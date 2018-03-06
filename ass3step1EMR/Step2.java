@@ -26,10 +26,26 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
-public class Step2 {
+/*
+Map input records=472764897
+		Map output records=396499851
+		Map output bytes=6646705702
+		Map output materialized bytes=1287150417
+		Input split bytes=21235
+		Combine input records=0
+		Combine output records=0
+		Reduce input groups=4423745
+		Reduce shuffle bytes=1287150417
+		Reduce input records=396499851
+		Reduce output records=4423745
+		Spilled Records=792999702
+ * 
+ */
 
-	// This step is a simple WordCount for the words that appear in 5Grams.
-	
+public class Step2 {
+     
+	// This step is a simple WordCount for the words that appear in 1gram.
+	//output records - 4423745
 	//new : input - 1gram
 	public static class MapperClassWordCounter1Gram extends Mapper<LongWritable, Text, Text, LongWritable> {
 	
