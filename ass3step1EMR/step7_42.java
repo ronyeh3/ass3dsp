@@ -97,7 +97,7 @@ public class step7_42 {
 				e.printStackTrace();
 			}
 
-			if (filename.substring(0, 3).equals("las")) {  // clusters
+			if (filename.substring(0, 4).equals("last")) {  // clusters from step_6_44
 				JsonReader reader = new JsonReader(joinReader); // clusters file is in json format
 				Type type = new TypeToken<ArrayList<List<List<String>>>>(){}.getType();
 				allClusters = gson.fromJson(reader, type);
@@ -202,7 +202,7 @@ public class step7_42 {
 					hitsVector = new float[vectorData.length];
 				for (int i=0 ; i< vectorData.length ; i++) {
 					currElement = Float.parseFloat(vectorData[i]);
-					hitsVector[i] += currElement;
+					hitsVector[i] += currElement;            /// why arrey out of boundhere ???
 				}
 			}
 			String finalVector="";
@@ -213,8 +213,8 @@ public class step7_42 {
 			actualKey = finalVector+actualKey;
 			key = new Text(actualKey);
 			context.write(key, null);
-			
-			
+
+
 			//context.write(key, new Text(finalVector));
 			// now: blessed1 blessed2 relation	0.5,0.2,1,13
 			// desired: 0.5,0.2,1,13,relation
@@ -222,51 +222,50 @@ public class step7_42 {
 		}
 
 
+	}
 
-		public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 
 
-			Configuration conf = new Configuration();
-			Job job = Job.getInstance(conf);
-			job.setJarByClass(step7_42.class);
-			job.setMapperClass(MapperClass.class);
-			job.setReducerClass(ReducerClass.class);
-			job.setMapOutputKeyClass(Text.class);
-			job.setMapOutputValueClass(Text.class);
-			job.setOutputFormatClass(TextOutputFormat.class);
-			job.setOutputKeyClass(Text.class);
-			job.setOutputValueClass(Text.class);
-			job.setOutputFormatClass(TextOutputFormat.class);
-			job.setInputFormatClass(TextInputFormat.class);
-			FileInputFormat.addInputPaths(job, args[0]);   //input 5gram
-			MultipleOutputs.addNamedOutput(job, "output", TextOutputFormat.class,
-					Text.class, Text.class);
+		Configuration conf = new Configuration();
+		Job job = Job.getInstance(conf);
+		job.setJarByClass(step7_42.class);
+		job.setMapperClass(MapperClass.class);
+		job.setReducerClass(ReducerClass.class);
+		job.setMapOutputKeyClass(Text.class);
+		job.setMapOutputValueClass(Text.class);
+		job.setOutputFormatClass(TextOutputFormat.class);
+		job.setOutputKeyClass(Text.class);
+		job.setOutputValueClass(Text.class);
+		job.setOutputFormatClass(TextOutputFormat.class);
+		job.setInputFormatClass(TextInputFormat.class);
+		FileInputFormat.addInputPaths(job, args[0]);   //input 5gram
 
-			/*  cache  */
-			FileSystem fs_s3a = new S3AFileSystem();
-			// args[1] = "s3n://ass3dsp181resultstamir"
-			fs_s3a.initialize(URI.create(args[1] ) , conf);
-			// args[2] = "s3n://ass3dsp181resultstamir/step6_344Result/"
-			// manually upload the input to S3. (it was created locally and not as MapReduce application)
-			// *blessed words* are also found in this folder (step6_344Result)
-			Path path = new Path(args[2]);
-			RemoteIterator<LocatedFileStatus> itr = fs_s3a.listFiles(path, false);
-			while (itr.hasNext()) {
-				LocatedFileStatus f = itr.next();
-				if(f.getPath().getName().toString().equals("_SUCCESS")) {
-					System.out.println("[Step7] Skiped \"_SUCCESS\" file");
-					continue;
-				}
-				System.out.println("[Step7] Adding "+ f.getPath().toUri()+"  URI to cache File");
-				job.addCacheFile(f.getPath().toUri());
-				System.out.println("[Step7]	A file has been added to cache");
+		/*  cache  */
+		FileSystem fs_s3a = new S3AFileSystem();
+		// args[1] = "s3n://ass3dsp181resultstamir"
+		fs_s3a.initialize(URI.create(args[1] ) , conf);
+		// args[2] = "s3n://ass3dsp181resultstamir/step6_34_4ResultAndBlessed/"
+		// manually upload the input to S3. (it was created locally and not as MapReduce application)
+		// *blessed words* are also found in this folder (step6_34_4ResultAndBlessed)
+		Path path = new Path(args[2]);
+		RemoteIterator<LocatedFileStatus> itr = fs_s3a.listFiles(path, false);
+		while (itr.hasNext()) {
+			LocatedFileStatus f = itr.next();
+			if(f.getPath().getName().toString().equals("_SUCCESS")) {
+				System.out.println("[Step7] Skiped \"_SUCCESS\" file");
+				continue;
 			}
-			fs_s3a.close();
-			System.out.println("[Step7] Finished adding files to cache.");
-
-			FileOutputFormat.setOutputPath(job, new Path(args[2]));		  
-			System.exit(job.waitForCompletion(true) ? 0 : 1);
-
+			System.out.println("[Step7] Adding "+ f.getPath().toUri()+"  URI to cache File");
+			job.addCacheFile(f.getPath().toUri());
+			System.out.println("[Step7]	A file has been added to cache");
 		}
+		fs_s3a.close();
+		System.out.println("[Step7] Finished adding files to cache.");
+
+		FileOutputFormat.setOutputPath(job, new Path(args[3]));		//output folder  
+		System.exit(job.waitForCompletion(true) ? 0 : 1);
+
 	}
 }
+
