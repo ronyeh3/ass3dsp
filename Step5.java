@@ -132,8 +132,7 @@ public class Step5 {
 
 	private static boolean shouldmerge(List<String> curr, List<String> next) {
 		List<String> big;
-		List<String> small;
-
+		List<String> small;       
 		float denominator;
 		float numerator;
 		//if small\big such that 2\3 share same patterns - merge
@@ -142,19 +141,19 @@ public class Step5 {
 			small  = curr;
 			numerator = 0;		
 		}
-		else {                        //   2 = comons    2
-			big = curr;             //    3 not comon  5-2
+		else {                       
+			big = curr;             
 			small  = next;
 			numerator = 0;
 		}
 
 		for(String pattern: small)
 			if(big.contains(pattern))
-				numerator++;
+				numerator++;      
 
-		denominator = big.size() + small.size() - numerator;
+		denominator = small.size();
 
-		if (numerator/denominator <= S) 
+		if (numerator/denominator <= S)
 			return false;
 
 		return true; 

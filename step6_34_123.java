@@ -224,10 +224,13 @@ public class step6_34_123 {
 	}
 
 	public static boolean shouldmerge(List<Pair<String, Integer>> c1, List<Pair<String, Integer>> c2) {
+		// think about merging into c2 as well, maybe better to set small and big (like step5 should merge with 2/3)
 		String c1Patt, c2Patt;
 		boolean allCoresAreShared = true;
 		float denominator;
 		float numerator = 0;	
+		float coreNumerator = 0;
+		float coreDenominator = 0;
 		Pair<String,Integer> c2Pattern;
 		Pair<String,Integer> c1Pattern;
 		//if small\big such that 2\3 share same patterns - merge
@@ -253,7 +256,7 @@ public class step6_34_123 {
 			}
 		}
 		//TODO Check how we should calculate the percentage of shared. From the minimal list or the total num of elements.
-		denominator = c1.size() + c2.size() - numerator;
+		denominator = c1.size();
 		float ans =  numerator/denominator;
 		//System.out.println(ans);
 		if(ans < S) 

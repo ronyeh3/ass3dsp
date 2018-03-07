@@ -119,11 +119,14 @@ public class step7_42 {
 		@Override
 		public void map(LongWritable LongWritable, Text value, Context context) throws IOException,  InterruptedException {
 			String ngram = value.toString();
+			//the child went to school
+			// check if "the went school" (x1 x3 x5) is a pattern
+			// check if "child to" (x2 x4) is a blessed pair
 			String[] splittedNgram = ngram.split("\\s+");
-			String[] blessedPairArr;
+			String[] blessedPairArr; // blessed1 blessed2 relation
 			String firstBlessed, secondBlessed, secondWordInNgram, fourthWordInNgram;
 			String currHit, totalHits="";             
-			if (ngramAppearsAsPattern(splittedNgram)) {   ///////// the ngram (x1 x3 x5) appears as pattern somewhere (don't know if confirmed/unconfirmed)
+			if (ngramAppearsAsPattern(splittedNgram)) {   /// the ngram (x1 x3 x5) appears as pattern somewhere (don't know if confirmed/unconfirmed)
 				for (String blessedPair : blessed_words) {
 					blessedPairArr = blessedPair.split("\t");
 					firstBlessed = blessedPairArr[0].toLowerCase();
