@@ -36,8 +36,8 @@ public class Step3 {
 		@Override
 		public void setup(Context context) throws IOException, InterruptedException {
 			Fb = context.getConfiguration().getInt("Fb", 100*100000);
-			Fc = context.getConfiguration().getInt("Fc", 750*100000);;
-			Fh = context.getConfiguration().getInt("Fh", 25*100000); ;  //Maybe less then 50 (50 was 200mb result)
+			Fc = context.getConfiguration().getInt("Fc", 750*100000);
+			Fh = context.getConfiguration().getInt("Fh", 25*100000);  //Maybe less then 50 (50 was 200mb result)
 			maxHookWord = context.getConfiguration().getInt("maxHook", 2000);   // manual deletion from buckets
 		}
 

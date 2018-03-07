@@ -54,9 +54,6 @@ public class Step1 {
 		@Override
 		public void map(LongWritable key, Text value, Context context) throws IOException,  InterruptedException {
 			
-//			if (  (counter= ((counter+1)%limiter) ) !=0 ) //skip every 4 = ~20%
-//				return;  
-			
 			valueAsString = value.toString();
 			splittedValue = valueAsString.split("\t");
 			String[] splittedNgram = splittedValue[0].trim().toLowerCase().split("\\s+");

@@ -35,6 +35,7 @@ import com.google.gson.stream.JsonReader;
 import org.apache.hadoop.io.LongWritable;
 
 /*
+ *   ## MapReduce Application ##
  *   input - step 1 :  5 gram minimize (to see that it a valide sentence)
  *   input ram - blessed words
  *   input ram - step 6_344: all clusters and how many
@@ -120,21 +121,25 @@ public class step7_42 {
 			String ngram = value.toString();
 			String[] splittedNgram = ngram.split("\\s+");
 			String[] blessedPairArr;
-			String firstBlessed, secondBlessed;
+			String firstBlessed, secondBlessed, secondWordInNgram, fourthWordInNgram;
 			String currHit, totalHits="";             
 			if (ngramAppearsAsPattern(splittedNgram)) {   ///////// the ngram (x1 x3 x5) appears as pattern somewhere (don't know if confirmed/unconfirmed)
 				for (String blessedPair : blessed_words) {
 					blessedPairArr = blessedPair.split("\t");
 					firstBlessed = blessedPairArr[0].toLowerCase();
 					secondBlessed = blessedPairArr[1].toLowerCase();
-					if (splittedNgram[1].toLowerCase().equals(firstBlessed) && splittedNgram[3].toLowerCase().equals(secondBlessed)) { /// The x2 x4 of ngram is a blessed pair
+					secondWordInNgram = splittedNgram[1].toLowerCase();
+					fourthWordInNgram = splittedNgram[3].toLowerCase();
+					if ((secondWordInNgram.equals(firstBlessed) && fourthWordInNgram.equals(secondBlessed)) ||
+							(secondWordInNgram.equals(secondBlessed) && fourthWordInNgram.equals(firstBlessed))) { /// The x2 x4 of ngram is a blessed pair
 
 						//here we need to iterate through all clusters and calculate hits
 						for (List<List<String>> cluster : allClusters) {
 							currHit = getHits(cluster, blessedPairArr);
-							totalHits += " "+currHit;
+							totalHits += currHit+" ";
 						}
 						context.write(new Text(blessedPair), new Text(totalHits));
+						totalHits = "";
 					}
 				}
 			}
@@ -190,19 +195,16 @@ public class step7_42 {
 		// reducer receives blessed word couple (key) and their probabilities per cluster (value)
 		// (blessed1 blessed2 ; connection) , (0.0 0.6 0.2 0.4 0.5 ......... )
 		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException,  InterruptedException {
-			float[] hitsVector=null;
+			float[] hitsVector = null;
 			String[] vectorData;
 			float currElement;
 			for (Text value : values) {
-				while (value.toString().charAt(0) == ' ') {
-					value = new Text(value.toString().substring(1, value.toString().length()));
-				}
 				vectorData = value.toString().split(" ");
 				if (hitsVector == null)
 					hitsVector = new float[vectorData.length];
 				for (int i=0 ; i< vectorData.length ; i++) {
 					currElement = Float.parseFloat(vectorData[i]);
-					hitsVector[i] += currElement;            /// why arrey out of boundhere ???
+					hitsVector[i] += currElement;            /// why array out of bound here ???
 				}
 			}
 			String finalVector="";

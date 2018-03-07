@@ -99,7 +99,6 @@ public class step7_42 {
 							currHit = getHits(cluster, blessedPairArr);
 							totalHits += " "+currHit;
 						}
-						System.out.println("NOW EMIT!!!!\n "+blessedPair+" ## \n"+totalHits);
 						context.write(new Text(blessedPair), new Text(totalHits));
 					}
 				}
@@ -111,8 +110,6 @@ public class step7_42 {
 	private static String getHits(List<List<String>> cluster, String[] blessed) {
 		List<String> confirmed = cluster.get(0);
 		List<String> unconfirmed = cluster.get(1);
-		System.out.println("Confirmed: "+confirmed.toString());
-		System.out.println("Unconfirmed: "+unconfirmed.toString());
 		float alpha = 1;
 		float n = confirmed.size();
 		float m = unconfirmed.size();
@@ -170,7 +167,6 @@ public class step7_42 {
 				if (hitsVector == null)
 					hitsVector = new float[vectorData.length];
 				for (int i=0 ; i< vectorData.length ; i++) {
-					System.out.println("Vector data "+i+": "+vectorData[i]);
 					currElement = Float.parseFloat(vectorData[i]);
 					hitsVector[i] += currElement;
 				}

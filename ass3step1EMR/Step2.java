@@ -73,7 +73,6 @@ public class Step2 {
 			for (LongWritable value : values) {
 				sum += value.get();
 			}
-			//      System.out.println("reducer key is: "+key);
 			context.write(key, new LongWritable(sum)); 
 		}
 	}
