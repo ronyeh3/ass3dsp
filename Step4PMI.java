@@ -32,7 +32,7 @@ import org.apache.hadoop.io.LongWritable;
  */
 //TODO ADD RESTRICRING OF CW. Target word should have less occurences than Fc!!!!!!!
 
-public class Step4 {
+public class Step4PMI {
 	static HashSet<String> hfw = new HashSet<String>();  // onegram!!!!!!!!!!
 	static HashSet<String> hooks = new HashSet<String>();
 	static HashSet<String> notcws = new HashSet<String>(); // there are less not CWs than CWs, working with the "not" for efficiency
@@ -174,7 +174,7 @@ public class Step4 {
 
 		Configuration conf = new Configuration();
 		Job job = new Job(conf);
-		job.setJarByClass(Step4.class);
+		job.setJarByClass(Step4PMI.class);
 		job.setMapperClass(MapperClass.class);
 		job.setReducerClass(ReducerClass.class);
 		job.setMapOutputKeyClass(Text.class);

@@ -222,7 +222,7 @@ public class Step4 {
 				Text.class, Text.class);
 		MultipleOutputs.addNamedOutput(job, "byPattern", TextOutputFormat.class,
 				Text.class, Text.class);
-		FileOutputFormat.setOutputPath(job, new Path(args[3]));		//output path  
+		
 		System.exit(job.waitForCompletion(true) ? 0 : 1);
 
 	}
