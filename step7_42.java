@@ -51,8 +51,6 @@ public class step7_42 {
 			FileSystem fs = FileSystem.get(conf);
 			System.out.println("entring setup");
 			Path [] cacheFiles = context.getLocalCacheFiles();
-			System.out.println("HOW MANY FILES?   "+cacheFiles.length);
-
 			if((cacheFiles != null) && (cacheFiles.length >0)) {
 				for (Path cacheFile : cacheFiles) {
 					FSDataInputStream in = fs.open(cacheFile);
@@ -84,7 +82,7 @@ public class step7_42 {
 
 			}
 		}
-		
+
 		public void map(LongWritable LongWritable, Text value, Context context) throws IOException,  InterruptedException {
 			String ngram = value.toString().split("\t")[0];
 			//the child went to school
@@ -98,7 +96,7 @@ public class step7_42 {
 			String fourthWordInNgram = splittedNgram[3].toLowerCase(); // x4
 			String ngramPattern = 
 					splittedNgram[0] + " " + splittedNgram[2] + " "+ splittedNgram[4]; // x1 x3 x5
-			
+
 			if (ngramAppearsAsPattern(splittedNgram)) {   /// the ngram (x1 x3 x5) appears as pattern somewhere (don't know if confirmed/unconfirmed)
 				for (String blessedPair : blessed_words) {
 					blessedPairArr = blessedPair.split("\t");
@@ -142,7 +140,9 @@ public class step7_42 {
 		float firstValue, secondValue;
 		firstValue = (n == 0) ? 0 : (appearsAsCore/n);
 		secondValue = (m == 0) ? 0 : (appearsAsUnconfirmed/m);
-		return Float.toString(  firstValue   +   (alpha*secondValue)   );
+		float finalScore = firstValue   +   (alpha*secondValue);
+
+		return Float.toString(finalScore);
 
 
 	}
@@ -162,10 +162,10 @@ public class step7_42 {
 		return false;
 	}
 
-
 	public static class ReducerClass extends Reducer<Text,Text,Text,Text> {
 		// reducer receives blessed word couple (key) and their probabilities per cluster (value)
 		// (blessed1 blessed2 ; connection) , (0.0 0.6 0.2 0.4 0.5 ......... )
+		// check why we sum the vectors
 		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException,  InterruptedException {
 			float[] hitsVector = null;
 			String[] vectorData;
@@ -181,7 +181,12 @@ public class step7_42 {
 			}
 			String finalVector="";
 			for (float value : hitsVector) {
-				finalVector += value + ",";
+				if (value == 0) {
+					finalVector += "0,";
+				}
+				else {
+					finalVector += value + ",";
+				}
 			}
 			String actualKey = key.toString().split("\t")[2];
 			actualKey = finalVector+actualKey;
