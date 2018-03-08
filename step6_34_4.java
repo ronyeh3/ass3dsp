@@ -42,7 +42,7 @@ import org.apache.hadoop.io.LongWritable;
 // merge them according to rules (i,ii). 
 //input : finish.txt. from step6_34_123
 public class step6_34_4 {
-///maybe change to also 2/3 from total pattrns on top of same core and set other as unconfirm
+	///maybe change to also 2/3 from total pattrns on top of same core and set other as unconfirm
 
 	public static void main(String[] args) throws Exception {
 		Gson gson = new Gson();
@@ -50,17 +50,17 @@ public class step6_34_4 {
 		BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 		JsonStreamParser jp = new JsonStreamParser(br);
 		ArrayList<List<List<String>>> allClusters =  new ArrayList<List<List<String>>>();  // list of clusters, each element is list of [ [list] , [list] ] 
-		                                                                                     //yeah, list of 2 lists of lists                 conf     unconf
+		//yeah, list of 2 lists of lists                 conf     unconf
 		Type type = new TypeToken<ArrayList<List<String>>>(){}.getType();
 		while(jp.hasNext()) {
 			allClusters.add(gson.fromJson(jp.next(), type));
 		}
 
-				System.out.println(allClusters);
-				System.out.println("How many clustrs: "+allClusters.size());
-				System.out.println(allClusters.get(0));
-				System.out.println(allClusters.get(0).get(0));
-				System.out.println(allClusters.get(0).get(0).get(0));
+		System.out.println(allClusters);
+		System.out.println("How many clustrs: "+allClusters.size());
+		System.out.println(allClusters.get(0));
+		System.out.println(allClusters.get(0).get(0));
+		System.out.println(allClusters.get(0).get(0).get(0));
 
 		statAgain:
 			for( int i=0; i<allClusters.size();i++) {
@@ -78,11 +78,18 @@ public class step6_34_4 {
 				}
 			}
 
-		//System.out.println(allClusters);
-				BufferedWriter out2 = new BufferedWriter(new FileWriter("output/step344/last.txt"));
-				out2.write(gson.toJson(allClusters));
-				out2.close();	
-				
+		for (int i = 0 ; i< allClusters.size(); i++) {
+			List<List<String>> currCluster = allClusters.get(i);
+			if (currCluster.get(0).size() + currCluster.get(1).size() < 5) {
+				allClusters.remove(i);
+				i--;
+			}
+		}
+
+		BufferedWriter out2 = new BufferedWriter(new FileWriter("output/step344/last.txt"));
+		out2.write(gson.toJson(allClusters));
+		out2.close();	
+
 	}
 
 	private static void mergeListPatternClusters(List<List<String>> curr, List<List<String>> next) {
@@ -92,7 +99,13 @@ public class step6_34_4 {
 	}
 
 	private static boolean shouldmerge(List<List<String>> curr, List<List<String>> next) {
-		if(curr.get(0).size() == next.get(0).size() && curr.get(0).containsAll(next.get(0)))
+		List<List<String>> big = curr;
+		List<List<String>> small = next;
+		if (curr.size() < next.size()) {
+			small = curr;
+			big = next;
+		}
+		if(big.get(0).containsAll(small.get(0)))
 			return true;
 		return false;
 	}
