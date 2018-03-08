@@ -141,11 +141,11 @@ public class step6_34_123 {
 
 				printoutputcluster(hooksAndClusters , gson);
 
-				//beep sounds when finish
-				for(int i=0; i<50;i++) {
-					Toolkit.getDefaultToolkit().beep();
-					Thread.sleep(1000);
-				}
+//				//beep sounds when finish
+//				for(int i=0; i<50;i++) {
+//					Toolkit.getDefaultToolkit().beep();
+//					Thread.sleep(1000);
+//				}
 	}
 
 

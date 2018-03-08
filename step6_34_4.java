@@ -80,13 +80,13 @@ public class step6_34_4 {
 
 		for (int i = 0 ; i< allClusters.size(); i++) {
 			List<List<String>> currCluster = allClusters.get(i);
-			if (currCluster.get(0).size() + currCluster.get(1).size() < 5) {
+			if (currCluster.get(0).size() + currCluster.get(1).size() <= 1) {
 				allClusters.remove(i);
 				i--;
 			}
 		}
 
-		BufferedWriter out2 = new BufferedWriter(new FileWriter("output/step344/last.txt"));
+		BufferedWriter out2 = new BufferedWriter(new FileWriter("output/step6_34_4/last.txt"));
 		out2.write(gson.toJson(allClusters));
 		out2.close();	
 

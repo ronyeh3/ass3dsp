@@ -44,6 +44,8 @@ import org.apache.hadoop.io.LongWritable;
 
 
 public class step7_42 {
+	private static final float alpha = 1;
+
 	static HashSet<String> blessed_words = new HashSet<String>();  //pair words and relation word [w1 w2 w3, ... ]
 	static ArrayList<List<List<String>>> allClusters =  new ArrayList<List<List<String>>>(); 
 
@@ -119,7 +121,7 @@ public class step7_42 {
 
 		@Override
 		public void map(LongWritable LongWritable, Text value, Context context) throws IOException,  InterruptedException {
-			String ngram = value.toString();
+			String ngram = value.toString().split("\t")[0];
 			//the child went to school
 			// check if "the went school" (x1 x3 x5) is a pattern
 			// check if "child to" (x2 x4) is a blessed pair
@@ -156,7 +158,6 @@ public class step7_42 {
 	private static String getHits(List<List<String>> cluster, String ngramPattern) {
 		List<String> confirmed = cluster.get(0);
 		List<String> unconfirmed = cluster.get(1);
-		float alpha = 1;
 		float n = confirmed.size();
 		float m = unconfirmed.size();
 		float appearsAsCore=0;
