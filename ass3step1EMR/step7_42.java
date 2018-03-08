@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -36,14 +37,14 @@ import org.apache.hadoop.io.LongWritable;
 
 /*
  *   ## MapReduce Application ##
- *   input - step 1 :  5 gram minimize (to see that it a valide sentence)
+ *   input - step 1 :  5 gram minimize (to see that it a valid sentence)
  *   input ram - blessed words
  *   input ram - step 6_344: all clusters and how many
  */   
 
 
 public class step7_42 {
-	static List<String> blessed_words = new ArrayList<String>();  //pair words and relation word [w1 w2 w3, ... ]
+	static HashSet<String> blessed_words = new HashSet<String>();  //pair words and relation word [w1 w2 w3, ... ]
 	static ArrayList<List<List<String>>> allClusters =  new ArrayList<List<List<String>>>(); 
 
 
@@ -124,21 +125,23 @@ public class step7_42 {
 			// check if "child to" (x2 x4) is a blessed pair
 			String[] splittedNgram = ngram.split("\\s+");
 			String[] blessedPairArr; // blessed1 blessed2 relation
-			String firstBlessed, secondBlessed, secondWordInNgram, fourthWordInNgram;
-			String currHit, totalHits="";             
+			String firstBlessed, secondBlessed;
+			String currHit, totalHits="";
+			String secondWordInNgram = splittedNgram[1].toLowerCase(); // x2
+			String fourthWordInNgram = splittedNgram[3].toLowerCase(); // x4
+			String ngramPattern = 
+					splittedNgram[0] + " " + splittedNgram[2] + " "+ splittedNgram[4]; // x1 x3 x5
+			
 			if (ngramAppearsAsPattern(splittedNgram)) {   /// the ngram (x1 x3 x5) appears as pattern somewhere (don't know if confirmed/unconfirmed)
 				for (String blessedPair : blessed_words) {
 					blessedPairArr = blessedPair.split("\t");
 					firstBlessed = blessedPairArr[0].toLowerCase();
 					secondBlessed = blessedPairArr[1].toLowerCase();
-					secondWordInNgram = splittedNgram[1].toLowerCase();
-					fourthWordInNgram = splittedNgram[3].toLowerCase();
 					if ((secondWordInNgram.equals(firstBlessed) && fourthWordInNgram.equals(secondBlessed)) ||
 							(secondWordInNgram.equals(secondBlessed) && fourthWordInNgram.equals(firstBlessed))) { /// The x2 x4 of ngram is a blessed pair
-
 						//here we need to iterate through all clusters and calculate hits
 						for (List<List<String>> cluster : allClusters) {
-							currHit = getHits(cluster, blessedPairArr);
+							currHit = getHits(cluster, ngramPattern);
 							totalHits += currHit+" ";
 						}
 						context.write(new Text(blessedPair), new Text(totalHits));
@@ -150,7 +153,7 @@ public class step7_42 {
 
 
 	}  
-	private static String getHits(List<List<String>> cluster, String[] blessed) {
+	private static String getHits(List<List<String>> cluster, String ngramPattern) {
 		List<String> confirmed = cluster.get(0);
 		List<String> unconfirmed = cluster.get(1);
 		float alpha = 1;
@@ -160,13 +163,13 @@ public class step7_42 {
 		float appearsAsUnconfirmed=0;
 		for (String corePattern : confirmed) {
 			corePattern = corePattern.toLowerCase();
-			if (corePattern.contains(blessed[0].toLowerCase()) && corePattern.contains(blessed[1].toLowerCase())) {
+			if (corePattern.equals(ngramPattern)) {
 				appearsAsCore++;
 			}
 		}
 		for (String unconfirmedPattern : unconfirmed) {
 			unconfirmedPattern = unconfirmedPattern.toLowerCase();
-			if (unconfirmedPattern.contains(blessed[0].toLowerCase()) && unconfirmedPattern.contains(blessed[1].toLowerCase())) {
+			if (unconfirmedPattern.equals(ngramPattern)) {
 				appearsAsUnconfirmed++;
 			}
 		}
@@ -179,7 +182,7 @@ public class step7_42 {
 	}
 
 	public static boolean ngramAppearsAsPattern(String[] ngram) {
-		String ngram_w1w3w5_string = ngram[0] + " " + ngram[2] + " " + ngram[4]; // x1 x2 x3
+		String ngram_w1w3w5_string = ngram[0] + " " + ngram[2] + " " + ngram[4]; // x1 x3 x5
 		for (List<List<String>> currList : allClusters) { // currList is a cluster
 			for (List<String> currList1 : currList) {
 				for (String pattern : currList1) {

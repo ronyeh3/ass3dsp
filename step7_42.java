@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -36,7 +37,8 @@ import org.apache.hadoop.io.LongWritable;
 
 
 public class step7_42 {
-	static List<String> blesed_words = new ArrayList<String>();  //pair words and relation word [w1 w2 w3, ... ]
+	private static final float alpha = 1;
+	static HashSet<String> blesed_words = new HashSet<String>();  //pair words and relation word [w1 w2 w3, ... ]
 	static ArrayList<List<List<String>>> allClusters =  new ArrayList<List<List<String>>>(); 
 
 
@@ -82,14 +84,14 @@ public class step7_42 {
 			}
 		}
 		public void map(LongWritable LongWritable, Text value, Context context) throws IOException,  InterruptedException {
-			String ngram = value.toString();
+			String ngram = value.toString().split("\t")[0];
 			String[] splittedNgram = ngram.split("\\s+");
 			String[] blessedPairArr;
 			String firstBlessed, secondBlessed;
 			String currHit, totalHits="";             
 			if (ngramAppearsAsPattern(splittedNgram)) {   ///////// the ngram (x1 x3 x5) appears as pattern somewhere (don't know if confirmed/unconfirmed)
 				for (String blessedPair : blesed_words) {
-					blessedPairArr = blessedPair.split("\\t");
+					blessedPairArr = blessedPair.split("\t");
 					firstBlessed = blessedPairArr[0].toLowerCase();
 					secondBlessed = blessedPairArr[1].toLowerCase();
 					if (splittedNgram[1].toLowerCase().equals(firstBlessed) && splittedNgram[3].toLowerCase().equals(secondBlessed)) { /// The x2 x4 of ngram is a blessed pair
@@ -98,6 +100,8 @@ public class step7_42 {
 						for (List<List<String>> cluster : allClusters) {
 							currHit = getHits(cluster, blessedPairArr);
 							totalHits += " "+currHit;
+
+
 						}
 						context.write(new Text(blessedPair), new Text(totalHits));
 					}
@@ -110,27 +114,24 @@ public class step7_42 {
 	private static String getHits(List<List<String>> cluster, String[] blessed) {
 		List<String> confirmed = cluster.get(0);
 		List<String> unconfirmed = cluster.get(1);
-		float alpha = 1;
-		float n = confirmed.size();
-		float m = unconfirmed.size();
-		float appearsAsCore=0;
-		float appearsAsUnconfirmed=0;
+		float n = (float) confirmed.size();
+		float m = (float) unconfirmed.size();
+		float appearsAsCore = 0;
+		float appearsAsUnconfirmed = 0;
 		for (String corePattern : confirmed) {
 			corePattern = corePattern.toLowerCase();
-			if (corePattern.contains(blessed[0].toLowerCase()) && corePattern.contains(blessed[1].toLowerCase())) {
-				appearsAsCore++;
-			}
+			appearsAsCore++;
 		}
 		for (String unconfirmedPattern : unconfirmed) {
 			unconfirmedPattern = unconfirmedPattern.toLowerCase();
-			if (unconfirmedPattern.contains(blessed[0].toLowerCase()) && unconfirmedPattern.contains(blessed[1].toLowerCase())) {
-				appearsAsUnconfirmed++;
-			}
+			appearsAsUnconfirmed++;
 		}
+		
 		float firstValue, secondValue;
 		firstValue = (n == 0) ? 0 : (appearsAsCore/n);
 		secondValue = (m == 0) ? 0 : (appearsAsUnconfirmed/m);
 		return Float.toString(  firstValue   +   (alpha*secondValue)   );
+
 
 
 	}
@@ -183,11 +184,11 @@ public class step7_42 {
 
 		public static void main(String[] args) throws Exception {
 
-//			System.load("C:/Users/Tamir/Desktop/lzo2.dll");
-//			System.setProperty("hadoop.home.dir", "C:/hadoop-2.6.2");
+			//			System.load("C:/Users/Tamir/Desktop/lzo2.dll");
+			//			System.setProperty("hadoop.home.dir", "C:/hadoop-2.6.2");
 
-						System.load("C:/Users/RONlptp/eclipse-workspace/ass2localRunner/lib/lzo2.dll");
-						System.setProperty("hadoop.home.dir", "E:\\hadoop-2.6.2");
+			System.load("C:/Users/RONlptp/eclipse-workspace/ass2localRunner/lib/lzo2.dll");
+			System.setProperty("hadoop.home.dir", "E:\\hadoop-2.6.2");
 
 			Configuration conf = new Configuration();
 			Job job = new Job(conf);
