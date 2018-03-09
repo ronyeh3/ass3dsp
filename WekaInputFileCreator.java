@@ -63,7 +63,7 @@ public class WekaInputFileCreator {
 	
 	private static String wekaAttributes(String pathToVectors) throws IOException {
 		File file = new File(pathToVectors+"/part-r-00000");
-		FileInputStream fstream = new FileInputStream(file); /// make this map-red
+		FileInputStream fstream = new FileInputStream(file);
 		BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 		String firstVector = br.readLine();
 		String[] vectorData = firstVector.split(",");
