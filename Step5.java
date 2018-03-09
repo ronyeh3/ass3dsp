@@ -57,9 +57,8 @@ public class Step5 {
 			HashMap<String,HashMap<String, List<String>>> hooksAndClusters = new HashMap<String, HashMap<String,List<String>>>();
 			String strLine;
 			String[] splittedLine;
-			String[] splittedPatternsTargets;
 			String[] currPatternAndTarget;
-			String hookWord, patternsAndTargets;
+			String hookWord, patternsAndTarget;
 			String target, pattern;
 			Gson gson = new Gson();
 
@@ -76,29 +75,31 @@ public class Step5 {
 						continue;
 					splittedLine = strLine.split("\t");
 					hookWord = splittedLine[0];
-					hooksAndClusters.put(hookWord, new HashMap<String,List<String>>());
-					HashMap<String, List<String>> currHookHashMap = hooksAndClusters.get(hookWord);// cluster is {target,[array of patterns]}    
-					//for each hook , cluster patternt by target
-					patternsAndTargets = splittedLine[1];
-					splittedPatternsTargets = patternsAndTargets.split("\\|");
-					for (String pair : splittedPatternsTargets) {
-						currPatternAndTarget = pair.split("##");
-						pattern = currPatternAndTarget[0];
-						target = currPatternAndTarget[1];
-						if (currHookHashMap.containsKey(target)) {
-							if (!currHookHashMap.get(target).contains(pattern))
-								currHookHashMap.get(target).add(pattern);
-						}
-						else {
-							currHookHashMap.put(target, new ArrayList<String>());  // new cluster
-							currHookHashMap.get(target).add(pattern);
-						}
-					}
+					if(!hooksAndClusters.containsKey(hookWord))
+						hooksAndClusters.put(hookWord, new HashMap<String,List<String>>());
 
+					HashMap<String, List<String>> currHookHashMap = hooksAndClusters.get(hookWord);// cluster is {target,[array of patterns]}   
+
+					//for each hook , cluster patternt by target
+					patternsAndTarget = splittedLine[1];
+					currPatternAndTarget = patternsAndTarget.split("##");
+					pattern = currPatternAndTarget[0];
+					target = currPatternAndTarget[1];
+					if (currHookHashMap.containsKey(target)) {
+						if (!currHookHashMap.get(target).contains(pattern))
+							currHookHashMap.get(target).add(pattern);
+					}
+					else {
+						currHookHashMap.put(target, new ArrayList<String>());  // new cluster
+						currHookHashMap.get(target).add(pattern);
+					}
 				}
 				br.close();
 			}
-			BufferedWriter out = new BufferedWriter(new FileWriter("output/step5/outbefore.txt"));
+
+
+
+			BufferedWriter out = new BufferedWriter(new FileWriter("output/local/step5/outbefore.txt"));
 			out.write(gson.toJson(hooksAndClusters));
 			out.close();
 
@@ -124,7 +125,7 @@ public class Step5 {
 
 			}
 
-			BufferedWriter out2 = new BufferedWriter(new FileWriter("output/step5/outafter.txt"));
+			BufferedWriter out2 = new BufferedWriter(new FileWriter("output/local/step5/outafter.txt"));
 			Type type = new TypeToken<HashMap<String,HashMap<String, List<String>>>>(){}.getType();
 			out2.write(gson.toJson(hooksAndClusters,type));
 			out2.close();

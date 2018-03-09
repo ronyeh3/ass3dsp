@@ -106,7 +106,7 @@ public class Step4 {
 						context.write(new Text(type2+"\t"+pattern), new Text(hookword));
 					}
 				}
-				else if (hooks.contains(ngramWords[3])) {
+				else if (hooks.contains(ngramWords[3])) {   //maybe not else-, another if
 					if (!notcws.contains(ngramWords[1])) {
 
 						hookword = ngramWords[3];
@@ -129,24 +129,20 @@ public class Step4 {
 		}
 
 		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException,  InterruptedException {
-			
+	
+			//no Memory assumption , maybe we cant store all pattern and target for a hook
+			// we output the values one by one for a hook word
+			//but we must assumes this because in step 6 we put in memory all the patterns target anyway
 			if (key.toString().charAt(1) == '1') {
-				String patternsAndTargets="";
 				String actualKey = key.toString().split("\t")[1];
-				for (Text value : values) {
-					patternsAndTargets += value.toString()+"|";
-				}
-				patternsAndTargets = patternsAndTargets.substring(0,patternsAndTargets.length());
+				for (Text patternsAndTargets : values) 
 				mos.write("byHook", new Text(actualKey), new Text(patternsAndTargets));
 				//				mos.write("byHook", new Text(""), null);
 			}
 			else { // if (key.toString().charAt(1) == '2')
-				String hookWords="";
+
 				String actualKey = key.toString().split("\t")[1];
-				for (Text value : values) {
-					hookWords += value.toString()+"|";
-				}
-				hookWords = hookWords.substring(0,hookWords.length());
+				for (Text hookWords : values) 
 				mos.write("byPattern", new Text(actualKey), new Text(hookWords));
 				//				mos.write("byPattern", new Text(""), null);
 			}

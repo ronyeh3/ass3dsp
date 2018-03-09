@@ -5,8 +5,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileStatus;
@@ -26,24 +34,21 @@ import org.apache.hadoop.io.LongWritable;
 
 /*
  * input - step 1 :  5 gram just the words
- * input - step 3 (cache) :  the classifications of the HFW and hooks and notcwd
+ * input - step 3 (cache) :  one gram , 2 gram
  * 
  * output: byhook , by pattern
  */
-//TODO ADD RESTRICRING OF CW. Target word should have less occurences than Fc!!!!!!!
 
 public class Step4PMI {
-	static HashSet<String> hfw = new HashSet<String>();  // onegram!!!!!!!!!!
-	static HashSet<String> hooks = new HashSet<String>();
-	static HashSet<String> notcws = new HashSet<String>(); // there are less not CWs than CWs, working with the "not" for efficiency
-	// because we need them just to make sure we don't choose target words that are very common (is, the ...)
+
+	static Map <String, String> oneGramMap = new ConcurrentHashMap<String, String>();
+	static Map <String, String> twoGramMap = new ConcurrentHashMap<String, String>();
+	public static int NumberOfWords;
 
 
 	public static class MapperClass extends Mapper<LongWritable, Text, Text, Text> {
-		private static final String type1 = "-1-";
-		private static final String type2 = "-2-";
-		
-		
+
+
 		protected void setup(Context context) throws IOException, InterruptedException {
 
 			Configuration conf = context.getConfiguration();
@@ -72,85 +77,95 @@ public class Step4PMI {
 
 			BufferedReader joinReader = new BufferedReader(new InputStreamReader(in, "UTF8"));
 
-			HashSet<String> currList;
-			if (filename.substring(0, 3).equals("hfw"))
-				currList = hfw;
-			else if (filename.substring(0, 3).equals("hoo")) //hook
-				currList = hooks;
-			else if (filename.substring(0, 3).equals("not"))  //not-content-word
-				currList = notcws;
+
+			Map<String, String> currList;
+			if (filename.substring(0, 3).equals("one"))
+				currList = oneGramMap;
+			else if (filename.substring(0, 3).equals("two")) //
+				currList = twoGramMap;
 			else
 				return;
 
 			String line;
 			while ((line = joinReader.readLine()) != null) {
-				String keyValue = line.toString();
-				currList.add(keyValue);  
+				String[] keyValue = line.toString().split("\t");
+				currList.put(keyValue[0].trim(), keyValue[1].trim());		
 			}
 
 		}
-		
-		
-		public void map(LongWritable LongWritable, Text value, Context context) throws IOException,  InterruptedException {
-			String ngram = value.toString().split("\t")[0];
-			String[] ngramWords = ngram.split("\\s+");
-			String target, pattern, hookword;
-			//System.out.println("Current ngram: "+ngram);
-			if (hfw.contains(ngramWords[0]) && hfw.contains(ngramWords[2]) && hfw.contains(ngramWords[4])){
-				if (hooks.contains(ngramWords[1])) {  
-					if (!notcws.contains(ngramWords[3])) {// //[3]<fc - so it is content word
-						hookword = ngramWords[1];
-						target = ngramWords[3];  // not is - contain 
-						pattern = ngramWords[0] + " " + ngramWords[2] + " " + ngramWords[4];
-						context.write(new Text(type1+"\t"+hookword), new Text(pattern+"##"+target));
-						context.write(new Text(type2+"\t"+pattern), new Text(hookword));
-					}
-				}
-				else if (hooks.contains(ngramWords[3])) {
-					if (!notcws.contains(ngramWords[1])) {
 
-						hookword = ngramWords[3];
-						target = ngramWords[1];
-						pattern = ngramWords[0] + " " + ngramWords[2] + " " + ngramWords[4];
-						context.write(new Text(type1+"\t"+hookword), new Text(pattern+"##"+target));
-						context.write(new Text(type2+"\t"+pattern), new Text(hookword));
-					}
-				}
+		protected double Calc_PMI (String w1 , String w2) {
+			String w1w2 = (w1.compareTo(w2) >0 ? w2 + " " +w1 : w1 + " " + w2  );
 
-			}  
+			double c_w1w2 =  (twoGramMap.containsKey(w1w2)? Math.log(Long.parseLong(twoGramMap.get(w1w2))): 0);
+
+			return  c_w1w2 	+ Math.log(NumberOfWords) 
+			- Math.log(Long.parseLong(oneGramMap.get(w1)))
+			- Math.log(Long.parseLong(oneGramMap.get(w2)));
 		}
+
+
+		public void map(LongWritable LongWritable, Text value, Context context) throws IOException,  InterruptedException {
+			String[] hook_patt_tar = value.toString().split("\t");
+			String[] patt_tar = hook_patt_tar[1].split("##");
+
+			double curpmi = Calc_PMI(hook_patt_tar[0], patt_tar[1]);  // hook , target
+
+
+			context.write( new Text(hook_patt_tar[0]), new Text(patt_tar[0]+"#"+patt_tar[1]+"#"+String.valueOf(curpmi))); //hook , 
+		}
+
+
+
+
 	}
 
 	public static class ReducerClass extends Reducer<Text,Text,Text,Text> {
 		private MultipleOutputs<Text,Text> mos;
+
+		HashMap<String , Pair<Double , ArrayList<String>>> cachearreylist = new HashMap<String , Pair<Double , ArrayList<String>>>();
 
 		public void setup(Context context) {
 			mos = new MultipleOutputs<Text,Text>(context);
 		}
 
 		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException,  InterruptedException {
-			
-			if (key.toString().charAt(1) == '1') {
-				String patternsAndTargets="";
-				String actualKey = key.toString().split("\t")[1];
-				for (Text value : values) {
-					patternsAndTargets += value.toString()+"|";
+
+			for (Text value : values) {
+				String[] pat_tar_pmi =  value.toString().split("#");
+				if (cachearreylist.containsKey(pat_tar_pmi[1]))
+					cachearreylist.get(value).getSecond().add(pat_tar_pmi[0]);
+				else {
+					ArrayList<String> t = new ArrayList<String>();
+					t.add(pat_tar_pmi[1]);
+					Pair<Double , ArrayList<String>> ne = new Pair<Double , ArrayList<String>>(Double.parseDouble(pat_tar_pmi[2]),t);
+
 				}
-				patternsAndTargets = patternsAndTargets.substring(0,patternsAndTargets.length());
-				mos.write("byHook", new Text(actualKey), new Text(patternsAndTargets));
-				//				mos.write("byHook", new Text(""), null);
 			}
-			else { // if (key.toString().charAt(1) == '2')
-				String hookWords="";
-				String actualKey = key.toString().split("\t")[1];
-				for (Text value : values) {
-					hookWords += value.toString()+"|";
+			Map<String , Pair<Double , ArrayList<String>>> sortedMap =  getMapSortedByPMI(cachearreylist);
+
+			double L_double = (1/(double)3);
+			int fromIndex = (int) (sortedMap.size() * L_double) ;
+			int toIndex = sortedMap.size() - fromIndex;
+
+			int i =0;
+			for (Entry<String, Pair<Double, ArrayList<String>>> str : sortedMap.entrySet()) {
+				if(i<fromIndex) continue;
+				for ( String r : str.getValue().getSecond()) {
+					mos.write("byHook", key, new Text(r+"#"+str.getKey()));
 				}
-				hookWords = hookWords.substring(0,hookWords.length());
-				mos.write("byPattern", new Text(actualKey), new Text(hookWords));
-				//				mos.write("byPattern", new Text(""), null);
+				if(i<toIndex) break;
+
+
 			}
 		}
+
+		public static Map<String, Pair<Double , ArrayList<String>>> getMapSortedByPMI(final Map<String, Pair<Double , ArrayList<String>>> map) {
+			return map.entrySet().stream()
+					.sorted((e1, e2) ->Double.compare( e1.getValue().getFirst().doubleValue() , e2.getValue().getFirst().doubleValue()))
+					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, LinkedHashMap::new));
+		}
+
 		public void cleanup(Context context) throws IOException {
 			try {
 				mos.close();
@@ -166,11 +181,11 @@ public class Step4PMI {
 
 	public static void main(String[] args) throws Exception {
 
-//		System.load("C:/Users/Tamir/Desktop/lzo2.dll");
-//		System.setProperty("hadoop.home.dir", "C:/hadoop-2.6.2");
+		//		System.load("C:/Users/Tamir/Desktop/lzo2.dll");
+		//		System.setProperty("hadoop.home.dir", "C:/hadoop-2.6.2");
 
-				System.load("C:/Users/RONlptp/eclipse-workspace/ass2localRunner/lib/lzo2.dll");
-				System.setProperty("hadoop.home.dir", "E:\\hadoop-2.6.2");
+		System.load("C:/Users/RONlptp/eclipse-workspace/ass2localRunner/lib/lzo2.dll");
+		System.setProperty("hadoop.home.dir", "E:\\hadoop-2.6.2");
 
 		Configuration conf = new Configuration();
 		Job job = new Job(conf);
@@ -185,9 +200,7 @@ public class Step4PMI {
 		job.setOutputFormatClass(TextOutputFormat.class);
 		job.setInputFormatClass(TextInputFormat.class);
 		FileInputFormat.addInputPaths(job, args[0]);   //input !!!!!!!
-		
-		MultipleOutputs.addNamedOutput(job, "byHook", TextOutputFormat.class,
-				Text.class, Text.class);
+
 		MultipleOutputs.addNamedOutput(job, "byPattern", TextOutputFormat.class,
 				Text.class, Text.class);
 		Path hfwAndHooksAndNotCWD = new Path(args[1]+"[^_]*");  //!!!!!!!!!! input
