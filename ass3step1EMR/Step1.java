@@ -60,7 +60,7 @@ public class Step1 {
 			for (String word : splittedNgram)
 				if (!p.matcher(word).matches()) { return; }
 			
-			occurences = new LongWritable(Long.parseLong(splittedValue[2]));
+			occurences = new LongWritable(Long.parseLong(splittedValue[1]));
 			word.set(splittedValue[0]);  
 			context.write(word, occurences);
 		}
