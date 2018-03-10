@@ -33,7 +33,7 @@ public class Step3 {
 		private String classification;
 		private String valueAsString;
 		private String[] splittedValue;
-		
+
 		@Override          ///////THESE ARE LOCAL PARAMS!!!!!!!!!!!!! from small expaple 5gram
 		public void setup(Context context) throws IOException, InterruptedException {
 			Fb = context.getConfiguration().getInt("Fb", 50000);
@@ -52,10 +52,10 @@ public class Step3 {
 			valueAsString = value.toString();
 			splittedValue = valueAsString.split("\t");
 			occurences = Long.parseLong(splittedValue[1]);
-			
+
 			if (occurences < Fc && occurences > Fb) { // hook word // add only if we are below maxHookWords
 				classification += "HOOK$";
-				
+
 				Counter Counter = context.getCounter("my_counter", "hooks");
 				Counter.increment(1L);
 			}
@@ -66,16 +66,16 @@ public class Step3 {
 
 			if (occurences > Fh) { // high frequency word
 				classification += "HFW$";
-//				if (Math.random() < 0.02) {
-//					System.out.println("HFW: "+splittedValue[0]+"  Original: "+valueAsString);
-//				}
+				//				if (Math.random() < 0.02) {
+				//					System.out.println("HFW: "+splittedValue[0]+"  Original: "+valueAsString);
+				//				}
 			}
 			// here splittedValue[0] is the word
 			// classification example: Hook|HFW
 			// classification example: Hook|
 			// classification example: HFW|
 			if(!classification.equals(""))
-			context.write(new Text(splittedValue[0]), new Text(classification));
+				context.write(new Text(splittedValue[0]), new Text(classification));
 		}
 	}
 
@@ -93,7 +93,7 @@ public class Step3 {
 			Counter Counter = context.getCounter("my_counter", "hooks");
 			System.out.println(Counter.getValue());
 			//ratio = (long) Math.ceil((float) context.getCounter(COUNTER.HOOKWORDS).getValue() / (float) maxHookWords);
-	
+
 		}
 
 		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException,  InterruptedException {
@@ -101,11 +101,11 @@ public class Step3 {
 			for (Text value : values) {
 				wordClassifications = value.toString().split("\\$");
 				for (int i=0 ; i<wordClassifications.length ; i++) {
-					
+
 					if (wordClassifications[i].equals("HOOK")) {
 						// if we want multiple reducers, consider adding this context.getNumReduceTasks()) to the value of ratio
-//						if ( (counter = (counter+1)%ratio) !=0)
-//							continue;
+						//						if ( (counter = (counter+1)%ratio) !=0)
+						//							continue;
 						mos.write("hook", key, null);
 					}
 					else if (wordClassifications[i].equals("HFW"))
@@ -129,21 +129,21 @@ public class Step3 {
 
 
 	public static void main(String[] args) throws Exception {
-//		System.load("C:/Users/Tamir/Desktop/lzo2.dll");
-//		System.setProperty("hadoop.home.dir", "C:/hadoop-2.6.2");
+		System.load("C:/Users/Tamir/Desktop/lzo2.dll");
+		System.setProperty("hadoop.home.dir", "C:/hadoop-2.6.2");
 
-				System.load("C:/Users/RONlptp/eclipse-workspace/ass2localRunner/lib/lzo2.dll");
-				System.setProperty("hadoop.home.dir", "E:\\hadoop-2.6.2");
+		//				System.load("C:/Users/RONlptp/eclipse-workspace/ass2localRunner/lib/lzo2.dll");
+		//				System.setProperty("hadoop.home.dir", "E:\\hadoop-2.6.2");
 
-		
-		
+
+
 		Configuration conf = new Configuration();
-		
+
 		conf.setInt("Fb", Integer.parseInt(args[2]));
 		conf.setInt("Fc", Integer.parseInt(args[3]));
 		conf.setInt("Fh", Integer.parseInt(args[4]));
 		conf.setInt("maxHook", Integer.parseInt(args[5]));
-		
+
 		Job job = new Job(conf, "HFW & Hook Words Counter");
 		job.setJarByClass(Step3.class);
 		job.setReducerClass(myReducerClass.class);

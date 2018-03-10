@@ -33,7 +33,7 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.io.LongWritable;
 
 /*
- * input - step 1 :  5 gram just the words
+ * input - step 1 : step4 output
  * input - step 3 (cache) :  one gram , 2 gram
  * 
  * output: byhook , by pattern
@@ -43,7 +43,7 @@ public class Step4PMI {
 
 	static Map <String, String> oneGramMap = new ConcurrentHashMap<String, String>();
 	static Map <String, String> twoGramMap = new ConcurrentHashMap<String, String>();
-	public static int NumberOfWords;
+	public static long NumberOfWords;// = 193863291517430L 301888295413;
 
 
 	public static class MapperClass extends Mapper<LongWritable, Text, Text, Text> {
@@ -79,9 +79,9 @@ public class Step4PMI {
 
 
 			Map<String, String> currList;
-			if (filename.substring(0, 3).equals("one"))
+			if (filename.substring(0, 5).equals("1gram"))
 				currList = oneGramMap;
-			else if (filename.substring(0, 3).equals("two")) //
+			else if (filename.substring(0, 5).equals("2gram")) //
 				currList = twoGramMap;
 			else
 				return;
@@ -181,11 +181,11 @@ public class Step4PMI {
 
 	public static void main(String[] args) throws Exception {
 
-		//		System.load("C:/Users/Tamir/Desktop/lzo2.dll");
-		//		System.setProperty("hadoop.home.dir", "C:/hadoop-2.6.2");
+		System.load("C:/Users/Tamir/Desktop/lzo2.dll");
+		System.setProperty("hadoop.home.dir", "C:/hadoop-2.6.2");
 
-		System.load("C:/Users/RONlptp/eclipse-workspace/ass2localRunner/lib/lzo2.dll");
-		System.setProperty("hadoop.home.dir", "E:\\hadoop-2.6.2");
+		//		System.load("C:/Users/RONlptp/eclipse-workspace/ass2localRunner/lib/lzo2.dll");
+		//		System.setProperty("hadoop.home.dir", "E:\\hadoop-2.6.2");
 
 		Configuration conf = new Configuration();
 		Job job = new Job(conf);
@@ -203,14 +203,21 @@ public class Step4PMI {
 
 		MultipleOutputs.addNamedOutput(job, "byPattern", TextOutputFormat.class,
 				Text.class, Text.class);
-		Path hfwAndHooksAndNotCWD = new Path(args[1]+"[^_]*");  //!!!!!!!!!! input
-		FileSystem fs = FileSystem.get(job.getConfiguration());
-		FileStatus[] list = fs.globStatus(hfwAndHooksAndNotCWD);  
-		for (FileStatus status : list) {
+		Path wordCounts1gram = new Path(args[1]+"[^_]*");  //!!!!!!!!!! input
+		FileSystem onegramFS = FileSystem.get(job.getConfiguration());
+		FileStatus[] onegramList = onegramFS.globStatus(wordCounts1gram);  
+		for (FileStatus status : onegramList) {
 			job.addCacheFile(status.getPath().toUri());
 			System.out.println("--CACHE: Added: "+status.getPath().toUri().toString());
 		}
-		FileOutputFormat.setOutputPath(job, new Path(args[2]));		  
+		Path wordCounts2gram = new Path(args[2]+"[^_]*");  //!!!!!!!!!! input
+		FileSystem twogramFS = FileSystem.get(job.getConfiguration());
+		FileStatus[] twogramList = twogramFS.globStatus(wordCounts2gram);  
+		for (FileStatus status : twogramList) {
+			job.addCacheFile(status.getPath().toUri());
+			System.out.println("--CACHE: Added: "+status.getPath().toUri().toString());
+		}
+		FileOutputFormat.setOutputPath(job, new Path(args[3]));		  
 		System.exit(job.waitForCompletion(true) ? 0 : 1);
 
 	}

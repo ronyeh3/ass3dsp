@@ -42,8 +42,8 @@ public class Step4 {
 	public static class MapperClass extends Mapper<LongWritable, Text, Text, Text> {
 		private static final String type1 = "-1-";
 		private static final String type2 = "-2-";
-		
-		
+
+
 		protected void setup(Context context) throws IOException, InterruptedException {
 
 			Configuration conf = context.getConfiguration();
@@ -89,8 +89,8 @@ public class Step4 {
 			}
 
 		}
-		
-		
+
+
 		public void map(LongWritable LongWritable, Text value, Context context) throws IOException,  InterruptedException {
 			String ngram = value.toString().split("\t")[0];
 			String[] ngramWords = ngram.split("\\s+");
@@ -129,21 +129,21 @@ public class Step4 {
 		}
 
 		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException,  InterruptedException {
-	
+
 			//no Memory assumption , maybe we cant store all pattern and target for a hook
 			// we output the values one by one for a hook word
 			//but we must assumes this because in step 6 we put in memory all the patterns target anyway
 			if (key.toString().charAt(1) == '1') {
 				String actualKey = key.toString().split("\t")[1];
 				for (Text patternsAndTargets : values) 
-				mos.write("byHook", new Text(actualKey), new Text(patternsAndTargets));
+					mos.write("byHook", new Text(actualKey), new Text(patternsAndTargets));
 				//				mos.write("byHook", new Text(""), null);
 			}
 			else { // if (key.toString().charAt(1) == '2')
 
 				String actualKey = key.toString().split("\t")[1];
 				for (Text hookWords : values) 
-				mos.write("byPattern", new Text(actualKey), new Text(hookWords));
+					mos.write("byPattern", new Text(actualKey), new Text(hookWords));
 				//				mos.write("byPattern", new Text(""), null);
 			}
 		}
@@ -162,11 +162,11 @@ public class Step4 {
 
 	public static void main(String[] args) throws Exception {
 
-//		System.load("C:/Users/Tamir/Desktop/lzo2.dll");
-//		System.setProperty("hadoop.home.dir", "C:/hadoop-2.6.2");
+				System.load("C:/Users/Tamir/Desktop/lzo2.dll");
+				System.setProperty("hadoop.home.dir", "C:/hadoop-2.6.2");
 
-				System.load("C:/Users/RONlptp/eclipse-workspace/ass2localRunner/lib/lzo2.dll");
-				System.setProperty("hadoop.home.dir", "E:\\hadoop-2.6.2");
+//		System.load("C:/Users/RONlptp/eclipse-workspace/ass2localRunner/lib/lzo2.dll");
+//		System.setProperty("hadoop.home.dir", "E:\\hadoop-2.6.2");
 
 		Configuration conf = new Configuration();
 		Job job = new Job(conf);
@@ -181,7 +181,7 @@ public class Step4 {
 		job.setOutputFormatClass(TextOutputFormat.class);
 		job.setInputFormatClass(TextInputFormat.class);
 		FileInputFormat.addInputPaths(job, args[0]);   //input !!!!!!!
-		
+
 		MultipleOutputs.addNamedOutput(job, "byHook", TextOutputFormat.class,
 				Text.class, Text.class);
 		MultipleOutputs.addNamedOutput(job, "byPattern", TextOutputFormat.class,
