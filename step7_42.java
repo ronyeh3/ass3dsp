@@ -109,7 +109,7 @@ public class step7_42 {
 							currHit = getHits(cluster, ngramPattern);
 							totalHits += currHit+" ";
 						}
-						context.write(new Text(blessedPair), new Text(totalHits));
+						context.write(new Text(blessedPair), new Text(totalHits+"##"+ngram));
 						totalHits = "";
 					}
 				}
@@ -168,16 +168,19 @@ public class step7_42 {
 		// check why we sum the vectors
 		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException,  InterruptedException {
 			float[] hitsVector = null;
-			String[] vectorData;
+			String[] vectorAndNgram, vectorData;
 			float currElement;
+			String ngrams = "##";
 			for (Text value : values) {
-				vectorData = value.toString().split(" ");
+				vectorAndNgram = value.toString().split("##");
+				vectorData = vectorAndNgram[0].split(" ");
 				if (hitsVector == null)
 					hitsVector = new float[vectorData.length];
 				for (int i=0 ; i< vectorData.length ; i++) {
 					currElement = Float.parseFloat(vectorData[i]);
 					hitsVector[i] += currElement;            /// why array out of bound here ???
 				}
+				ngrams += vectorAndNgram[1] + "$";
 			}
 			String finalVector="";
 			for (float value : hitsVector) {
@@ -189,7 +192,7 @@ public class step7_42 {
 				}
 			}
 			String actualKey = key.toString().split("\t")[2];
-			actualKey = finalVector+actualKey;
+			actualKey = finalVector+actualKey+ngrams;
 			key = new Text(actualKey);
 			context.write(key, null);
 
