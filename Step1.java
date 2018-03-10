@@ -54,8 +54,8 @@ public class Step1 {
 		private static  int counter = 0;
 		
 		public void reduce(Text key, Iterable<LongWritable> values, Context context) throws IOException,  InterruptedException {
-			if (  (counter= ((counter+1)%limiter) ) !=0 ) //skip every 4 = 20%
-				return;        
+//			if (  (counter= ((counter+1)%limiter) ) !=0 ) //skip every 4 = 20%
+//				return;        
 			
 			long sum = 0;
 			for (LongWritable value : values)

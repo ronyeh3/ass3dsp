@@ -10,6 +10,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -53,8 +54,11 @@ public class Step2 {
 		@Override
 		public void reduce(Text key, Iterable<LongWritable> values, Context context) throws IOException,  InterruptedException {
 			long sum = 0;
-			for (LongWritable value : values)
-				sum += value.get();			
+			for (LongWritable value : values) {
+				sum += value.get();	
+				Counter Counter = context.getCounter("my_counter", "totalwordApearing");
+				Counter.increment(sum);
+			}
 			context.write(key, new LongWritable(sum));
 		}
 	}

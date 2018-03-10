@@ -94,7 +94,7 @@ public class Step4PMI {
 
 		}
 
-		protected double Calc_PMI (String w1 , String w2) {
+		protected double getPMI (String w1 , String w2) {
 			String w1w2 = (w1.compareTo(w2) >0 ? w2 + " " +w1 : w1 + " " + w2  );
 
 			double c_w1w2 =  (twoGramMap.containsKey(w1w2)? Math.log(Long.parseLong(twoGramMap.get(w1w2))): 0);
@@ -109,7 +109,7 @@ public class Step4PMI {
 			String[] hook_patt_tar = value.toString().split("\t");
 			String[] patt_tar = hook_patt_tar[1].split("##");
 
-			double curpmi = Calc_PMI(hook_patt_tar[0], patt_tar[1]);  // hook , target
+			double curpmi = getPMI(hook_patt_tar[0], patt_tar[1]);  // hook , target
 
 
 			context.write( new Text(hook_patt_tar[0]), new Text(patt_tar[0]+"#"+patt_tar[1]+"#"+String.valueOf(curpmi))); //hook , 
@@ -144,8 +144,8 @@ public class Step4PMI {
 			}
 			Map<String , Pair<Double , ArrayList<String>>> sortedMap =  getMapSortedByPMI(cachearreylist);
 
-			double L_double = (1/(double)3);
-			int fromIndex = (int) (sortedMap.size() * L_double) ;
+			double lowbound = (double)1/3;;
+			int fromIndex = (int) (sortedMap.size() * lowbound) ;
 			int toIndex = sortedMap.size() - fromIndex;
 
 			int i =0;
