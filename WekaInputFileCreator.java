@@ -19,9 +19,13 @@ public class WekaInputFileCreator {
 
 	public static void main(String[] args) throws Exception {
 		BufferedWriter out = new BufferedWriter(new FileWriter("output/weka/semantic_relations.arff"));
-		
+		BufferedWriter debug = new BufferedWriter(new FileWriter("output/weka/semantic_debug.arff"));
+
 		out.write(wekaHeader());
 		out.write(wekaAttributes(args[0]));
+		
+		debug.write(wekaHeader());
+		debug.write(wekaAttributes(args[0]));
 		
 		FilenameFilter filter = new FilenameFilter() {
 			public boolean accept(File dir, String name) {
@@ -30,19 +34,24 @@ public class WekaInputFileCreator {
 			File folder = new File(args[0]);
 			File[] listOfFiles = folder.listFiles(filter);
 			String strLine;
+			String[] vectorAndNgrams;
 
 			out.write("@DATA\r\n");
+			debug.write("@DATA\r\n");
 			for (int i = 0; i < listOfFiles.length; i++) {
 				File file = listOfFiles[i];
 
 				FileInputStream fstream = new FileInputStream(file);
 				BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
 				while ((strLine = br.readLine()) != null) { 
-					out.write(strLine+"\r\n");
+					vectorAndNgrams = strLine.split("##");
+					out.write(vectorAndNgrams[0]+"\r\n");
+					debug.write("% "+vectorAndNgrams[1]+"\r\n"+vectorAndNgrams[0]+"\r\n\r\n");
 				}
 				br.close();
 			}
 			out.close();
+			debug.close();
 	}
 	
 	
@@ -65,7 +74,8 @@ public class WekaInputFileCreator {
 		File file = new File(pathToVectors+"/part-r-00000");
 		FileInputStream fstream = new FileInputStream(file);
 		BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
-		String firstVector = br.readLine();
+		String[] firstVectorAndNgrams = br.readLine().split("##");
+		String firstVector = firstVectorAndNgrams[0];
 		String[] vectorData = firstVector.split(",");
 		String attributes = "";
 		for (int i=0 ; i<vectorData.length-1; i++) {
