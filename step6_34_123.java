@@ -96,10 +96,10 @@ public class step6_34_123 {
 
 
 
-				//////Type type2 = new TypeToken<HashMap<String,HashMap<String, Pair<String,Integer>>>>(){}.getType(); //no need
-				//					BufferedWriter out2 = new BufferedWriter(new FileWriter("output/step6_34_123/outbefore342.txt"));
-				//					out2.write(gson.toJson(hooksAndClusters));
-				//					out2.close();
+				////Type type2 = new TypeToken<HashMap<String,HashMap<String, Pair<String,Integer>>>>(){}.getType(); //no need
+									BufferedWriter out2 = new BufferedWriter(new FileWriter("output/step6_34_123/outbefore342.txt"));
+									out2.write(gson.toJson(hooksAndClusters));
+									out2.close();
 
 				///////////////////////////////////////////////////////////////////////////				
 				System.out.println("start 3.4 big loop");
