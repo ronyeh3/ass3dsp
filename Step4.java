@@ -140,9 +140,11 @@ public class Step4 {
 				//				mos.write("byHook", new Text(""), null);
 			}
 			else { // if (key.toString().charAt(1) == '2')
-
+				String hookWords="";
 				String actualKey = key.toString().split("\t")[1];
-				for (Text hookWords : values) 
+				for (Text hookWord : values) 
+					hookWords += hookWord.toString()+"|";
+				hookWords = hookWords.substring(0,hookWords.length());
 				mos.write("byPattern", new Text(actualKey), new Text(hookWords));
 				//				mos.write("byPattern", new Text(""), null);
 			}
