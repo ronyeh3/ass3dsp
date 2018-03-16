@@ -1,0 +1,49 @@
+   % 1. Title: DSP181 - Final Project
+   % 
+   % 2. Sources:
+   %      (a) Creators: Ron Yehuda & Tamir Eyal
+   %      (b) Date: March, 2018
+   % 
+
+  @RELATION semanticsRelations
+
+  @ATTRIBUTE cluster0   NUMERIC
+  @ATTRIBUTE cluster1   NUMERIC
+  @ATTRIBUTE cluster2   NUMERIC
+  @ATTRIBUTE cluster3   NUMERIC
+  @ATTRIBUTE cluster4   NUMERIC
+  @ATTRIBUTE cluster5   NUMERIC
+  @ATTRIBUTE cluster6   NUMERIC
+  @ATTRIBUTE cluster7   NUMERIC
+  @ATTRIBUTE cluster8   NUMERIC
+  @ATTRIBUTE cluster9   NUMERIC
+  @ATTRIBUTE cluster10   NUMERIC
+  @ATTRIBUTE cluster11   NUMERIC
+  @ATTRIBUTE cluster12   NUMERIC
+  @ATTRIBUTE cluster13   NUMERIC
+  @ATTRIBUTE cluster14   NUMERIC
+  @ATTRIBUTE cluster15   NUMERIC
+  @ATTRIBUTE cluster16   NUMERIC
+  @ATTRIBUTE cluster17   NUMERIC
+  @ATTRIBUTE cluster18   NUMERIC
+  @ATTRIBUTE cluster19   NUMERIC
+  @ATTRIBUTE cluster20   NUMERIC
+  @ATTRIBUTE cluster21   NUMERIC
+  @ATTRIBUTE cluster22   NUMERIC
+  @ATTRIBUTE cluster23   NUMERIC
+  @ATTRIBUTE cluster24   NUMERIC
+  @ATTRIBUTE cluster25   NUMERIC
+  @ATTRIBUTE cluster26   NUMERIC
+  @ATTRIBUTE cluster27   NUMERIC
+  @ATTRIBUTE cluster28   NUMERIC
+  @ATTRIBUTE class        {coord,hyper,mero,random}
+
+@DATA
+0,0,0.02173913,0,0,0,0,0,0.11111111,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+%CORRECT CLASSIFICATION MERO:
+0.029411765,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,1.0,0,0,coord
+
+%BAD CLASSIFICATION MERO:
+%0.10084034,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+

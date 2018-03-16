@@ -43,7 +43,7 @@ public class Step4PMI {
 
 	static Map <String, String> oneGramMap = new ConcurrentHashMap<String, String>();
 	static Map <String, String> twoGramMap = new ConcurrentHashMap<String, String>();
-	public static int NumberOfWords;
+	public static int NumberOfWords; // 193863291517430
 
 
 	public static class MapperClass extends Mapper<LongWritable, Text, Text, Text> {

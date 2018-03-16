@@ -97,7 +97,9 @@ public class Step4PMI {
 		protected double getPMI (String w1 , String w2) {
 			String w1w2 = (w1.compareTo(w2) >0 ? w2 + " " +w1 : w1 + " " + w2  );
 
-			double c_w1w2 =  (twoGramMap.containsKey(w1w2)? Math.log(Long.parseLong(twoGramMap.get(w1w2))): 0);
+			double c_w1w2 =  (twoGramMap.containsKey(w1w2)? 
+					Math.log(Long.parseLong(twoGramMap.get(w1w2))):
+						0);
 
 			return  c_w1w2 	+ Math.log(NumberOfWords) 
 			- Math.log(Long.parseLong(oneGramMap.get(w1)))

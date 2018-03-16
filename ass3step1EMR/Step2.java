@@ -74,7 +74,7 @@ public class Step2 {
 			for (LongWritable value : values) {
 				sum += value.get();
 				Counter Counter = context.getCounter("my_counter", "totalwordApearing");
-				Counter.increment(sum);
+				Counter.increment(value.get());
 			}
 			context.write(key, new LongWritable(sum)); 
 		}

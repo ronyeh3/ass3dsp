@@ -99,7 +99,7 @@ public class Step5 {
 
 
 
-			BufferedWriter out = new BufferedWriter(new FileWriter("output/local/step5/outbefore.txt"));
+			BufferedWriter out = new BufferedWriter(new FileWriter("output/step5/outbefore.txt"));
 			out.write(gson.toJson(hooksAndClusters));
 			out.close();
 
@@ -125,7 +125,7 @@ public class Step5 {
 
 			}
 
-			BufferedWriter out2 = new BufferedWriter(new FileWriter("output/local/step5/outafter.txt"));
+			BufferedWriter out2 = new BufferedWriter(new FileWriter("output/step5/outafter.txt"));
 			Type type = new TypeToken<HashMap<String,HashMap<String, List<String>>>>(){}.getType();
 			out2.write(gson.toJson(hooksAndClusters,type));
 			out2.close();

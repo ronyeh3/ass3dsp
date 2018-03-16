@@ -1,0 +1,635 @@
+   % 1. Title: DSP181 - Final Project
+   % 
+   % 2. Sources:
+   %      (a) Creators: Ron Yehuda & Tamir Eyal
+   %      (b) Date: March, 2018
+   % 
+
+  @RELATION semanticsRelations
+
+  @ATTRIBUTE cluster0   NUMERIC
+  @ATTRIBUTE cluster1   NUMERIC
+  @ATTRIBUTE cluster2   NUMERIC
+  @ATTRIBUTE cluster3   NUMERIC
+  @ATTRIBUTE cluster4   NUMERIC
+  @ATTRIBUTE cluster5   NUMERIC
+  @ATTRIBUTE cluster6   NUMERIC
+  @ATTRIBUTE cluster7   NUMERIC
+  @ATTRIBUTE cluster8   NUMERIC
+  @ATTRIBUTE cluster9   NUMERIC
+  @ATTRIBUTE cluster10   NUMERIC
+  @ATTRIBUTE cluster11   NUMERIC
+  @ATTRIBUTE cluster12   NUMERIC
+  @ATTRIBUTE cluster13   NUMERIC
+  @ATTRIBUTE cluster14   NUMERIC
+  @ATTRIBUTE cluster15   NUMERIC
+  @ATTRIBUTE cluster16   NUMERIC
+  @ATTRIBUTE cluster17   NUMERIC
+  @ATTRIBUTE cluster18   NUMERIC
+  @ATTRIBUTE cluster19   NUMERIC
+  @ATTRIBUTE cluster20   NUMERIC
+  @ATTRIBUTE cluster21   NUMERIC
+  @ATTRIBUTE cluster22   NUMERIC
+  @ATTRIBUTE cluster23   NUMERIC
+  @ATTRIBUTE cluster24   NUMERIC
+  @ATTRIBUTE cluster25   NUMERIC
+  @ATTRIBUTE cluster26   NUMERIC
+  @ATTRIBUTE cluster27   NUMERIC
+  @ATTRIBUTE cluster28   NUMERIC
+  @ATTRIBUTE class        {coord,hyper,mero,random}
+
+@DATA
+% by ambulance or helicopter to$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.04,0,0,0,0,0,0,0,0,0,0,coord
+
+% of apple and peach and$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0.1,0,0.2,0,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% the axe to give the$
+0,0,0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,0,random
+
+% the axe and saw of$of axe and saw and$the axe and saw are$
+0,0,0.5,0,0,0.05882353,0,0,0.11111111,0,0,0,0,1.1,0,0.4,0,0,0,0,0,1.0,0,0,0,0,0,0,0,coord
+
+% the bag or bottle of$the bag or bottle is$a bag or bottle of$
+0,0,0.02173913,0,0,0,0,0,0,0,0,0,0,0,0.1,0,0.2,1.0,0,0,0,1.0,0,0,0,0,0,0,0,coord
+
+% a bag or box and$a box or bag and$a box or bag for$a bag or box of$a box or bag of$a bag or box for$a bag or box to$a box or bag in$
+0,0,1.0869565,0,0,2.1176472,0,0,0,0,0,0,0,0,0.2,0,1.057143,3.5,1.16,1.375,0,0,0,0,0,0,0,0,0,coord
+
+% a bag or case of$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.1,0,0.1,1.0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% a bag or pouch in$a pouch or bag in$a bag or pouch of$
+0,0,0.04347826,0,0,0.11764706,0,0,0,0,0,0,0,0,0.1,0,0.3857143,1.5,1.0,0,0,0,0,0,0,0,0,0,0,coord
+
+% his eye to bear upon$to bear the eye of$not bear the eye of$
+0,1.0,0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,mero
+
+% not bear the force of$to bear the force of$the force to bear the$his force to bear upon$
+0,1.0,0,2.0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,1.0,0,0,0,random
+
+% to bear a horse and$the horse to bear the$
+0,0.5,0,1.0,1.0,0,0.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,0,coord
+
+% the mouth of bear creek$the mouth of bear river$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,mero
+
+% the mouth of beaver creek$the mouth of beaver river$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,mero
+
+% a chair or bed and$a chair or bed or$the bed or chair to$from chair to bed and$a bed and chair existence$a bed or chair and$a chair or bed with$a chair or bed for$from bed to chair to$a bed or chair or$a bed or chair to$the bed or chair and$from bed to chair and$a bed or chair for$a bed and chair and$
+0,0,1.1956521,0,0,2.2352943,0,0,0.33333334,0,0,0,0,0,0.2,0,1.5428573,1.25,0.82000005,2.875,0,0,0,0,0,0,0,0,0,coord
+
+% a bed or couch with$a bed or couch in$a bed or couch for$a couch or bed and$the bed and couch of$a couch or bed in$a bed or couch and$a couch or bed with$a couch or bed for$
+0,0,1.1304348,0,0,2.1176472,0,0,0.11111111,0,0,0,0,1.0,0.2,0.2,1.1428572,1.5,1.16,1.25,0,1.0,0,0,0,0,0,0,0,coord
+
+% the bed to give the$to give a bed to$the bed and give the$the bed to give her$
+0,0,0.02173913,1.0,1.6666667,0,0.5,0,0,1.0,0,0,1.0,0,0,0,0,0,0,0,0,0,1.0,0.33333334,1.0,0,0,0,0,random
+
+% a bed with mattress and$
+0,0,0,0,0,0,0,0,0.11111111,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% the bark of birch and$
+0.029411765,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,1.0,0,0,mero
+
+% of pine and birch and$of birch and pine and$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0.2,0,0.4,0,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% a wood of birch and$
+0.10084034,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,0,0,0,mero
+
+% to wear a blouse and$
+0,0.5,0,0,0,0,0.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,hyper
+
+% the bottle or container of$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,0,0,hyper
+
+% the bottle and glass on$the glass and bottle on$a bottle and glass and$a bottle and glass at$a bottle or glass with$the bottle and glass to$the bottle and glass in$a glass or bottle of$a bottle and glass in$a bottle and glass to$the bottle and glass and$a bottle and glass on$a bottle or glass of$
+0,0,0.13043478,0,0,0.23529412,0,0,1.0,0,0,0,0,0,2.1999998,0,0.34285715,2.0,0,0.125,0,0,0,0,0,0,0,0,0,coord
+
+% a bottle of liquid and$
+0.10084034,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,0,0,0,mero
+
+% to raise the bottle to$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,random
+
+% the bottle of water from$the bottle of water that$the bottle of water and$a bottle of water into$a bottle of water for$a bottle of water with$a bottle of water in$a bottle of water or$a bottle of water to$the bottle of water on$a bottle of water at$little bottle of water and$a bottle with water and$a bottle of water is$a bottle of water and$a bottle of water that$a bottle of water from$a bottle of water on$the bottle of water is$the bottle of water in$the bottle of water to$one bottle of water and$a bottle of water which$one bottle of water for$a bottle of water was$the bottle of water which$a bottle of water will$
+1.5210087,0,0,0,0,0,0,0,0.11111111,0,0,0,0,0,0,0,0,0,0,0,2.0,0,0,0,0,0,1.6666667,0,0,mero
+
+% his bottle of wine to$a bottle of wine left$a bottle of wine to$a bottle of wine from$a bottle of wine in$a bottle of wine or$a bottle of wine that$one bottle of wine and$a bottle of wine through$the bottle of wine that$the bottle of wine from$little bottle of wine and$a bottle of wine could$a bottle of wine was$a bottle of wine the$a bottle of wine will$a bottle of wine for$the bottle of wine on$every bottle of wine in$a bottle of wine which$a bottle of wine is$a bottle of wine at$one bottle of wine for$the bottle of wine to$the bottle of wine in$the bottle of wine or$a bottle of wine i$the bottle of wine and$the bottle of wine is$a bottle of wine would$the bottle of wine into$a bottle of wine between$the bottle of wine which$a bottle of wine and$every bottle of wine that$a bottle of wine with$a bottle of wine on$a bottle of wine into$
+2.0000005,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2.0,0,0,0,0,0,2.0,0,0,mero
+
+% a bowl of food for$a bowl of food was$the bowl of food and$the bowl of food on$a bowl of food on$a bowl of food and$the bowl of food in$a bowl of food in$a bowl of food to$a bowl of food or$a bowl of food from$
+1.0378151,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2.0,0,0,0,0,0,1.3333334,0,0,mero
+
+% a bowl or jar with$
+0,0,0.02173913,0,0,0,0,0,0,0,0,0,0,0,0.1,0,0.14285715,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% the bowl of rice to$the bowl of rice in$a bowl of rice for$a bowl of rice in$a bowl of rice or$a bowl of rice to$a bowl of rice on$a bowl of rice which$the bowl of rice which$a bowl of rice is$a bowl of rice and$a bowl of rice at$a bowl of rice was$a bowl with rice and$a bowl of rice with$the bowl of rice and$one bowl of rice and$a bowl of rice from$a bowl of rice that$
+1.1722691,0,0,0,0,0,0,0,0.11111111,0,0,0,0,0,0,0,0,0,0,0,2.0,0,0,0,0,0,1.3333334,0,0,mero
+
+% the bowl of water to$a bowl of water between$a bowl of water on$the bowl of water in$the bowl of water and$the bowl of water is$a bowl of water at$a bowl of water is$a bowl of water was$the bowl of water which$a bowl of water from$a bowl of water that$a bowl of water will$a bowl of water into$a bowl of water with$a bowl of water which$a bowl with water and$a bowl of water to$a bowl of water or$a bowl of water in$a bowl of water would$a bowl of water and$the bowl of water on$the bowl of water from$the bowl of water that$a bowl of water for$
+1.4915968,0,0,0,0,0,0,0,0.11111111,0,0,0,0,0,0,0,0,0,0,0,2.0,0,0,0,0,0,1.6666667,0,0,mero
+
+% from box to box to$from box to box and$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.1,0,0,0.625,0,0,0,0,0,0,0,0,0,coord
+
+% a box or case of$the box or case in$the case or box in$
+0,0,0.04347826,0,0,0,0,0,0,0,0,0,0,0,0.1,0,0.1,1.0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% the box and give it$the box to give the$the box and give the$to give the box to$
+0,0,0.04347826,1.0,1.3333334,0,0,0,0,1.0,0,0,1.0,0,0,0,0,0,0,0,0,0,1.0,0.33333334,1.0,0,0,0,0,random
+
+% a box just inside the$
+0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% the box and lid with$
+0,0,0.02173913,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% the box and lock it$
+0,0,0.02173913,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% a box of paper and$
+0.10084034,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,0,0,0,mero
+
+% a cow or bull is$a bull or cow that$the bull and cow are$
+0,0,0.54347825,0,0,0.11764706,0,0,0,0,0,0,0,0,0,0,0.2,0,0.08,0,0,0,0,0,0,0,0,0,0,coord
+
+% the head of bull creek$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.5,mero
+
+% a horse or bull and$
+0,0,0.5,0,0,1.0,0,0,0,0,0,0,0,0,0,0,0.14285715,0.25,0.04,0.5,0,0,0,0,0,0,0,0,0,coord
+
+% the bus and back to$
+0,0,0.02173913,0,0,0,0,0,0,0,0,0,0,0,0.1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% the bus in front of$a bus in front of$
+0,0,0,0,0,0,0,0,0,0,0.6666667,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% the bus to wait for$the bus and wait for$
+0,0,0.02173913,0,0,0,0,1.0,0.11111111,0,0,0.33333334,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,random
+
+% the cabbage and lettuce in$
+0,0,0.02173913,0,0,0,0,0,0.11111111,0,0,0,0,0,0.1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% the car and see that$to see the car of$the car to see the$the car to see her$the car and see the$
+0,1.0,0.04347826,1.0,1.6666667,0,0,0,0,1.3333334,0,0,1.0,0,0,0,0,0,0,0,0,0,1.0,0.33333334,0,0.5,0,0,0,random
+
+% the mouth of carp river$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.5,mero
+
+% every cottage and castle in$
+0,0,0.02173913,0,0,0.05882353,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% the house or castle of$the castle or house of$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2.0,0,0,0,0,0,0,0,hyper
+
+% the castle to look for$the castle and look for$
+0,0,0.02173913,0,0,0,0,1.0,0.11111111,0,0,0.33333334,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,random
+
+% the castle or tower of$the tower and castle of$the tower or castle of$the castle and tower of$
+0,0,0,0,0,0,0,0,0.22222222,0,0,0,0,2.0,0,0.4,0,0,0,0,0,4.0,0,0,0,0,0,0,0,mero
+
+% a dog or cat may$the dog or cat and$a dog and cat hospital$a cat or dog with$a cat and dog in$the cat or dog is$the cat and dog that$the cat and dog by$a dog or cat with$a cat or dog can$the cat and dog the$the dog or cat or$the dog or cat to$the dog or cat in$the cat and dog and$every cat and dog in$the cat and dog is$the dog and cat with$a dog or cat at$a dog or cat is$a dog or cat was$the dog and cat to$the dog and cat in$a cat or dog has$the cat and dog there$a dog or cat from$a dog or cat that$your dog or cat is$a cat and dog existence$a cat and dog on$the dog and cat which$a cat or dog is$a cat or dog for$the dog and cat were$the dog and cat there$the dog and cat have$the dog and cat are$a dog and cat in$a cat or dog would$a cat or dog or$the cat and dog it$a cat or dog and$a cat or dog in$a cat or dog to$a cat or dog will$the dog and cat that$a dog or cat will$a cat or dog was$a dog or cat and$the cat and dog to$the cat and dog in$a dog or cat for$a dog or cat would$the cat or dog or$the cat and dog families$the dog and cat it$his dog and cat and$a cat or dog that$a dog or cat has$the dog and cat for$the dog and cat the$of dog and cat owners$a cat or dog may$the dog and cat families$the cat and dog have$the cat and dog were$a dog or cat on$a dog and cat that$a cat and dog hospital$of dog and cat food$the dog and cat and$a dog or cat in$the dog and cat is$a dog or cat or$a dog or cat to$of cat and dog food$the dog and cat by$a dog or cat can$the cat and dog are$the dog or cat is$every dog and cat in$
+0,0,3.6739163,0,0.6666667,2.941177,0,0.5,1.8888891,2.6666667,0,0,2.0,0,2.8999999,0,3.0571427,2.0,2.6,2.125,0,0,0,0.6666667,0,0,0,0,0,coord
+
+% the cat from head to$
+0,0,0,0,0,0,0,0,0,0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% the mouth of catfish creek$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.5,mero
+
+% of cedar and cypress and$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0.1,0,0.2,0,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% the carrot and celery and$
+0,0,0.02173913,0,0,0,0,0,0.33333334,0,0,0,0,0,0.1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% the chair and begin to$a chair and begin to$
+0,0,0.02173913,0,0,0,0,0,0.11111111,0,0,0,0,0,0.2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,random
+
+% from chair to couch to$a chair or couch and$
+0,0,0.5,0,0,1.0,0,0,0,0,0,0,0,0,0,0,0.14285715,0.25,0.04,1.0,0,0,0,0,0,0,0,0,0,coord
+
+% a chair or seat of$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.1,0,0.1,1.0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% a chair or sofa that$a chair or sofa to$a chair or sofa in$
+0,0,0.06521739,0,0,0.11764706,0,0,0,0,0,0,0,0,0,0,0.3857143,0.5,1.04,0.125,0,0,0,0,0,0,0,0,0,coord
+
+% a chair or stool on$a chair or stool with$a chair or stool for$a stool or chair to$a stool or chair in$a chair or stool at$a chair or stool of$a stool or chair and$a chair or stool to$a chair or stool and$a chair or stool in$a chair or stool or$a stool or chair with$
+0,0,1.2173913,0,0,2.294118,0,0,0,0,0,0,0,0,0.3,0,1.771429,2.75,2.1599998,1.5,0,0,0,0,0,0,0,0,0,coord
+
+% the chisel and mallet in$the mallet and chisel and$a mallet and chisel and$a chisel and mallet in$a chisel and mallet to$the chisel and mallet of$a mallet and chisel to$his mallet and chisel and$the mallet and chisel to$the mallet and chisel in$the mallet and chisel of$a chisel and mallet and$the mallet and chisel is$the mallet and chisel are$
+0,0,0.6521739,0,0,0.23529412,0,0,2.1111114,0,0,0,0,2.0,1.8000001,0.4,0,0,0,0.25,0,2.0,0,0,0,0,0,0,0,coord
+
+% a saw or chisel in$
+0,0,0.02173913,0,0,0.05882353,0,0,0,0,0,0,0,0,0,0,0.14285715,0.25,0.5,0,0,0,0,0,0,0,0,0,0,coord
+
+% a cloak in front of$the cloak in front of$his cloak in front of$
+0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% the cloak and mask of$the mask and cloak of$
+0,0,0,0,0,0,0,0,0.22222222,0,0,0,0,2.0,0,0.4,0,0,0,0,0,2.0,0,0,0,0,0,0,0,coord
+
+% the coat in front of$his coat in front of$
+0,0,0,0,0,0,0,0,0,0,0.6666667,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% the coat and hat on$the coat and hat of$the hat and coat of$the hat and coat on$a coat and hat and$the hat and coat in$a hat and coat and$the hat and coat and$the hat and coat that$a hat and coat on$the coat and hat which$the coat and hat were$a coat and hat to$a hat and coat in$a coat and hat on$the coat and hat and$of hat and coat and$his hat and coat and$the hat and coat were$a coat and hat for$the hat and coat which$a coat and hat that$his coat and hat and$
+0,0,0.30434778,0,0,0.29411766,0,0,3.0000002,0.33333334,0,0,0,2.1,2.0,0.6,0,0,0,0.25,0,2.0,0,0,0,0,0,0,0,coord
+
+% his coat and scarf and$
+0,0,0.02173913,0,0,0,0,0,0.33333334,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% a grain of corn or$a grain of corn in$a grain of corn to$a grain of corn the$a grain of corn for$a grain of corn between$of corn and grain into$a grain of corn was$little grain of corn and$one grain of corn for$a grain of corn through$of corn and grain were$a grain of corn from$a grain of corn that$of corn and grain in$every grain of corn that$a grain of corn could$a grain of corn will$a grain of corn is$a grain of corn would$a grain of corn at$the grain of corn which$the corn and grain of$a grain of corn left$a grain of corn on$of corn and grain and$the grain of corn in$the grain of corn to$the grain of corn is$a grain of corn and$a grain of corn i$a grain of corn which$of corn and grain of$the grain of corn and$a grain of corn into$a grain of corn with$every grain of corn in$one grain of corn and$the grain of corn that$
+1.613446,0,0,0,0,0,0,0,0.11111111,0,0,0,0,1.3000001,0,2.0,0,0,0,0,2.0,1.0,0,0,0,0,1.3333334,0,0,hyper
+
+% the introduction of corn from$the introduction of corn and$the introduction of corn into$the introduction of corn in$
+0.27310926,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,2.0,0,0,random
+
+% a bed or couch with$a bed or couch in$a couch or bed in$a bed or couch and$a couch or bed with$a bed or couch for$the bed and couch of$a couch or bed and$a couch or bed for$
+0,0,1.1304348,0,0,2.1176472,0,0,0.11111111,0,0,0,0,1.0,0.2,0.2,1.1428572,1.5,1.1599998,1.25,0,1.0,0,0,0,0,0,0,0,coord
+
+% a chair or couch and$from chair to couch to$
+0,0,0.5,0,0,1.0,0,0,0,0,0,0,0,0,0,0,0.14285715,0.25,0.04,1.0,0,0,0,0,0,0,0,0,0,coord
+
+% a cow or buffalo is$
+0,0,0.02173913,0,0,0.05882353,0,0,0,0,0,0,0,0,0,0,0.1,0,0.04,0,0,0,0,0,0,0,0,0,0,coord
+
+% the bull and cow are$a bull or cow that$a cow or bull is$
+0,0,0.54347825,0,0,0.11764706,0,0,0,0,0,0,0,0,0,0,0.2,0,0.08,0,0,0,0,0,0,0,0,0,0,coord
+
+% a branch of cypress in$
+0.10084034,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% a knife or dagger from$a knife or dagger in$
+0,0,0.04347826,0,0,0.05882353,0,0,0,0,0,0,0,0,0,0,0.14285715,0.25,0.54,0,0,0,0,0,0,0,0,0,0,coord
+
+% the sword and dagger were$a sword and dagger and$the sword and dagger and$a sword and dagger in$a sword or dagger and$a sword and dagger at$the sword and dagger of$his sword and dagger and$a sword or dagger in$
+0,0,0.6086956,0,0,1.2352942,0,0,1.3333334,0,0,0,0,1.0,1.3000001,0.2,0.2857143,0.5,0.54,0.625,0,1.0,0,0,0,0,0,0,0,coord
+
+% the deer and bear and$of bear and deer and$the deer and bear are$the bear and deer and$of deer and bear and$the bear and deer are$the deer and bear were$of bear and deer were$
+0,0,1.0652174,0,0,0.11764706,0,0,0.7777778,0,0,0,0,0.3,0.2,0.6,0,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% to find a deer or$
+0,0,0,0,0,0,0.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,random
+
+% the flesh of deer and$
+0.029411765,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,1.0,0,0,mero
+
+% the meat of deer and$
+0.029411765,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,1.0,0,0,mero
+
+% the desk and chair and$a desk and chair in$a desk and chair to$the desk and chair were$a chair and desk for$a desk and chair and$the desk and chair of$a desk and chair for$his desk and chair and$a desk and chair that$the desk and chair in$the desk and chair for$
+0,0,0.1521739,0,0,0.11764706,0,0.5,2.0000002,0,0,0,0,1.0,1.4000001,0.2,0,0,0,0.125,0,1.0,0,0,0,0,0,0,0,coord
+
+% the dress or apparel of$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,0,0,hyper
+
+% the elephant and mammoth are$
+0,0,0.5,0,0,0.05882353,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% the knife and fork of$a fork or knife to$the knife and fork with$every knife and fork in$the knife and fork is$the knife and fork and$the knife and fork that$of knife and fork and$the knife and fork to$the knife and fork for$a knife and fork for$the knife and fork in$his knife and fork and$a knife or fork to$a knife or fork or$the knife and fork which$a knife or fork in$the knife and fork were$the knife and fork on$a knife and fork that$a fork and knife and$a knife and fork and$a fork and knife to$a fork and knife in$a knife and fork in$a knife and fork to$a knife and fork at$a knife and fork on$the knife and fork are$his fork and knife and$
+0,0,0.9347825,0,0,0.7058824,0,0.5,2.7777781,0.33333334,0,0,0,1.1,2.9999998,0.4,0.5714286,0.75,1.54,0.625,0,1.0,0,0,0,0,0,0,0,coord
+
+% the fork and spoon and$his spoon and fork and$a fork and spoon and$a fork and spoon to$a fork and spoon in$a fork and spoon at$a fork and spoon for$a fork or spoon and$a fork or spoon to$a fork or spoon or$a fork or spoon in$the fork or spoon in$a spoon and fork in$a spoon and fork to$the fork and spoon in$a spoon or fork to$a spoon or fork in$the spoon and fork and$a spoon and fork and$a spoon or fork and$a spoon and fork for$
+0,0,1.2608695,0,0,2.5882359,0,0,2.4444447,0,0,0,0,0,2.7999997,0,1.0,1.5,2.12,1.625,0,0,0,0,0,0,0,0,0,coord
+
+% the chimpanzee and gorilla in$the gorilla and chimpanzee are$the chimpanzee and gorilla the$the chimpanzee and gorilla have$the gorilla and chimpanzee and$the gorilla and chimpanzee in$the chimpanzee and gorilla are$the chimpanzee and gorilla of$the gorilla and chimpanzee have$the gorilla and chimpanzee of$
+0,0,1.1304348,0,0.33333334,0.11764706,0,0,0.7777778,1.0,0,0,1.0,2.0,0.3,0.4,0,0,0,0,0,2.0,0,0.33333334,0,0,0,0,0,coord
+
+% a cricket or grasshopper in$the grasshopper and cricket the$
+0,0,0.04347826,0,0.33333334,0.05882353,0,0,0,1.0,0,0,1.0,0,0,0,0.14285715,0.25,0.5,0,0,0,0,0.33333334,0,0,0,0,0,coord
+
+% his guitar in front of$the guitar in front of$a guitar in front of$
+0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,random
+
+% the guitar and mandolin and$
+0,0,0.02173913,0,0,0,0,0,0.33333334,0,0,0,0,0,0.1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% the violin and guitar were$
+0,0,0.02173913,0,0,0,0,0,0.11111111,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% to handle a gun and$to handle a gun or$
+0,0.5,0,0,0,0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% his hammer and pincers and$
+0,0,0.02173913,0,0,0,0,0,0.33333334,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% the ring of hammer on$
+0.10084034,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,random
+
+% the hat and cloak in$a hat and cloak in$his hat and cloak and$the hat and cloak of$his cloak and hat and$the cloak and hat of$a cloak and hat and$
+0,0,0.08695652,0,0,0.11764706,0,0,1.4444445,0,0,0,0,2.0,1.2,0.4,0,0,0,0.125,0,2.0,0,0,0,0,0,0,0,coord
+
+% the coat and hat and$a coat and hat that$his hat and coat and$the hat and coat were$a coat and hat for$the hat and coat which$the hat and coat on$a hat and coat in$a coat and hat on$of hat and coat and$the hat and coat that$the hat and coat and$a hat and coat and$his coat and hat and$the coat and hat on$the coat and hat which$a hat and coat on$a coat and hat to$the coat and hat were$a coat and hat and$the hat and coat in$the hat and coat of$the coat and hat of$
+0,0,0.30434778,0,0,0.29411766,0,0,3.0000002,0.33333334,0,0,0,2.1,2.0000002,0.6,0,0,0,0.25,0,2.0,0,0,0,0,0,0,0,coord
+
+% his jacket and hat and$a hat and jacket in$his hat and jacket and$
+0,0,0.06521739,0,0,0.05882353,0,0,0.7777778,0,0,0,0,0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% his hatchet of steel to$
+0.071428575,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% by ambulance or helicopter to$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.04,0,0,0,0,0,0,0,0,0,0,coord
+
+% a horse or donkey and$the horse and donkey are$
+0,0,1.0,0,0,1.0588236,0,0,0,0,0,0,0,0,0,0,0.14285715,0.25,0.04,0.5,0,0,0,0,0,0,0,0,0,coord
+
+% of foot and horse were$the horse and foot to$the horse and foot in$of horse and foot soldiers$of foot and horse which$of foot and horse guards$of foot and horse in$of foot and horse to$of horse and foot were$the horse and foot that$of horse and foot which$by horse and foot and$of horse and foot for$the horse and foot of$of horse and foot and$by foot or horse or$by foot or horse and$of horse and foot of$of foot and horse and$the horse and foot on$the horse and foot were$the foot and horse of$of horse and foot guards$the horse and foot which$of horse and foot into$of horse and foot to$of horse and foot in$of foot and horse for$of foot and horse soldiers$
+0,0,0.108695656,0,0,0,0,0,0.44444445,0.33333334,0,0,0,3.7999992,0.3,3.6000004,0,0,0.12,0,0,2.0,0,0,0,0,0,0,0,mero
+
+% the head of horse creek$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.5,mero
+
+% the mouth of horse creek$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.5,mero
+
+% to shoe a horse and$the shoe the horse was$to shoe a horse or$
+0,0.5,0,0,0,0,1.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% the construction of hospital and$
+0.029411765,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,1.0,0,0,hyper
+
+% the hospital to give the$the hospital to give her$the hospital and give the$the hospital and give them$
+0,0,0.02173913,1.0,2.0,0,0,0,0,1.3333334,0,0,1.0,0,0,0,0,0,0,0,0,0,1.0,0.33333334,0,0,0,0,0,random
+
+% a hospital or institution for$a hospital or institution on$a hospital or institution of$the hospital or institution in$
+0,0,0.06521739,0,0,0,0,0,0,0,0,0,0,0,0.1,0,0.3857143,1.25,0.04,0.125,0,0,0,0,0,0,0,0,0,hyper
+
+% the hospital to nurse the$the hospital to nurse her$
+0,0,0,1.0,1.3333334,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,0,mero
+
+% the hospital and outside the$a hospital just outside the$
+0,0,0.02173913,0,0.33333334,0,0,0,0,1.0,0,0,2.0,0,0,0,0,0,0,0,0,0,0,0.33333334,0,0,0,0,0,mero
+
+% the patient to hospital at$the hospital the patient was$the patient to hospital and$the patient from hospital to$the patient to hospital for$
+0,0,0,0,0,0,0.5,0.5,0,0,1.0,2.0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,0,mero
+
+% a hotel just outside the$
+0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% a store and hotel at$a hotel and store in$
+0,0,0.02173913,0,0,0.11764706,0,0,0.11111111,0,0,0,0,0,1.1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% the hotel and tell the$the hotel to tell the$the hotel to tell her$the hotel and tell them$
+0,0,0.02173913,1.0,2.0,0,0,0,0,1.3333334,0,0,1.0,0,0,0,0,0,0,0,0,0,1.0,0.33333334,0,0,0,0,0,random
+
+% a glass or jar of$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.1,0,0.1,1.0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% a jar of pickles that$a jar of pickles and$a jar of pickles or$a jar of pickles in$a jar of pickles for$
+0.4327731,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,0,0,0,mero
+
+% the jar from top to$
+0,0,0,0,0,0,0,0,0,0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% a knife or dagger in$a knife or dagger from$
+0,0,0.04347826,0,0,0.05882353,0,0,0,0,0,0,0,0,0,0,0.14285715,0.25,0.54,0,0,0,0,0,0,0,0,0,0,coord
+
+% the knife and fork of$a fork or knife to$a knife and fork at$the knife and fork with$every knife and fork in$a fork and knife and$a fork and knife in$a fork and knife to$a knife and fork and$a knife and fork that$the knife and fork that$of knife and fork and$the knife and fork and$the knife and fork is$his fork and knife and$a knife or fork or$a knife or fork to$a knife or fork in$the knife and fork on$the knife and fork were$the knife and fork which$a knife and fork to$a knife and fork in$the knife and fork to$the knife and fork in$a knife and fork for$the knife and fork for$his knife and fork and$a knife and fork on$the knife and fork are$
+0,0,0.9347825,0,0,0.7058824,0,0.5,2.7777781,0.33333334,0,0,0,1.1,3.0,0.4,0.5714286,0.75,1.54,0.625,0,1.0,0,0,0,0,0,0,0,coord
+
+% the plate and knife and$his plate and knife and$a plate with knife and$a plate and knife and$
+0,0,0.04347826,0,0,0.05882353,0,0,1.1111112,0,0,0,0,0,0.2,0,0,0,0,0.125,0,0,0,0,0,0,0,0,0,coord
+
+% to give a library to$
+0,0,0,0,0,0,0.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,random
+
+% the office and library of$the office of library and$
+0.029411765,0,0,0,0,0,0,0,0.11111111,0,0,0,0,1.0,0,0.2,0,0,0,0,1.0,1.0,0,0,0,0,1.0,0,0,mero
+
+% the library of political and$
+0.029411765,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,1.0,0,0,random
+
+% a lion in search of$
+0,0,0,0,0,0,0,0,0,0,0.33333334,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,random
+
+% a mug of water on$a mug of water for$of water and mug in$a mug of water to$a mug of water in$the mug of water to$a mug of water and$a mug of water from$
+0.6344538,0,0,0,0,0,0,0,0,0,0,0,0,0.1,0,1.0,0,0,0,0,1.0,0,0,0,0,0,0,0,0,mero
+
+% the bark of oak or$the bark of oak and$
+0.10084034,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,1.0,0,0,mero
+
+% of garlic and onion and$the garlic and onion in$the onion and garlic with$of onion and garlic and$the onion and garlic and$the onion and garlic are$the onion and garlic for$the garlic and onion and$the onion and garlic to$the onion and garlic in$
+0,0,0.6521739,0,0,0.05882353,0,0.5,1.0000001,0,0,0,0,0.2,0.5,0.4,0,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% of apple and peach and$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0.1,0,0.2,0,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% the phone and read the$
+0,0,0.02173913,0,0.33333334,0,0,0,0,1.0,0,0,1.0,0,0,0,0,0,0,0,0,0,0,0.33333334,0,0,0,0,0,random
+
+% the piano and guitar and$
+0,0,0.02173913,0,0,0,0,0,0.33333334,0,0,0,0,0,0.1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% of pine and birch and$of birch and pine and$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0.2,0,0.4,0,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% of birch and poplar and$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0.1,0,0.2,0,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% the control of radio in$the control of radio and$
+0.13025211,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,1.3333334,0,0,mero
+
+% the radio or go to$the radio and go to$
+0,0,0.04347826,0,0,0,0,0,0,0,0,0,0,0,0.1,0,0.1,0,0.04,0.125,0,0,0,0,0,0,0,0,0,random
+
+% the reach of radio and$the radio to reach the$
+0.029411765,0,0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,1.0,0,0,0,1.0,0,0,random
+
+% the food and restaurant industry$the food and restaurant industries$
+0,0,0,0,0,0.11764706,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% every hotel and restaurant in$a hotel or restaurant and$the hotel and restaurant trade$the restaurant and hotel industries$the hotel and restaurant industries$a restaurant or hotel is$the hotel and restaurant business$a hotel and restaurant at$a hotel or restaurant is$in restaurant and hotel management$a hotel or restaurant to$a hotel or restaurant or$a hotel or restaurant in$a hotel and restaurant in$in hotel and restaurant management$the hotel and restaurant are$the hotel and restaurant industry$a hotel and restaurant on$the restaurant and hotel business$the restaurant and hotel industry$the restaurant and hotel trade$of hotel and restaurant owners$a hotel and restaurant and$a restaurant or hotel in$of hotel and restaurant services$
+0,0,1.2173913,0,0,2.411766,0,0,0.44444445,0,0,0,0,0,1.3000001,0,0.9142857,1.0,1.7,0.875,0,0,0,0,0,0,0,0,0,coord
+
+% a rifle and ammunition and$a rifle and ammunition to$his rifle and ammunition and$
+0,0,0.02173913,0,0,0.05882353,0,0,0.7777778,0,0,0,0,0,0.2,0,0,0,0,0.125,0,0,0,0,0,0,0,0,0,mero
+
+% to handle a rifle or$to handle a rifle and$
+0,0.5,0,0,0,0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% a rifle or shotgun and$a rifle or shotgun in$a rifle or shotgun to$
+0,0,0.54347825,0,0,1.1176472,0,0,0,0,0,0,0,0,0,0,0.42857146,0.75,1.04,0.625,0,0,0,0,0,0,0,0,0,coord
+
+% the robe in front of$
+0,0,0,0,0,0,0,0,0,0,0.33333334,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% to wear a robe and$and wear the robe of$to wear the robe of$
+0,2.0,0,0,0,0,0.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.33333334,0,0.5,0,1.0,0,hyper
+
+% the head of salmon river$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.5,mero
+
+% of trout and salmon in$the salmon and trout in$the salmon and trout of$of salmon and trout and$the trout and salmon of$the trout and salmon are$of salmon and trout to$of salmon and trout in$the salmon and trout are$
+0,0,1.0217391,0,0,0.11764706,0,0,0.33333334,0,0,0,0,2.3999999,0.1,2.6000001,0,0,0,0,0,2.0,0,0,0,0,0,0,0,coord
+
+% and saw the edge of$the edge and saw them$the edge and saw a$the edge and saw the$i saw the edge of$he saw the edge of$the edge and saw that$
+0,0.5,0.04347826,0,0.6666667,0,0,0,0,2.0,0,0,1.0,0,0,0,0,0,0,0,0,0,0,1.6666667,0,0,0,2.0,0,mero
+
+% he saw the first of$i saw the first of$the first i saw a$and saw the first of$
+0,0.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.3333334,0,0,0,2.0,0,random
+
+% and saw the rear of$the rear and saw the$i saw the rear of$he saw the rear of$the rear and saw a$the rear i saw a$
+0,0.5,0.02173913,0,0.33333334,0,0,0,0,1.3333334,0,0,1.0,0,0,0,0,0,0,0,0,0,0,2.0,0,0,0,2.0,0,random
+
+% i saw the turn of$the turn and saw the$he saw the turn of$
+0,0,0.02173913,0,0.33333334,0,0,0,0,1.0,0,0,1.0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,1.0,0,random
+
+% the wood and saw the$the wood i saw a$the wood and saw a$
+0,0,0.02173913,0,0.33333334,0,0,0,0,1.3333334,0,0,1.0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,mero
+
+% to wear a scarf and$to wear a scarf to$to wear a scarf or$
+0,0.5,0,0,0,0,1.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,hyper
+
+% a bull or sheep or$
+0,0,0.02173913,0,0,0.05882353,0,0,0,0,0,0,0,0,0,0,0.14285715,0,0.04,0.125,0,0,0,0,0,0,0,0,0,coord
+
+% the sheep and deer and$of sheep and deer to$
+0,0,0.02173913,0,0,0,0,0,0.33333334,0,0,0,0,0.1,0.1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% the fleece of sheep or$the fleece of sheep and$
+0.10084034,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,1.0,0,0,mero
+
+% a goat or sheep or$a goat or sheep to$a sheep or goat with$the sheep and goat the$a goat or sheep and$a sheep or goat in$a sheep or goat for$a sheep or goat or$a sheep or goat to$the sheep and goat is$a goat or sheep is$a goat or sheep for$a sheep or goat from$a sheep or goat was$the goat and sheep are$a sheep or goat and$the sheep and goat in$of sheep and goat in$the sheep and goat industry$a sheep or goat is$the sheep and goat are$a goat or sheep was$of sheep and goat and$
+0,0,2.3478262,0,0.33333334,2.5882359,0,0,0.11111111,1.0,0,0,1.0,0.2,0.2,1.2,1.6285716,1.75,1.8599998,1.75,0,0,0,0.33333334,0,0,0,0,0,coord
+
+% the meat of sheep and$the meat of sheep or$
+0.10084034,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,1.0,0,0,mero
+
+% a present of sheep and$
+0.10084034,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,0,0,0,random
+
+% the wool of sheep is$the sheep and wool business$of sheep and wool and$the wool of sheep or$the wool of sheep in$the wool of sheep and$the wool of sheep which$the sheep and wool industry$of sheep and wool in$the wool of sheep that$
+0.28991598,0,0,0,0,0.11764706,0,0,0,0,0,0,0,0.2,0,1.2,0,0,0,0,1.0,0,0,0,0,0,1.3333334,0,0,mero
+
+% a shirt with collar and$the shirt and collar industry$his shirt and collar and$
+0,0,0.02173913,0,0,0.05882353,0,0,0.44444445,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% his pants and shirt and$the pants and shirt and$a shirt and pants that$the shirt and pants and$his shirt and pants and$a shirt and pants and$
+0,0,0.108695656,0,0,0.05882353,0,0,1.7777779,0,0,0,0,0,0.3,0,0,0,0,0.125,0,0,0,0,0,0,0,0,0,coord
+
+% the head of snake river$the head of snake creek$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,mero
+
+% a chair or sofa that$a chair or sofa to$a chair or sofa in$
+0,0,0.06521739,0,0,0.11764706,0,0,0,0,0,0,0,0,0,0,0.3857143,0.5,1.04,0.125,0,0,0,0,0,0,0,0,0,coord
+
+% to get a spade and$
+0,0.5,0,0,0,0,0.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,random
+
+% the stove to look at$
+0,0,0,0,0,0,0,0,0,0,0,0.33333334,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,random
+
+% a stove and refrigerator and$the stove and refrigerator were$the stove and refrigerator and$
+0,0,0.04347826,0,0,0.05882353,0,0,0.7777778,0,0,0,0,0,0.2,0,0,0,0,0.125,0,0,0,0,0,0,0,0,0,coord
+
+% the arm and sword of$the sword and arm of$
+0,0,0,0,0,0,0,0,0.22222222,0,0,0,0,2.0,0,0.4,0,0,0,0,0,2.0,0,0,0,0,0,0,0,hyper
+
+% the sword and continue the$
+0,0,0.02173913,0,0.33333334,0,0,0,0,1.0,0,0,1.0,0,0,0,0,0,0,0,0,0,0,0.33333334,0,0,0,0,0,random
+
+% the sword and dagger were$a sword and dagger in$a sword and dagger and$a sword or dagger and$the sword and dagger and$his sword and dagger and$a sword or dagger in$the sword and dagger of$a sword and dagger at$
+0,0,0.6086956,0,0,1.2352942,0,0,1.3333335,0,0,0,0,1.0,1.3000001,0.2,0.2857143,0.5,0.54,0.625,0,1.0,0,0,0,0,0,0,0,coord
+
+% to handle the sword of$to handle a sword and$
+0,1.5,0,0,0,0,0.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.5,0,0,0,mero
+
+% the sword and knife of$
+0,0,0,0,0,0,0,0,0.11111111,0,0,0,0,1.0,0,0.2,0,0,0,0,0,1.0,0,0,0,0,0,0,0,coord
+
+% the pike or sword of$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,0,0,coord
+
+% a sword and pistol in$his sword and pistol and$the sword and pistol of$
+0,0,0.04347826,0,0,0.05882353,0,0,0.5555556,0,0,0,0,1.0,1.0,0.2,0,0,0,0,0,1.0,0,0,0,0,0,0,0,coord
+
+% his sword and scabbard and$
+0,0,0.02173913,0,0,0,0,0,0.33333334,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% the table in advance of$
+0,0,0,0,0,0,0,0,0,0,0.33333334,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,random
+
+% to describe the table of$
+0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.5,0,0,0,random
+
+% the table and speak to$
+0,0,0.02173913,0,0,0,0,0,0,0,0,0,0,0,0.1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,random
+
+% the table to wait for$the table and wait on$the table and wait for$a table and wait for$
+0,0,0.02173913,0,0,0,0,1.0,0.22222222,0,0,0.33333334,0,0,0.1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,random
+
+% of television and video in$of video and television in$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0.2,0,2.0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% a tiger or leopard is$the tiger and leopard with$
+0,0,0.04347826,0,0,0.05882353,0,0,0,0,0,0,0,0,0,0,0.1,0,0.04,0,0,0,0,0,0,0,0,0,0,coord
+
+% to accompany the train to$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,random
+
+% a bus or train from$by bus and train and$at bus and train stations$of bus and train services$by bus or train to$by bus or train or$the train and bus station$and bus and train stations$by bus or train and$the bus or train or$the bus or train to$the bus and train stations$and train and bus stations$the train and bus stations$by train and bus from$a train or bus ticket$by bus or train from$by train or bus and$in bus and train stations$the bus or train station$by train or bus from$a bus or train and$a bus or train is$by train and bus and$the bus or train and$by train or bus or$by train or bus to$by bus and train to$by bus and train from$a train or bus station$a bus or train for$the bus and train station$at train and bus stations$the train or bus station$in train and bus stations$a bus or train ticket$a train or bus and$a bus or train to$a bus or train in$a bus or train or$a bus or train station$by train and bus to$a train or bus or$the train or bus to$the train or bus and$a train or bus to$
+0,0,1.2826086,0,0,2.411765,0,0,0,0,0,0,0,0.4,0,0,1.6428573,1.5,3.2199993,2.125,0,0,0,0,0,0,0,0,0,coord
+
+% a train of cause and$to cause the train to$to cause a train to$the train of cause and$
+0.13025211,0,0,0,0,0,0.5,0,0,0,0,0,0,0,0,0,0,0,0,0,2.0,0,0,0,2.0,0,1.0,0,0,random
+
+% by train and coach to$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.04,0,0,0,0,0,0,0,0,0,0,mero
+
+% the effort to train and$the effort to train the$
+0,0,0,1.0,1.0,0,0,0,0,0,0,0.33333334,0,0,0,0,0,0,0,0,0,0,2.0,0,0,0,0,0,0,random
+
+% the engine and train of$a train or engine is$the engine and train were$
+0,0,0.04347826,0,0,0.05882353,0,0,0.22222222,0,0,0,0,1.0,0,0.2,0.1,0,0.04,0,0,1.0,0,0,0,0,0,0,0,mero
+
+% by train and ferry to$by train and ferry from$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.08,0,0,0,0,0,0,0,0,0,0,coord
+
+% the train from front to$the train in front of$a train in front of$
+0,0,0,0,0,0,0,0,0,0,1.6666667,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% to lose the train of$
+0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.5,0,0,0,random
+
+% by truck or train to$by train or truck to$by truck and train to$by train and truck to$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.16,0,0,0,0,0,0,0,0,0,0,coord
+
+% the salmon and trout of$the salmon and trout in$the trout and salmon are$of trout and salmon in$of salmon and trout to$of salmon and trout in$the salmon and trout are$the trout and salmon of$of salmon and trout and$
+0,0,1.0217391,0,0,0.11764706,0,0,0.33333334,0,0,0,0,2.4,0.1,2.6000001,0,0,0,0,0,2.0,0,0,0,0,0,0,0,coord
+
+% a car or truck for$your car or truck is$a car or truck is$a car or truck on$a car or truck that$a car or truck would$a car or truck with$a car or truck or$a car or truck in$the car or truck to$a car or truck to$the car or truck and$a car or truck and$the car or truck is$
+0,0,0.7826086,0,0,1.2352941,0,0,0,0,0,0,0,0,0.1,0,1.7000003,1.0,1.28,1.125,0,0,0,0,0,0,0,0,0,coord
+
+% the truck to do the$
+0,0,0,1.0,1.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,0,random
+
+% a truck and driver to$a truck and driver for$a truck and driver and$
+0,0,0,0,0,0.05882353,0,0,0.5555556,0,0,0,0,0,0.2,0,0,0,0,0.125,0,0,0,0,0,0,0,0,0,mero
+
+% a truck of fuel to$
+0.10084034,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
+% the head of turtle creek$
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.5,mero
+
+% the turtle or tortoise is$
+0,0,0.02173913,0,0,0,0,0,0,0,0,0,0,0,0,0,0.1,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% of coat and vest and$a coat and vest for$his coat and vest and$the coat and vest and$the coat and vest of$
+0,0,0.04347826,0,0,0,0,0,0.8888889,0,0,0,0,1.1,0.1,0.4,0,0,0,0,0,1.0,0,0,0,0,0,0,0,coord
+
+% the violin and guitar were$
+0,0,0.02173913,0,0,0,0,0,0.11111111,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,coord
+
+% the bark of willow and$
+0.029411765,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1.0,0,0,0,0,0,1.0,0,0,mero
+
+% a branch of willow in$
+0.10084034,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,mero
+
